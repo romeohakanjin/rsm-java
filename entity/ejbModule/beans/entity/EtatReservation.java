@@ -12,7 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "etat_reservation")
-public class EtatResarvation {
+public class EtatReservation {
 	private Integer id_etat;
 	private String libelle;
 	

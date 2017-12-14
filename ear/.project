@@ -4,6 +4,7 @@
 	<comment></comment>
 	<projects>
 		<project>rsm-entity</project>
+		<project>rsm-sessionbean</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
