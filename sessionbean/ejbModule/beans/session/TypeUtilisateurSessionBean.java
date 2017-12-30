@@ -20,14 +20,14 @@ import javax.transaction.UserTransaction;
 import beans.entity.TypeUtilisateur;
 
 /**
- * @author Sindy
+ * @author SLI
  */
 @Stateful
 @LocalBean
 @TransactionManagement(TransactionManagementType.BEAN)
 public class TypeUtilisateurSessionBean {
 
-	@PersistenceContext(unitName = "AnnonceService")
+	@PersistenceContext(unitName = "RsmProjectService")
 	EntityManager entityManager;
 
 	@Resource

@@ -20,14 +20,14 @@ import javax.transaction.UserTransaction;
 import beans.entity.EtatReservation;
 
 /**
- * @author Sindy
+ * @author SLI
  */
 @Stateful
 @LocalBean
 @TransactionManagement(TransactionManagementType.BEAN)
 public class EtatReservationSessionBean {
 
-	@PersistenceContext(unitName = "AnnonceService")
+	@PersistenceContext(unitName = "RsmProjectService")
 	EntityManager entityManager;
 
 	@Resource

@@ -2,7 +2,6 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -11,13 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import beans.entity.Annonce;
-import beans.entity.Commentaire;
 import beans.session.AnnonceSessionBean;
-import beans.session.CommentaireSessionBean;
 
 /**
- * @author Sindy
+ * @author SLI
  */
 @WebServlet("/AnnonceServlet")
 public class AnnonceServlet extends HttpServlet {
@@ -31,36 +27,14 @@ public class AnnonceServlet extends HttpServlet {
 	public HttpServletRequest request;
 	public HttpServletResponse response;
 
-	@EJB
-	AnnonceSessionBean annonceSessionBean;
-
+//	@EJB
+//    AnnonceSessionBean annonceSessionBean;
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		initialiser(request, response);
 		formulaireCreation();
 
-		if ((titreParameter != null) && (descriptionParameter != null) && (capaciteParameter != null)) {
-			if ((!"".equals(titreParameter)) && (!"".equals(descriptionParameter)) && (!"".equals(capaciteParameter))) {
-				capaciteMax = Integer.parseInt(capaciteParameter);
-				Annonce annonce = new Annonce();
-				annonce.setTitre(titreParameter);
-				annonce.setDescription(descriptionParameter);
-				annonce.setCapacite_max(capaciteMax);
-				
-				creation = annonceSessionBean.creerAnnonce(annonce);
-				
-				if (creation) {
-					List<Annonce> annonces = annonceSessionBean.getAllAnnonce();
-					out.println("<table border='1'>");
-					for (Annonce an : annonces) {
-						out.println("<tr><td>" + an.getTitre() + "</td><td>" + an.getDescription() + "</td></tr>");
-					}
-					out.println("</table>");
-				} else {
-					out.print("L'annonce n'a pas pu être créée <br>");
-				}
-			}
-		}
 	}
 	
 	/**

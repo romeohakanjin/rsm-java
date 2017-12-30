@@ -20,14 +20,14 @@ import javax.transaction.UserTransaction;
 import beans.entity.Commentaire;
 
 /**
- * @author Sindy
+ * @author SLI
  */
 @Stateful
 @LocalBean
 @TransactionManagement(TransactionManagementType.BEAN)
 public class CommentaireSessionBean {
 
-	@PersistenceContext(unitName = "AnnonceService")
+	@PersistenceContext(unitName = "RsmProjectService")
 	EntityManager entityManager;
 
 	@Resource

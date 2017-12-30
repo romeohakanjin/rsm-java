@@ -1,6 +1,6 @@
 package beans.entity;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,9 +18,9 @@ public class Reservation {
 	private Integer id_reservation;
 	private Integer id_annonce;
 	private Integer id_utilisateur;
-	private Double prix;
-	private Integer capatice_max;
-	private Date date_sejour;
+	private double prix;
+	private Integer capacite_max;
+	private Timestamp date_sejour;
 	private Integer id_statut_reservation;
 	private Integer id_etat_reservation;
 
@@ -58,19 +58,19 @@ public class Reservation {
 		this.prix = prix;
 	}
 
-	public Integer getCapatice_max() {
-		return capatice_max;
+	public Integer getCapacite_max() {
+		return capacite_max;
 	}
 
-	public void setCapatice_max(Integer capatice_max) {
-		this.capatice_max = capatice_max;
+	public void setCapacite_max(Integer capacite_max) {
+		this.capacite_max = capacite_max;
 	}
 
-	public Date getDate_sejour() {
+	public Timestamp getDate_sejour() {
 		return date_sejour;
 	}
 
-	public void setDate_sejour(Date date_sejour) {
+	public void setDate_sejour(Timestamp date_sejour) {
 		this.date_sejour = date_sejour;
 	}
 

@@ -1,0 +1,8 @@
+<datasource jndi-name="java:jboss/datasources/rsmProject" pool-name="rsmProject" enabled="true" use-java-context="true">
+  <connection-url>jdbc:mysql://192.168.150.1:3306/apocalypse</connection-url>
+  <driver>mysql</driver>
+    <security>
+      <user-name>interro</user-name>
+      <password>interro</password>
+    </security>
+</datasource>

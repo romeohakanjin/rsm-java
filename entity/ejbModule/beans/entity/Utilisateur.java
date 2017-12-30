@@ -20,7 +20,7 @@ public class Utilisateur {
 	private String mail;
 	private String mobile;
 	private String adresse;
-	private String codePostal;
+	private String code_postal;
 	private String ville;
 	private Integer point_bonus;
 	
@@ -82,12 +82,12 @@ public class Utilisateur {
 		this.adresse = adresse;
 	}
 
-	public String getCodePostal() {
-		return codePostal;
+	public String getCode_postal() {
+		return code_postal;
 	}
 
-	public void setCodePostal(String codePostal) {
-		this.codePostal = codePostal;
+	public void setCode_postal(String code_postal) {
+		this.code_postal = code_postal;
 	}
 
 	public String getVille() {

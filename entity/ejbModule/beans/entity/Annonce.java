@@ -1,7 +1,8 @@
 package beans.entity;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,7 +21,7 @@ public class Annonce {
 	private String titre;
 	private String description;
 	private Integer capacite_max;
-	private Date date_creation;
+	private Timestamp date_creation;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,11 +65,11 @@ public class Annonce {
 		this.capacite_max = capacite_max;
 	}
 
-	public Date getDate_creation() {
+	public Timestamp getDate_creation() {
 		return date_creation;
 	}
 
-	public void setDate_creation(Date date_creation) {
+	public void setDate_creation(Timestamp date_creation) {
 		this.date_creation = date_creation;
 	}
 }

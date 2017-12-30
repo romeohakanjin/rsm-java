@@ -13,17 +13,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "type_utilisateur")
 public class TypeUtilisateur {
-	private Integer id_type;
+	private Integer id_type_utilisateur;
 	private String libelle;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer getId_type() {
-		return id_type;
+	public Integer getId_type_utilisateur() {
+		return id_type_utilisateur;
 	}
 
-	public void setId_type(Integer id_type) {
-		this.id_type = id_type;
+	public void setId_type_utilisateur(Integer id_type_utilisateur) {
+		this.id_type_utilisateur = id_type_utilisateur;
 	}
 
 	public String getLibelle() {
