@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 01 Janvier 2018 à 11:56
+-- Généré le :  Mar 02 Janvier 2018 à 20:32
 -- Version du serveur :  10.1.16-MariaDB
 -- Version de PHP :  7.0.9
 
@@ -29,9 +29,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `annonce` (
   `id_annonce` int(10) NOT NULL,
   `id_utilisateur` int(10) NOT NULL,
-  `id_hotel` int(11) DEFAULT NULL,
   `titre` varchar(50) DEFAULT NULL,
-  `description` varchar(1000) DEFAULT NULL,
+  `description` text,
   `capacite_max` int(10) DEFAULT NULL,
   `date_creation` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -46,7 +45,7 @@ CREATE TABLE `commentaire` (
   `id_commentaire` int(11) NOT NULL,
   `id_reservation` int(11) NOT NULL,
   `id_utilisateur` int(11) NOT NULL,
-  `commentaire` varchar(1000) NOT NULL
+  `commentaire` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -79,17 +78,10 @@ INSERT INTO `etat_reservation` (`id_etat`, `libelle`) VALUES
 CREATE TABLE `hotel` (
   `id_hotel` int(11) NOT NULL,
   `nom` varchar(35) NOT NULL,
-  `adresse` varchar(60) NOT NULL,
-  `code_postal` int(11) NOT NULL,
+  `adresse` varchar(35) NOT NULL,
+  `code_postal` varchar(15) NOT NULL,
   `ville` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Contenu de la table `hotel`
---
-
-INSERT INTO `hotel` (`id_hotel`, `nom`, `adresse`, `code_postal`, `ville`) VALUES
-(1, 'Hiton', '6 rue de la paix', 75003, 'Paris');
 
 -- --------------------------------------------------------
 
@@ -104,8 +96,8 @@ CREATE TABLE `reservation` (
   `prix` double NOT NULL,
   `capacite_max` int(10) NOT NULL,
   `date_sejour` datetime NOT NULL,
-  `id_statut_reservation` int(10) NOT NULL,
-  `id_etat_reservation` int(10) NOT NULL
+  `id_statut` int(10) NOT NULL,
+  `id_etat` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -115,7 +107,7 @@ CREATE TABLE `reservation` (
 --
 
 CREATE TABLE `statut_reservation` (
-  `id_statut_reservation` int(10) NOT NULL,
+  `id_statut` int(10) NOT NULL,
   `libelle` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -123,7 +115,7 @@ CREATE TABLE `statut_reservation` (
 -- Contenu de la table `statut_reservation`
 --
 
-INSERT INTO `statut_reservation` (`id_statut_reservation`, `libelle`) VALUES
+INSERT INTO `statut_reservation` (`id_statut`, `libelle`) VALUES
 (1, 'Terminee'),
 (2, 'En cours'),
 (3, 'A venir');
@@ -135,7 +127,7 @@ INSERT INTO `statut_reservation` (`id_statut_reservation`, `libelle`) VALUES
 --
 
 CREATE TABLE `type_utilisateur` (
-  `id_type_utilisateur` int(10) NOT NULL,
+  `id_type` int(10) NOT NULL,
   `libelle` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -143,7 +135,7 @@ CREATE TABLE `type_utilisateur` (
 -- Contenu de la table `type_utilisateur`
 --
 
-INSERT INTO `type_utilisateur` (`id_type_utilisateur`, `libelle`) VALUES
+INSERT INTO `type_utilisateur` (`id_type`, `libelle`) VALUES
 (1, 'Administrateur'),
 (2, 'Hotelier'),
 (3, 'Standard');
@@ -156,8 +148,8 @@ INSERT INTO `type_utilisateur` (`id_type_utilisateur`, `libelle`) VALUES
 
 CREATE TABLE `utilisateur` (
   `id_utilisateur` int(10) NOT NULL,
-  `id_type_utilisateur` int(10) NOT NULL,
-  `id_hotel` int(11) DEFAULT NULL,
+  `id_type` int(10) NOT NULL,
+  `id_hotel` int(50) DEFAULT NULL,
   `nom` varchar(50) DEFAULT NULL,
   `prenom` varchar(50) DEFAULT NULL,
   `mail` varchar(70) DEFAULT NULL,
@@ -165,17 +157,17 @@ CREATE TABLE `utilisateur` (
   `adresse` varchar(50) DEFAULT NULL,
   `code_postal` varchar(10) DEFAULT NULL,
   `ville` varchar(50) DEFAULT NULL,
-  `point_bonus` int(100) DEFAULT '0'
+  `point_bonus` int(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `utilisateur`
 --
 
-INSERT INTO `utilisateur` (`id_utilisateur`, `id_type_utilisateur`, `id_hotel`, `nom`, `prenom`, `mail`, `mobile`, `adresse`, `code_postal`, `ville`, `point_bonus`) VALUES
-(4, 1, NULL, 'Lim', 'Sindy', 'sindy.lim91@gmail.com', '0635267495', '100 rue des tests', '75015', 'Paris', 0),
-(5, 2, NULL, 'Hakanjin', 'Romeo', 'hakanjin.romeo@hotmail.fr', '0602677213', '6 rue des test', '75013', 'Paris', 0),
-(6, 3, NULL, 'Diagne', 'Massamba', 'massdinho10@gmail.com', '0745873695', '27 rue des tests', '75018', 'Upton', 0);
+INSERT INTO `utilisateur` (`id_utilisateur`, `id_type`, `id_hotel`, `nom`, `prenom`, `mail`, `mobile`, `adresse`, `code_postal`, `ville`, `point_bonus`) VALUES
+(1, 1, NULL, 'LIM', 'Sindy', 'sindy.lim91@gmail.com', '0635267495', '100 rue des tests', '75015', 'Paris', 0),
+(2, 2, NULL, 'HAKANJIN', 'Romeo', 'romeo.hakanjin96@gmail.com', '0635987465', '12 allee des test', '95800', 'CERGY', 0),
+(3, 3, NULL, 'DIAGNE', 'Massamba', 'massdinho10@gmail.com', '0745873695', '3 avenue de test', '93600', 'AUNAY-SOUS-BOIS', 0);
 
 --
 -- Index pour les tables exportées
@@ -186,15 +178,15 @@ INSERT INTO `utilisateur` (`id_utilisateur`, `id_type_utilisateur`, `id_hotel`, 
 --
 ALTER TABLE `annonce`
   ADD PRIMARY KEY (`id_annonce`),
-  ADD KEY `FK1_ANNONCE` (`id_utilisateur`),
-  ADD KEY `FK_annonceHotel` (`id_hotel`);
+  ADD KEY `FK1_ANNONCE` (`id_utilisateur`);
 
 --
 -- Index pour la table `commentaire`
 --
 ALTER TABLE `commentaire`
   ADD PRIMARY KEY (`id_commentaire`),
-  ADD KEY `FK2_COMMENTAIRE` (`id_utilisateur`);
+  ADD KEY `FK2_COMMENTAIRE` (`id_utilisateur`),
+  ADD KEY `id_reservation` (`id_reservation`);
 
 --
 -- Index pour la table `etat_reservation`
@@ -215,28 +207,28 @@ ALTER TABLE `reservation`
   ADD PRIMARY KEY (`id_reservation`),
   ADD KEY `FK1_RESERVATION` (`id_annonce`),
   ADD KEY `FK2_RESERVATION` (`id_utilisateur`),
-  ADD KEY `FK3_RESERVATION` (`id_etat_reservation`),
-  ADD KEY `FK4_RESERVATION` (`id_statut_reservation`);
+  ADD KEY `FK3_RESERVATION` (`id_etat`),
+  ADD KEY `FK4_RESERVATION` (`id_statut`);
 
 --
 -- Index pour la table `statut_reservation`
 --
 ALTER TABLE `statut_reservation`
-  ADD PRIMARY KEY (`id_statut_reservation`);
+  ADD PRIMARY KEY (`id_statut`);
 
 --
 -- Index pour la table `type_utilisateur`
 --
 ALTER TABLE `type_utilisateur`
-  ADD PRIMARY KEY (`id_type_utilisateur`);
+  ADD PRIMARY KEY (`id_type`);
 
 --
 -- Index pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
   ADD PRIMARY KEY (`id_utilisateur`),
-  ADD KEY `FK1_UTILISATEUR` (`id_type_utilisateur`),
-  ADD KEY `FK_UtilisateurHotel` (`id_hotel`);
+  ADD KEY `FK1_UTILISATEUR` (`id_type`),
+  ADD KEY `FK2_UTILISATEUR` (`id_hotel`);
 
 --
 -- AUTO_INCREMENT pour les tables exportées
@@ -261,22 +253,27 @@ ALTER TABLE `etat_reservation`
 -- AUTO_INCREMENT pour la table `hotel`
 --
 ALTER TABLE `hotel`
-  MODIFY `id_hotel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_hotel` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `reservation`
+--
+ALTER TABLE `reservation`
+  MODIFY `id_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT pour la table `statut_reservation`
 --
 ALTER TABLE `statut_reservation`
-  MODIFY `id_statut_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_statut` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT pour la table `type_utilisateur`
 --
 ALTER TABLE `type_utilisateur`
-  MODIFY `id_type_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_type` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- Contraintes pour les tables exportées
 --
@@ -285,14 +282,14 @@ ALTER TABLE `utilisateur`
 -- Contraintes pour la table `annonce`
 --
 ALTER TABLE `annonce`
-  ADD CONSTRAINT `FK1_ANNONCE` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_annonceHotel` FOREIGN KEY (`id_hotel`) REFERENCES `hotel` (`id_hotel`);
+  ADD CONSTRAINT `FK1_ANNONCE` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `commentaire`
 --
 ALTER TABLE `commentaire`
-  ADD CONSTRAINT `FK2_COMMENTAIRE` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`);
+  ADD CONSTRAINT `FK2_COMMENTAIRE` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`),
+  ADD CONSTRAINT `commentaire_ibfk_1` FOREIGN KEY (`id_reservation`) REFERENCES `reservation` (`id_reservation`);
 
 --
 -- Contraintes pour la table `reservation`
@@ -300,15 +297,15 @@ ALTER TABLE `commentaire`
 ALTER TABLE `reservation`
   ADD CONSTRAINT `FK1_RESERVATION` FOREIGN KEY (`id_annonce`) REFERENCES `annonce` (`id_annonce`),
   ADD CONSTRAINT `FK2_RESERVATION` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`),
-  ADD CONSTRAINT `FK3_RESERVATION` FOREIGN KEY (`id_etat_reservation`) REFERENCES `etat_reservation` (`id_etat`),
-  ADD CONSTRAINT `FK4_RESERVATION` FOREIGN KEY (`id_statut_reservation`) REFERENCES `statut_reservation` (`id_statut_reservation`);
+  ADD CONSTRAINT `FK3_RESERVATION` FOREIGN KEY (`id_etat`) REFERENCES `etat_reservation` (`id_etat`),
+  ADD CONSTRAINT `FK4_RESERVATION` FOREIGN KEY (`id_statut`) REFERENCES `statut_reservation` (`id_statut`);
 
 --
 -- Contraintes pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  ADD CONSTRAINT `FK1_UTILISATEUR` FOREIGN KEY (`id_type_utilisateur`) REFERENCES `type_utilisateur` (`id_type_utilisateur`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_UtilisateurHotel` FOREIGN KEY (`id_hotel`) REFERENCES `hotel` (`id_hotel`);
+  ADD CONSTRAINT `FK1_UTILISATEUR` FOREIGN KEY (`id_type`) REFERENCES `type_utilisateur` (`id_type`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `utilisateur_ibfk_1` FOREIGN KEY (`id_hotel`) REFERENCES `hotel` (`id_hotel`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
