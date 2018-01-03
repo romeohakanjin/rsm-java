@@ -1,5 +1,6 @@
 package beans.entity;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -13,9 +14,10 @@ import javax.persistence.Table;
  * @author RHA
  *
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "annonce")
-public class Annonce {
+public class Annonce implements Serializable{
 	private Integer id_annonce;
 	private Integer id_utilisateur;
 	private String titre;

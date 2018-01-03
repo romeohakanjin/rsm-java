@@ -1,5 +1,7 @@
 package beans.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,11 +12,13 @@ import javax.persistence.Table;
  * @author RHA
  *
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "utilisateur")
-public class Utilisateur {
+public class Utilisateur implements Serializable {
 	private Integer id_utilisateur;
 	private Integer id_type_utilisateur;
+	private Integer id_hotel;
 	private String nom;
 	private String prenom;
 	private String mail;
@@ -23,7 +27,7 @@ public class Utilisateur {
 	private String code_postal;
 	private String ville;
 	private Integer point_bonus;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getId_utilisateur() {
@@ -40,6 +44,14 @@ public class Utilisateur {
 
 	public void setId_type_utilisateur(Integer id_type_utilisateur) {
 		this.id_type_utilisateur = id_type_utilisateur;
+	}
+
+	public Integer getId_hotel() {
+		return id_hotel;
+	}
+
+	public void setId_hotel(Integer id_hotel) {
+		this.id_hotel = id_hotel;
 	}
 
 	public String getNom() {

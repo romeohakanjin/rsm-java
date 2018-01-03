@@ -27,9 +27,9 @@ public class AnnonceServlet extends HttpServlet {
 	public HttpServletRequest request;
 	public HttpServletResponse response;
 
-//	@EJB
-//    AnnonceSessionBean annonceSessionBean;
-	
+	/*@EJB
+    AnnonceSessionBean annonceSessionBean;
+	*/
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		initialiser(request, response);
