@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Mer 03 Janvier 2018 à 18:46
+-- Généré le :  Dim 07 Janvier 2018 à 16:13
 -- Version du serveur :  10.1.16-MariaDB
 -- Version de PHP :  7.0.9
 
@@ -34,6 +34,13 @@ CREATE TABLE `annonce` (
   `capacite_max` int(10) DEFAULT NULL,
   `date_creation` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `annonce`
+--
+
+INSERT INTO `annonce` (`id_annonce`, `id_utilisateur`, `titre`, `description`, `capacite_max`, `date_creation`) VALUES
+(1, 1, 'test', 'testDescription', 666, '2018-01-01 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -257,7 +264,7 @@ ALTER TABLE `utilisateur`
 -- AUTO_INCREMENT pour la table `annonce`
 --
 ALTER TABLE `annonce`
-  MODIFY `id_annonce` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_annonce` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT pour la table `commentaire`
 --
