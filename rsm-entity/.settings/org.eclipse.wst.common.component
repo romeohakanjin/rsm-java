@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="rsm-projet-entity">
+        <wb-resource deploy-path="/" source-path="/ejbModule" tag="defaultRootSource"/>
+        <property name="java-output-path" value="/rsm-projet-entity/build/classes"/>
+        <property name="ClientProject" value="rsm-projet-entityClient"/>
+        <property name="ClientJARURI" value="rsm-projet-entityClient.jar"/>
+    </wb-module>
+</project-modules>
