@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Dim 07 Janvier 2018 à 16:13
+-- Généré le :  Lun 15 Janvier 2018 à 19:43
 -- Version du serveur :  10.1.16-MariaDB
 -- Version de PHP :  7.0.9
 
@@ -90,6 +90,13 @@ CREATE TABLE `hotel` (
   `ville` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Contenu de la table `hotel`
+--
+
+INSERT INTO `hotel` (`id_hotel`, `nom`, `adresse`, `code_postal`, `ville`) VALUES
+(1, 'test1', '556 villa 5', '75013', 'Paris');
+
 -- --------------------------------------------------------
 
 --
@@ -167,11 +174,12 @@ INSERT INTO `type_utilisateur` (`id_type_utilisateur`, `libelle`) VALUES
 
 CREATE TABLE `utilisateur` (
   `id_utilisateur` int(10) NOT NULL,
-  `id_type_utilisateur` int(10) NOT NULL,
+  `id_type_utilisateur` int(10) DEFAULT '3',
   `id_hotel` int(50) DEFAULT NULL,
   `nom` varchar(50) DEFAULT NULL,
   `prenom` varchar(50) DEFAULT NULL,
   `mail` varchar(70) DEFAULT NULL,
+  `motDePasse` varchar(25) NOT NULL,
   `mobile` varchar(15) DEFAULT NULL,
   `adresse` varchar(50) DEFAULT NULL,
   `code_postal` varchar(10) DEFAULT NULL,
@@ -183,10 +191,10 @@ CREATE TABLE `utilisateur` (
 -- Contenu de la table `utilisateur`
 --
 
-INSERT INTO `utilisateur` (`id_utilisateur`, `id_type_utilisateur`, `id_hotel`, `nom`, `prenom`, `mail`, `mobile`, `adresse`, `code_postal`, `ville`, `point_bonus`) VALUES
-(1, 1, NULL, 'LIM', 'Sindy', 'sindy.lim91@gmail.com', '0635267495', '100 rue des tests', '75015', 'Paris', 0),
-(2, 2, NULL, 'HAKANJIN', 'Romeo', 'romeo.hakanjin96@gmail.com', '0635987465', '12 allee des test', '95800', 'CERGY', 0),
-(3, 3, NULL, 'DIAGNE', 'Massamba', 'massdinho10@gmail.com', '0745873695', '3 avenue de test', '93600', 'AUNAY-SOUS-BOIS', 0);
+INSERT INTO `utilisateur` (`id_utilisateur`, `id_type_utilisateur`, `id_hotel`, `nom`, `prenom`, `mail`, `motDePasse`, `mobile`, `adresse`, `code_postal`, `ville`, `point_bonus`) VALUES
+(1, 1, NULL, 'LIM', 'Sindy', 'sindy.lim91@gmail.com', 'test01', '0635267495', '100 rue des tests', '75015', 'Paris', 0),
+(2, 2, NULL, 'HAKANJIN', 'Romeo', 'romeo.hakanjin96@gmail.com', 'test02', '0635987465', '12 allee des test', '95800', 'CERGY', 0),
+(3, 3, NULL, 'DIAGNE', 'Massamba', 'massdinho10@gmail.com', 'test03', '0745873695', '3 avenue de test', '93600', 'AUNAY-SOUS-BOIS', 0);
 
 --
 -- Index pour les tables exportées
@@ -279,7 +287,7 @@ ALTER TABLE `etat_reservation`
 -- AUTO_INCREMENT pour la table `hotel`
 --
 ALTER TABLE `hotel`
-  MODIFY `id_hotel` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_hotel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT pour la table `paiement`
 --
@@ -304,7 +312,7 @@ ALTER TABLE `type_utilisateur`
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- Contraintes pour les tables exportées
 --
