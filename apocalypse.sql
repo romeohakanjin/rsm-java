@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
--- http://www.phpmyadmin.net
+-- version 4.6.4
+-- https://www.phpmyadmin.net/
 --
 -- Client :  127.0.0.1
--- Généré le :  Dim 07 Janvier 2018 à 16:13
--- Version du serveur :  10.1.16-MariaDB
--- Version de PHP :  7.0.9
+-- Généré le :  Lun 15 Janvier 2018 à 20:11
+-- Version du serveur :  5.7.14
+-- Version de PHP :  5.6.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,6 +19,20 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  `apocalypse`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `activite_externe`
+--
+
+CREATE TABLE `activite_externe` (
+  `id_activite` int(10) NOT NULL,
+  `titre` varchar(50) NOT NULL,
+  `description` varchar(1000) NOT NULL,
+  `ville` varchar(20) NOT NULL,
+  `id_type_activite` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -90,6 +104,14 @@ CREATE TABLE `hotel` (
   `ville` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Contenu de la table `hotel`
+--
+
+INSERT INTO `hotel` (`id_hotel`, `nom`, `adresse`, `code_postal`, `ville`) VALUES
+(1, 'test1', '556 villa 5', '75013', 'Paris'),
+(2, 'Hotel 1', '100 rue des brebis', '75015', 'Paris');
+
 -- --------------------------------------------------------
 
 --
@@ -142,6 +164,17 @@ INSERT INTO `statut_reservation` (`id_statut_reservation`, `libelle`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `type_activite`
+--
+
+CREATE TABLE `type_activite` (
+  `id_type_activite` int(10) NOT NULL,
+  `libelle` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `type_utilisateur`
 --
 
@@ -167,11 +200,12 @@ INSERT INTO `type_utilisateur` (`id_type_utilisateur`, `libelle`) VALUES
 
 CREATE TABLE `utilisateur` (
   `id_utilisateur` int(10) NOT NULL,
-  `id_type_utilisateur` int(10) NOT NULL,
+  `id_type_utilisateur` int(10) DEFAULT '3',
   `id_hotel` int(50) DEFAULT NULL,
   `nom` varchar(50) DEFAULT NULL,
   `prenom` varchar(50) DEFAULT NULL,
   `mail` varchar(70) DEFAULT NULL,
+  `motDePasse` varchar(25) NOT NULL,
   `mobile` varchar(15) DEFAULT NULL,
   `adresse` varchar(50) DEFAULT NULL,
   `code_postal` varchar(10) DEFAULT NULL,
@@ -183,14 +217,21 @@ CREATE TABLE `utilisateur` (
 -- Contenu de la table `utilisateur`
 --
 
-INSERT INTO `utilisateur` (`id_utilisateur`, `id_type_utilisateur`, `id_hotel`, `nom`, `prenom`, `mail`, `mobile`, `adresse`, `code_postal`, `ville`, `point_bonus`) VALUES
-(1, 1, NULL, 'LIM', 'Sindy', 'sindy.lim91@gmail.com', '0635267495', '100 rue des tests', '75015', 'Paris', 0),
-(2, 2, NULL, 'HAKANJIN', 'Romeo', 'romeo.hakanjin96@gmail.com', '0635987465', '12 allee des test', '95800', 'CERGY', 0),
-(3, 3, NULL, 'DIAGNE', 'Massamba', 'massdinho10@gmail.com', '0745873695', '3 avenue de test', '93600', 'AUNAY-SOUS-BOIS', 0);
+INSERT INTO `utilisateur` (`id_utilisateur`, `id_type_utilisateur`, `id_hotel`, `nom`, `prenom`, `mail`, `motDePasse`, `mobile`, `adresse`, `code_postal`, `ville`, `point_bonus`) VALUES
+(1, 1, NULL, 'LIM', 'Sindy', 'sindy.lim91@gmail.com', 'test01', '0635267495', '100 rue des tests', '75015', 'Paris', 0),
+(2, 2, NULL, 'HAKANJIN', 'Romeo', 'romeo.hakanjin96@gmail.com', 'test02', '0635987465', '12 allee des test', '95800', 'CERGY', 0),
+(3, 3, NULL, 'DIAGNE', 'Massamba', 'massdinho10@gmail.com', 'test03', '0745873695', '3 avenue de test', '93600', 'AUNAY-SOUS-BOIS', 0);
 
 --
 -- Index pour les tables exportées
 --
+
+--
+-- Index pour la table `activite_externe`
+--
+ALTER TABLE `activite_externe`
+  ADD PRIMARY KEY (`id_activite`),
+  ADD KEY `id_type` (`id_type_activite`);
 
 --
 -- Index pour la table `annonce`
@@ -243,6 +284,12 @@ ALTER TABLE `statut_reservation`
   ADD PRIMARY KEY (`id_statut_reservation`);
 
 --
+-- Index pour la table `type_activite`
+--
+ALTER TABLE `type_activite`
+  ADD PRIMARY KEY (`id_type_activite`);
+
+--
 -- Index pour la table `type_utilisateur`
 --
 ALTER TABLE `type_utilisateur`
@@ -260,6 +307,11 @@ ALTER TABLE `utilisateur`
 -- AUTO_INCREMENT pour les tables exportées
 --
 
+--
+-- AUTO_INCREMENT pour la table `activite_externe`
+--
+ALTER TABLE `activite_externe`
+  MODIFY `id_activite` int(10) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `annonce`
 --
@@ -279,7 +331,7 @@ ALTER TABLE `etat_reservation`
 -- AUTO_INCREMENT pour la table `hotel`
 --
 ALTER TABLE `hotel`
-  MODIFY `id_hotel` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_hotel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT pour la table `paiement`
 --
@@ -296,6 +348,11 @@ ALTER TABLE `reservation`
 ALTER TABLE `statut_reservation`
   MODIFY `id_statut_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
+-- AUTO_INCREMENT pour la table `type_activite`
+--
+ALTER TABLE `type_activite`
+  MODIFY `id_type_activite` int(10) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT pour la table `type_utilisateur`
 --
 ALTER TABLE `type_utilisateur`
@@ -304,10 +361,16 @@ ALTER TABLE `type_utilisateur`
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- Contraintes pour les tables exportées
 --
+
+--
+-- Contraintes pour la table `activite_externe`
+--
+ALTER TABLE `activite_externe`
+  ADD CONSTRAINT `activite_externe_ibfk_1` FOREIGN KEY (`id_type_activite`) REFERENCES `type_activite` (`id_type_activite`);
 
 --
 -- Contraintes pour la table `annonce`
