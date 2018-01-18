@@ -27,8 +27,14 @@
 				<!-- Nav -->
 				<nav id="nav">
 					<ul>
+						<% 	if (session.getAttribute("login") != null){%>
+								<li><a href="Deconnexion">Déconnexion</a></li>
+						<% } else{
+							%> 	<li><a href="Connexion.jsp">Connexion</a></li> <%
+						}
+						%>
 						<li class="current"><a href="index.jsp">Accueil</a></li>
-						<li><a href="Connexion.jsp">Connexion</a></li>
+						
 						<li><a href="Inscription.jsp">Inscription</a></li>
 					</ul>
 				</nav>

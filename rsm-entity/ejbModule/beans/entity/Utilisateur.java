@@ -22,6 +22,7 @@ public class Utilisateur implements Serializable {
 	private String nom;
 	private String prenom;
 	private String mail;
+	private String motDePasse;
 	private String mobile;
 	private String adresse;
 	private String code_postal;
@@ -76,6 +77,14 @@ public class Utilisateur implements Serializable {
 
 	public void setMail(String mail) {
 		this.mail = mail;
+	}
+
+	public String getMotDePasse() {
+		return motDePasse;
+	}
+
+	public void setMotDePasse(String motDePasse) {
+		this.motDePasse = motDePasse;
 	}
 
 	public String getMobile() {

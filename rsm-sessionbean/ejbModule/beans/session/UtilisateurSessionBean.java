@@ -17,6 +17,7 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
+import beans.entity.Hotel;
 import beans.entity.Utilisateur;
 
 /**
@@ -35,6 +36,7 @@ public class UtilisateurSessionBean {
 
 	/**
 	 * Créer un utilisateur
+	 * 
 	 * @param libelle
 	 * @return
 	 */
@@ -53,12 +55,94 @@ public class UtilisateurSessionBean {
 
 	/**
 	 * Récupère tous les utilisateurs
+	 * 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Utilisateur> getAllUtilisateur(){
+	public List<Utilisateur> getAllUtilisateur() {
 		String queryString = "FROM Utilisateur";
 		Query query = entityManager.createQuery(queryString);
 		return (List<Utilisateur>) query.getResultList();
+	}
+
+	/**
+	 * Vérifie les identifiants de la connexion d'un utilisateur
+	 * 
+	 * @param mail
+	 *            :
+	 * @param motDePasse
+	 *            :
+	 * 
+	 * @return boolean :
+	 */
+	public boolean isIdentificationValid(String mail, String motDePasse) {
+		boolean isIdentificationValid = false;
+
+		String query = "SELECT u.mail FROM Utilisateur u WHERE mail = '" + mail + "' AND motDePasse='" + motDePasse
+				+ "'";
+		Query query2 = entityManager.createQuery(query);
+
+		List listUser = query2.getResultList();
+
+		if (listUser.size() != 0) {
+			isIdentificationValid = true;
+		}
+
+		return isIdentificationValid;
+	}
+
+	/**
+	 * Vérifie l'email d'un utilisateur
+	 * 
+	 * @param mail
+	 *            :
+	 * 
+	 * @return boolean :
+	 */
+	public boolean isExitingUser(String mail) {
+		boolean isExitingUser = false;
+
+		String query = "SELECT u.mail FROM Utilisateur u WHERE mail = '" + mail + "'";
+		Query query2 = entityManager.createQuery(query);
+
+		List listUser = query2.getResultList();
+
+		if (listUser.size() != 0) {
+			isExitingUser = true;
+		}
+
+		return isExitingUser;
+	}
+	
+	/**
+	 * Check if the hotel already exist
+	 * @param nomHotel
+	 */
+	public boolean checkExistingHotel(String nomHotel) {
+		boolean isExistingHotel = false;
+
+		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '"+nomHotel+"'";
+		Query query2 = entityManager.createQuery(query);
+
+		List listHotel = query2.getResultList();
+
+		if (listHotel.size() != 0) {
+			isExistingHotel = true;
+		}
+
+		return isExistingHotel;
+	}
+
+	public int getIdHotel(String nomHotel) {
+		int idHotel = 0;
+		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '"+nomHotel+"'";
+		Query query2 = entityManager.createQuery(query);
+
+		List listHotel = query2.getResultList();
+		
+		for (int i = 0; i < listHotel.size(); i++) {
+			idHotel = (int) listHotel.get(i);
+ 		}
+		return idHotel;
 	}
 }

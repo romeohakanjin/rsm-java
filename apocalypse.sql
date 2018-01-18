@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.4
--- https://www.phpmyadmin.net/
+-- version 4.5.1
+-- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 15 Janvier 2018 à 20:11
--- Version du serveur :  5.7.14
--- Version de PHP :  5.6.25
+-- Généré le :  Jeu 18 Janvier 2018 à 22:50
+-- Version du serveur :  10.1.16-MariaDB
+-- Version de PHP :  7.0.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -210,7 +210,7 @@ CREATE TABLE `utilisateur` (
   `adresse` varchar(50) DEFAULT NULL,
   `code_postal` varchar(10) DEFAULT NULL,
   `ville` varchar(50) DEFAULT NULL,
-  `point_bonus` int(100) DEFAULT NULL
+  `point_bonus` int(100) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
