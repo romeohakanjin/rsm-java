@@ -145,4 +145,34 @@ public class UtilisateurSessionBean {
  		}
 		return idHotel;
 	}
+
+	public int createHotel(String nomHotel, String adresseHotel, String codePostalHotel, String villeHotel) {
+		int idHotel = 0;
+		
+		Hotel hotel = new Hotel();
+		hotel.setNom(nomHotel);
+		hotel.setAdresse(adresseHotel);
+		hotel.setCode_postal(codePostalHotel);
+		hotel.setVille(villeHotel);
+		
+		try {
+			userTransaction.begin();
+			entityManager.persist(hotel);
+			userTransaction.commit();
+		} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+			e.printStackTrace();
+		}
+		
+		
+		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '"+nomHotel+"'";
+		Query query2 = entityManager.createQuery(query);
+
+		List listInfoHotel = query2.getResultList();
+		
+		for (int i = 0; i < listInfoHotel.size(); i++) {
+			idHotel = (int) listInfoHotel.get(i);
+ 		}
+		
+		return idHotel;
+	}
 }

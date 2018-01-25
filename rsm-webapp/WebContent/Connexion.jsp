@@ -20,16 +20,21 @@
 				<!-- Logo -->
 				<div id="logo">
 					<h1>
-						<a href="index.html">RSM</a>
+						<a href="Home.jsp">RSM</a>
 					</h1>
 				</div>
 
 				<!-- Nav -->
 				<nav id="nav">
 					<ul>
-						<li><a href="index.jsp">Accueil</a></li>
-						<li class="current"><a href="Connexion.jsp">Connexion</a></li>
-						<li><a href="Inscription.jsp">Inscription</a></li>
+						<li><a href="Home.jsp">Accueil</a></li>
+						<% 	if (session.getAttribute("login") != null){%>
+								<li><a href="Deconnection">Déconnexion</a></li>
+						<% } else{
+							%> 	<li class="current"><a href="Connexion.jsp">Connexion</a></li>
+							 	<li><a href="Inscription.jsp">Inscription</a></li> <%
+						}
+						%>
 					</ul>
 				</nav>
 
@@ -40,8 +45,12 @@
 		<div id="main-wrapper">
 			<div class="container">
 				<div id="content">
+					<% 	if (request.getAttribute("error-form-connection") != null){%>
+								<p class="error-form"> <%= request.getAttribute("error-form-connection") %></p>
+						<% }
+					%>
 					<h2>Connexion</h2>
-					<form method='get' action='Connexion'>
+					<form method='get' action='Connection'>
 						<label>Identifiant</label> <input type='text' name='identifiant' />
 						<label>Mot de passe</label> <input type='text' name='motDePasse' />
 						<input type='submit' name='submit' value="submit">

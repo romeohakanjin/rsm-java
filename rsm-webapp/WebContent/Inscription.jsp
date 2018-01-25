@@ -20,16 +20,21 @@
 				<!-- Logo -->
 				<div id="logo">
 					<h1>
-						<a href="index.html">RSM</a>
+						<a href="Home.jsp">RSM</a>
 					</h1>
 				</div>
 
 				<!-- Nav -->
 				<nav id="nav">
 					<ul>
-						<li><a href="index.jsp">Accueil</a></li>
-						<li><a href="Connexion.jsp">Connexion</a></li>
-						<li class="current"><a href="Inscription.jsp">Inscription</a></li>
+						<li><a href="Home.jsp">Accueil</a></li>
+						<% 	if (session.getAttribute("login") != null){%>
+								<li><a href="Deconnection">Déconnexion</a></li>
+						<% } else{
+							%> 	<li><a href="Connexion.jsp">Connexion</a></li>
+							 	<li class="current"><a href="Inscription.jsp">Inscription</a></li> <%
+						}
+						%>
 					</ul>
 				</nav>
 
@@ -41,21 +46,48 @@
 		<div id="main-wrapper">
 			<div class="container">
 				<div id="content">
+					<% 	if (request.getAttribute("error-form-inscription") != null){%>
+								<p class="error-form"> <%= request.getAttribute("error-form-inscription") %> </p>
+						<% }
+					%>
 					<h2>Inscription</h2>
 					<form method='get' action='Inscription'>
 						<select name='selectTypeUtilisateur'>
 							<option value="utilisateur">Utilisateur</option>
-							<option value="hotelier">HÃ´telier</option>
+							<option value="hotelier">Hôtelier</option>
 						</select> <label>Identifiant</label> <input type='text' name='identifiant' />
+						
 						<label>Mot de passe</label> <input type='text' name='motDePasse' />
 						<label>Nom</label> <input type='text' name='nom' /> <label>Prenom</label>
-						<input type='text' name='prenom' /> <label>TÃ©lÃ©phone</label> <input
-							type='text' name='telephone' /> <label>Adresse</label> <input
-							type='text' name='adresse' /> <label>Code postal</label> <input
-							type='text' name='codePostal' /> <label>Ville</label> <input
-							type='text' name='ville' /> <label>Nom hÃ´tel</label> <input
-							type='text' name='nomHotel' /> <input type='submit' name='submit'
-							value="submit">
+						
+						<input type='text' name='prenom' />
+						<label>Téléphone</label>
+						
+						<input type='text' name='telephone' />
+						<label>Adresse</label>
+						
+						<input type='text' name='adresse' />
+						<label>Code postal</label>
+						
+						<input type='text' name='codePostal' />
+						<label>Ville</label> <input type='text' name='ville' />
+						
+						<select name='selectionHotel'>
+							<option value="hotel">Hôtel existant</option>
+							<option value="addHotel">Ajouter hôtel</option>
+						</select>
+						
+						<label>Nom hôtel</label>
+						<input type='text' name='nomHotel' />
+												
+						<label>Adresse hôtel</label>
+						<input type='text' name='adresseHotel' />
+						<label>Code postal</label>
+						<input type='text' name='codePostalHotel' />
+						<label>Ville</label>
+						<input type='text' name='villeHotel' />
+												
+						<input type='submit' name='submit' value="submit">
 					</form>
 				</div>
 			</div>
