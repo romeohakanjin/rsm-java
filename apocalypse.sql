@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Jeu 18 Janvier 2018 à 22:50
+-- Généré le :  Mar 30 Janvier 2018 à 21:46
 -- Version du serveur :  10.1.16-MariaDB
 -- Version de PHP :  7.0.9
 
@@ -66,7 +66,8 @@ CREATE TABLE `commentaire` (
   `id_commentaire` int(11) NOT NULL,
   `id_reservation` int(11) NOT NULL,
   `id_utilisateur` int(11) NOT NULL,
-  `commentaire` varchar(1000) NOT NULL
+  `commentaire` varchar(1000) NOT NULL,
+  `signaler` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -110,7 +111,11 @@ CREATE TABLE `hotel` (
 
 INSERT INTO `hotel` (`id_hotel`, `nom`, `adresse`, `code_postal`, `ville`) VALUES
 (1, 'test1', '556 villa 5', '75013', 'Paris'),
-(2, 'Hotel 1', '100 rue des brebis', '75015', 'Paris');
+(2, 'Hotel 1', '100 rue des brebis', '75015', 'Paris'),
+(7, 'vatec', '', '', ''),
+(8, 'popo', '', '', ''),
+(9, 'lm', 'lm', 'lm', 'lm'),
+(10, 'ko', 'ko', 'ko', 'ko');
 
 -- --------------------------------------------------------
 
@@ -210,7 +215,7 @@ CREATE TABLE `utilisateur` (
   `adresse` varchar(50) DEFAULT NULL,
   `code_postal` varchar(10) DEFAULT NULL,
   `ville` varchar(50) DEFAULT NULL,
-  `point_bonus` int(100) DEFAULT '0'
+  `point_bonus` int(100) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -220,7 +225,11 @@ CREATE TABLE `utilisateur` (
 INSERT INTO `utilisateur` (`id_utilisateur`, `id_type_utilisateur`, `id_hotel`, `nom`, `prenom`, `mail`, `motDePasse`, `mobile`, `adresse`, `code_postal`, `ville`, `point_bonus`) VALUES
 (1, 1, NULL, 'LIM', 'Sindy', 'sindy.lim91@gmail.com', 'test01', '0635267495', '100 rue des tests', '75015', 'Paris', 0),
 (2, 2, NULL, 'HAKANJIN', 'Romeo', 'romeo.hakanjin96@gmail.com', 'test02', '0635987465', '12 allee des test', '95800', 'CERGY', 0),
-(3, 3, NULL, 'DIAGNE', 'Massamba', 'massdinho10@gmail.com', 'test03', '0745873695', '3 avenue de test', '93600', 'AUNAY-SOUS-BOIS', 0);
+(3, 3, NULL, 'DIAGNE', 'Massamba', 'massdinho10@gmail.com', 'test03', '0745873695', '3 avenue de test', '93600', 'AUNAY-SOUS-BOIS', 0),
+(24, 2, NULL, 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 0),
+(25, 2, NULL, 'lp', 'lp', 'lp', 'lp', 'pl', 'pl', 'pl', 'lp', 0),
+(26, 2, 1, 'lplpl', 'plplpl', 'lpllp', 'plplp', 'plplp', 'lplpl', 'plplpl', 'plplpl', 0),
+(27, NULL, NULL, 'dddd', 'dddd', 'ddddd', 'dddd', 'ddddd', 'ddddd', 'dddd', 'ddd', 0);
 
 --
 -- Index pour les tables exportées
@@ -321,7 +330,7 @@ ALTER TABLE `annonce`
 -- AUTO_INCREMENT pour la table `commentaire`
 --
 ALTER TABLE `commentaire`
-  MODIFY `id_commentaire` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_commentaire` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT pour la table `etat_reservation`
 --
@@ -331,7 +340,7 @@ ALTER TABLE `etat_reservation`
 -- AUTO_INCREMENT pour la table `hotel`
 --
 ALTER TABLE `hotel`
-  MODIFY `id_hotel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_hotel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT pour la table `paiement`
 --
@@ -361,7 +370,7 @@ ALTER TABLE `type_utilisateur`
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 --
 -- Contraintes pour les tables exportées
 --
