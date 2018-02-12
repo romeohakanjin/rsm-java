@@ -113,15 +113,16 @@ public class UtilisateurSessionBean {
 
 		return isExitingUser;
 	}
-	
+
 	/**
 	 * Check if the hotel already exist
+	 * 
 	 * @param nomHotel
 	 */
 	public boolean checkExistingHotel(String nomHotel) {
 		boolean isExistingHotel = false;
 
-		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '"+nomHotel+"'";
+		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '" + nomHotel + "'";
 		Query query2 = entityManager.createQuery(query);
 
 		List listHotel = query2.getResultList();
@@ -135,44 +136,65 @@ public class UtilisateurSessionBean {
 
 	public int getIdHotel(String nomHotel) {
 		int idHotel = 0;
-		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '"+nomHotel+"'";
+		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '" + nomHotel + "'";
 		Query query2 = entityManager.createQuery(query);
 
 		List listHotel = query2.getResultList();
-		
+
 		for (int i = 0; i < listHotel.size(); i++) {
 			idHotel = (int) listHotel.get(i);
- 		}
+		}
 		return idHotel;
 	}
 
 	public int createHotel(String nomHotel, String adresseHotel, String codePostalHotel, String villeHotel) {
 		int idHotel = 0;
-		
+
 		Hotel hotel = new Hotel();
 		hotel.setNom(nomHotel);
 		hotel.setAdresse(adresseHotel);
 		hotel.setCode_postal(codePostalHotel);
 		hotel.setVille(villeHotel);
-		
+
 		try {
 			userTransaction.begin();
 			entityManager.persist(hotel);
 			userTransaction.commit();
-		} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+		} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException e) {
 			e.printStackTrace();
 		}
-		
-		
-		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '"+nomHotel+"'";
+
+		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '" + nomHotel + "'";
 		Query query2 = entityManager.createQuery(query);
 
 		List listInfoHotel = query2.getResultList();
-		
+
 		for (int i = 0; i < listInfoHotel.size(); i++) {
 			idHotel = (int) listInfoHotel.get(i);
- 		}
-		
+		}
+
 		return idHotel;
+	}
+	
+	/**
+	 * Get the id_type_utilisateur from a user
+	 * @param identifiant
+	 * @param motDePasse
+	 * @return
+	 */
+	public int getIdTypeUtilisateur(String identifiant, String motDePasse) {
+		int idTypeUtilisateur = 3;
+		String query = "SELECT u.id_type_utilisateur FROM Utilisateur u WHERE mail = '" + identifiant + "' AND motDePasse='" + motDePasse
+				+ "'";
+		Query query2 = entityManager.createQuery(query);
+
+		List listUser = query2.getResultList();
+
+		for (int i = 0; i < listUser.size(); i++) {
+			idTypeUtilisateur = (int) listUser.get(i);
+		}
+
+		return idTypeUtilisateur;
 	}
 }

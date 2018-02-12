@@ -1,8 +1,15 @@
 <div id="main-wrapper">
 	<div class="container">
 		<div id="content">
+			<%
+				if (request.getAttribute("error-form-connection") != null) {
+			%>
+					<p class="error-form"><%= request.getAttribute("error-form-connection") %></p>
+			<%
+				}
+			%>
 			<h2>Connexion</h2>
-			<form method='get' action='Connexion'>
+			<form method='get' action='Connection'>
 				<label>Identifiant</label>
 				<input type='text' name='identifiant'/>
 				<label>Mot de passe</label>

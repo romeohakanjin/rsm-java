@@ -17,6 +17,7 @@ public class Commentaire {
 	private Integer id_reservation;
 	private Integer id_utilisateur;
 	private String commentaire;
+	private boolean signaler;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,4 +52,13 @@ public class Commentaire {
 	public void setCommentaire(String commentaire) {
 		this.commentaire = commentaire;
 	}
+
+	public boolean isSignaler() {
+		return signaler;
+	}
+
+	public void setSignaler(boolean signaler) {
+		this.signaler = signaler;
+	}
+
 }

@@ -19,8 +19,11 @@ import beans.session.UtilisateurSessionBean;
 @WebServlet("/Connection")
 public class Connection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String HOME_PAGE = "Home";
+	private static final String HOME_PAGE = "Template";
 	private static final String CONNECTION_PAGE = "Connexion";
+	private static final int ID_TYPE_UTILISATEUR_STANDARD = 3;
+	private static final int ID_TYPE_UTILISATEUR_HOTELIER = 2;
+	private static final int ID_TYPE_UTILISATEUR_ADMIN = 1;
 	private String identifiant;
 	private String motDePasse;
 	private HttpServletRequest request;
@@ -38,6 +41,22 @@ public class Connection extends HttpServlet {
 		if (isOkForm) {
 			boolean existingUser = utilisateurSessionBean.isIdentificationValid(identifiant, motDePasse);
 			if (existingUser) {
+				int id_type_utilisateur = utilisateurSessionBean.getIdTypeUtilisateur(identifiant, motDePasse);
+
+				switch (id_type_utilisateur) {
+				case ID_TYPE_UTILISATEUR_ADMIN:
+					session.setAttribute("session-admin", "admin");
+					break;
+				case ID_TYPE_UTILISATEUR_HOTELIER:
+					session.setAttribute("session-hotelier", "hotelier");
+					break;
+				case ID_TYPE_UTILISATEUR_STANDARD:
+					session.setAttribute("session-standard", "standard");
+					break;
+				default:
+					break;
+				}
+
 				request.removeAttribute("error-form-connection");
 				httpSession(identifiant, motDePasse);
 				redirectionToView(HOME_PAGE);

@@ -21,16 +21,13 @@ function setCurrentPage(page){
 function redirect(){
 	var currentPage = $("li.current").attr("id");
 	switch(currentPage){
-		case "home":
-			$("div.content").load("Home.jsp");
+		case "hotelier-chambre":
+			$("div.content").load("HotelierChambre.jsp");
 		break;
-		case "connexion":
-			$("div.content").load("Connexion.jsp");
-		break;
-		case "inscription":
-			$("div.content").load("Inscription.jsp");
+		case "hotelier-annonce":
+			$("div.content").load("HotelierAnnonce.jsp");
 		break;
 		default:
-			$("div.content").load("Home.jsp");
+			$("div.content").load("HotelierBord.jsp");
 	}
 }

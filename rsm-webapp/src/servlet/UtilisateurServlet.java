@@ -77,6 +77,8 @@ public class UtilisateurServlet extends HttpServlet {
 				} else {
 					out.print("L'utilisateur n'a pas pu être créé <br>");
 				}
+			} else {
+				
 			}
 		}
 	}

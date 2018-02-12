@@ -1,4 +1,5 @@
 <jsp:directive.page contentType="text/html;charset=UTF-8" />
+<%@ page import="beans.entity.Annonce" %>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -16,24 +17,12 @@
 			<header id="header" class="container">
 				<div id="logo">
 					<h1>
-						<a href="javascript:setCurrentPage('home');">RSM</a>
+						<a href="Template.jsp">RSM</a>
 					</h1>
 				</div>
 				<nav id="nav">
 					<ul>
-						<li id="home" class="current"><a
-							href="javascript:setCurrentPage('home');">Accueil</a></li>
-
-						<%
-							if (session.getAttribute("session-admin") != null) {
-						%>
-						<li id="gestionAdmin"><a
-							href="javascript:setCurrentPage('gestionAdmin');">Gestion
-								Admin</a></li>
-						<%
-							}
-						%>
-
+						<li class="current"><a href="Template.jsp">Accueil</a></li>
 						<%
 							if (session.getAttribute("session-hotelier") != null) {
 						%>
@@ -42,32 +31,85 @@
 						<%
 							}
 						%>
-
-						<%
-							if (session.getAttribute("login") != null) {
-						%>
+						<% 	if (session.getAttribute("login") != null){%>
 						<li id="deconnexion"><a href="Deconnection">Déconnexion</a></li>
-						<%
-							} else {
-						%>
-						<li id="connexion"><a
-							href="javascript:setCurrentPage('connexion');">Connexion</a></li>
-						<li id="inscription"><a
-							href="javascript:setCurrentPage('inscription');">Inscription</a></li>
-						<%
-							}
-						%>
+						<% } %>
 					</ul>
 				</nav>
 			</header>
 		</div>
-
-		<!-- Contenu partiel -->
-		<div class="content">
-			
 		
+		
+			<!-- Gestion hotelier -->
+			<%
+				if (session.getAttribute("session-hotelier") != null) {
+			%>
+			<nav id="nav">
+				<ul>
+					<li><a
+						href="HotelierAnnonceListServlet">Annonce</a></li>
+					<li id="hotelier-chambre"><a
+						href="javascript:setCurrentPage('hotelier-chambre');">Chambre</a></li>
+				</ul>
+			</nav>
+			<%
+				}
+			%>
+			<!-- Contenu partiel -->
+		<div class="content">
+		
+			<div id="main-wrapper">
+				<div class="container">
+					<div id="content">
+						<%
+							if (request.getAttribute("error-hotelier-annonce-form") != null) {
+						%>
+								<p class="error-form"><%= request.getAttribute("error-hotelier-annonce-form") %></p>
+						<%
+							}
+						%>
+						<h2>Annnonce hotelier</h2>
+
+						<%
+							if (request.getAttribute("annonceEdited") != null) {
+								Annonce annonce = (Annonce) request.getAttribute("annonceEdited");
+ 								session.setAttribute("sessionAnnonceId", annonce.getId_annonce());
+						%>
+								<!-- if the user modify a annnonce -->
+								<form method='get' action='HotelierAnnonceServlet'>
+									<label>Titre</label>
+									<input type='text' name='titre' value="<%= annonce.getTitre() %>" required />
+									<label>Description</label>
+									<textarea rows="10" cols="50" name="description" maxlength="1000" required><%= annonce.getDescription() %></textarea>
+									<label>Capacite maximum</label>
+									<input type='text' name='capaciteMax' value="<%= annonce.getCapacite_max() %>" required />
+									
+									<input type='submit' name='submitButtonHotelierForm' value="Modifier">
+								</form>
+								<%
+									} else {
+								%>	<!-- if the user dosn't modify a annnonce -->
+									<form method='get' action='HotelierAnnonceServlet'>
+									<label>Titre</label>
+									<input type='text' name='titre' required />
+									<label>Description</label>
+									<textarea rows="10" cols="50" name="description" maxlength="1000" required>
+									</textarea>
+									<label>Capacite maximum</label>
+									<input type='text' name='capaciteMax' required />
+									
+									<input type='submit' name='submitButtonHotelierForm' value="Ajouter">
+								</form>
+								<%
+									}
+								%>
+					
+					</div>
+				</div>
+			</div>
 					
 		</div>
+		
 		<div id="footer-wrapper">
 			<footer id="footer" class="container">
 				<div class="row">
@@ -150,7 +192,7 @@
 	<script src="js/skel.min.js"></script>
 	<script src="js/util.js"></script>
 	<script src="js/main.js"></script>
-	<script src="js/template.js"></script>
+	<!-- <script src="js/templateHotelier.js"></script> -->
 
 </body>
 </html>
