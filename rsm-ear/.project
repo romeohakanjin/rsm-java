@@ -3,9 +3,9 @@
 	<name>rsm-projet-EAR</name>
 	<comment></comment>
 	<projects>
-		<project>rsm-projet-entity</project>
-		<project>rsm-projet-webapp</project>
 		<project>rsm-projet-sessionbean</project>
+		<project>rsm-projet-webapp</project>
+		<project>rsm-projet-entity</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
