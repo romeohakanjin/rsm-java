@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Mar 30 Janvier 2018 à 21:46
+-- Généré le :  Jeu 15 Février 2018 à 21:21
 -- Version du serveur :  10.1.16-MariaDB
 -- Version de PHP :  7.0.9
 
@@ -46,15 +46,18 @@ CREATE TABLE `annonce` (
   `titre` varchar(50) DEFAULT NULL,
   `description` varchar(1000) DEFAULT NULL,
   `capacite_max` int(10) DEFAULT NULL,
-  `date_creation` datetime DEFAULT NULL
+  `date_creation` datetime DEFAULT NULL,
+  `actif` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `annonce`
 --
 
-INSERT INTO `annonce` (`id_annonce`, `id_utilisateur`, `titre`, `description`, `capacite_max`, `date_creation`) VALUES
-(1, 1, 'test', 'testDescription', 666, '2018-01-01 00:00:00');
+INSERT INTO `annonce` (`id_annonce`, `id_utilisateur`, `titre`, `description`, `capacite_max`, `date_creation`, `actif`) VALUES
+(1, 1, 'test1', 'testDescription1', 666, '2018-01-01 00:00:00', 1),
+(15, 2, 'dd1', '515									', 5515, '2018-02-11 18:06:21', 1),
+(20, 2, 'raspouti', 'grasti									', 6024516, '2018-02-13 06:57:51', 1);
 
 -- --------------------------------------------------------
 
@@ -69,6 +72,16 @@ CREATE TABLE `commentaire` (
   `commentaire` varchar(1000) NOT NULL,
   `signaler` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `commentaire`
+--
+
+INSERT INTO `commentaire` (`id_commentaire`, `id_reservation`, `id_utilisateur`, `commentaire`, `signaler`) VALUES
+(1, 1, 24, 'Gonnier', 0),
+(2, 2, 2, 'razk', 0),
+(3, 3, 2, 'pourrish', 1),
+(4, 3, 3, 'kokonut', 0);
 
 -- --------------------------------------------------------
 
@@ -145,6 +158,15 @@ CREATE TABLE `reservation` (
   `id_statut_reservation` int(10) NOT NULL,
   `id_etat_reservation` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `reservation`
+--
+
+INSERT INTO `reservation` (`id_reservation`, `id_annonce`, `id_utilisateur`, `prix`, `capacite_max`, `date_sejour`, `id_statut_reservation`, `id_etat_reservation`) VALUES
+(1, 1, 1, 5654, 3, '2018-02-08 00:00:00', 2, 2),
+(2, 15, 2, 12644, 789, '2018-02-12 00:00:00', 1, 3),
+(3, 15, 2, 4596, 14, '2018-02-09 00:00:00', 3, 1);
 
 -- --------------------------------------------------------
 
@@ -224,12 +246,11 @@ CREATE TABLE `utilisateur` (
 
 INSERT INTO `utilisateur` (`id_utilisateur`, `id_type_utilisateur`, `id_hotel`, `nom`, `prenom`, `mail`, `motDePasse`, `mobile`, `adresse`, `code_postal`, `ville`, `point_bonus`) VALUES
 (1, 1, NULL, 'LIM', 'Sindy', 'sindy.lim91@gmail.com', 'test01', '0635267495', '100 rue des tests', '75015', 'Paris', 0),
-(2, 2, NULL, 'HAKANJIN', 'Romeo', 'romeo.hakanjin96@gmail.com', 'test02', '0635987465', '12 allee des test', '95800', 'CERGY', 0),
+(2, 2, NULL, 'HAKANJIN', 'Romeo', 'hakanjin.romeo96@gmail.com', 'test02', '0635987465', '12 allee des test', '95800', 'CERGY', 0),
 (3, 3, NULL, 'DIAGNE', 'Massamba', 'massdinho10@gmail.com', 'test03', '0745873695', '3 avenue de test', '93600', 'AUNAY-SOUS-BOIS', 0),
 (24, 2, NULL, 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 0),
 (25, 2, NULL, 'lp', 'lp', 'lp', 'lp', 'pl', 'pl', 'pl', 'lp', 0),
-(26, 2, 1, 'lplpl', 'plplpl', 'lpllp', 'plplp', 'plplp', 'lplpl', 'plplpl', 'plplpl', 0),
-(27, NULL, NULL, 'dddd', 'dddd', 'ddddd', 'dddd', 'ddddd', 'ddddd', 'dddd', 'ddd', 0);
+(26, 2, 1, 'lplpl', 'plplpl', 'lpllp', 'plplp', 'plplp', 'lplpl', 'plplpl', 'plplpl', 0);
 
 --
 -- Index pour les tables exportées
@@ -325,12 +346,12 @@ ALTER TABLE `activite_externe`
 -- AUTO_INCREMENT pour la table `annonce`
 --
 ALTER TABLE `annonce`
-  MODIFY `id_annonce` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_annonce` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT pour la table `commentaire`
 --
 ALTER TABLE `commentaire`
-  MODIFY `id_commentaire` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_commentaire` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT pour la table `etat_reservation`
 --
@@ -350,7 +371,7 @@ ALTER TABLE `paiement`
 -- AUTO_INCREMENT pour la table `reservation`
 --
 ALTER TABLE `reservation`
-  MODIFY `id_reservation` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT pour la table `statut_reservation`
 --
@@ -370,7 +391,7 @@ ALTER TABLE `type_utilisateur`
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 --
 -- Contraintes pour les tables exportées
 --
