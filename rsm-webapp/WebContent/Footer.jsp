@@ -1,63 +1,4 @@
-<jsp:directive.page contentType="text/html;charset=UTF-8" />
-<!DOCTYPE HTML>
-<html>
-<head>
-<title>HomePage</title>
-<meta http-equiv="Content-Type" content="text/html">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="css/main.css" />
-<link rel="stylesheet" href="css/style.css" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-</head>
-<body class="homepage">
-	<div id="page-wrapper">
-		<div id="header-wrapper">
-			<header id="header" class="container">
-				<div id="logo">
-					<h1>
-						<a href="Template.jsp">RSM</a>
-					</h1>
-				</div>
-				<nav id="nav">
-					<ul>
-						<li class="current"><a href="Template.jsp">Accueil</a></li>
-						<%
-							if (session.getAttribute("session-hotelier") != null) {
-						%>
-						<li><a
-							href="TemplateHotelier.jsp">Gestion Hotelier</a></li>
-						<%
-							}
-						%>
-						<% 	if (session.getAttribute("login") != null){%>
-						<li id="deconnexion"><a href="Deconnection">Déconnexion</a></li>
-						<% } %>
-					</ul>
-				</nav>
-			</header>
 		</div>
-		
-		
-			<!-- Gestion hotelier -->
-			<%
-				if (session.getAttribute("session-hotelier") != null) {
-			%>
-			<nav id="nav">
-				<ul>
-					<li><a
-						href="HotelierAnnonceListServlet">Annonce</a></li>
-					<li id="hotelier-chambre"><a
-						href="javascript:setCurrentPage('hotelier-chambre');">Chambre</a></li>
-				</ul>
-			</nav>
-			<%
-				}
-			%>
-			<!-- Contenu partiel -->
-		<div class="content">
-		</div>
-		
 		<div id="footer-wrapper">
 			<footer id="footer" class="container">
 				<div class="row">
@@ -140,7 +81,6 @@
 	<script src="js/skel.min.js"></script>
 	<script src="js/util.js"></script>
 	<script src="js/main.js"></script>
-	<script src="js/templateHotelier.js"></script>
 
 </body>
 </html>

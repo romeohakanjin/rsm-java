@@ -63,6 +63,7 @@ public class CommentaireServlet extends HttpServlet {
 		this.request = request;
 		this.response = response;
 		out = response.getWriter();
+		
 		response.setContentType("text/html");
 	}
 	

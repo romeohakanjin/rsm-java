@@ -50,21 +50,18 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		this.response = response;
 
 		initialiser();
-		
-		//Ajouter ou modifier une annonce
-		if (this.parametreAnnonce.equals(PARAMETER_ACTION_EDIT_ANNONCE)) {
-			System.out.println("boui");
+
+		// Ajouter ou modifier une annonce
+		/*if (this.parametreAnnonce.equals(PARAMETER_ACTION_EDIT_ANNONCE)) {
 			ajouterAnnonceModifierActionPerformed();
-			
-		} else if(this.parametreAnnonce.equals(PARAMETER_ACTION_ADD)) {
-			System.out.println("boollll");
+
+		} else if (this.parametreAnnonce.equals(PARAMETER_ACTION_ADD)) {
 			ajouterAnnonceActionPerformed();
-		}
-		
-		//Afficher ou supprimer une annonce
+		}*/
+
+		// Afficher ou supprimer une annonce
 		switch (this.parametre) {
 		case PARAMETER_ACTION_ADD:
-			System.out.println("col");
 			ajouterAnnonceActionPerformed();
 			break;
 		case PARAMETER_ACTION_EDIT_ANNONCE:
@@ -81,8 +78,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 			break;
 		}
-		
-		
+
 	}
 
 	/**
@@ -102,7 +98,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 				int idAnnonce = (int) session.getAttribute("sessionAnnonceId");
 				this.session.removeAttribute("sessionAnnonceId");
 				boolean matchingIdUser = annonceSessionBean.isMatchingIdUserAndIdUserAnnonce(id_utilisateur, idAnnonce);
-				
+
 				if (matchingIdUser) {
 					// Récupérer l'id de l'annonce modifié et le set dans annonce
 					Annonce annonce = new Annonce();
@@ -124,7 +120,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 
 	private void ajouterAnnonceActionPerformed() throws ServletException, IOException {
 		final boolean isOkForm = verificationFormulaire();
-
+		
 		if (isOkForm) {
 			dateCreation = new Date(Calendar.getInstance().getTime().getTime());
 			Annonce annonce = new Annonce();
@@ -139,10 +135,11 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			annonceSessionBean.creerAnnonce(annonce);
 
 			request.removeAttribute("error-hotelier-annonce-form");
-
+			System.out.println("gribouti");
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		} else {
 			setVariableToView("error-hotelier-annonce-form", "Informations incorrectes ou manquantes");
+			System.out.println("yata");
 			redirectionToView(ANNONCE_VIEW);
 		}
 	}
@@ -156,12 +153,21 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	private void modifierAnnonceActionPerformed() throws ServletException, IOException {
 		try {
 			int idAnnonce = Integer.valueOf(annonceId);
-			Annonce annonce = annonceSessionBean.getAnnonce(idAnnonce);
+			String identifiant = (String) this.session.getAttribute("login");
+			int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
 
-			request.setAttribute("annonceEdited", annonce);
-			redirectionToView(ANNONCE_VIEW);
+			boolean isMathingId = annonceSessionBean.isMatchingIdUserAndIdUserAnnonce(id_utilisateur, idAnnonce);
+			if (isMathingId) {
+				Annonce annonce = annonceSessionBean.getAnnonce(idAnnonce);
+
+				request.setAttribute("annonceEdited", annonce);
+				redirectionToView(ANNONCE_VIEW);
+			} else {
+				redirectionToServlet(ANNONCE_LISTE_SERVLET);
+			}
+
 		} catch (NumberFormatException exception) {
-			// redirect vers annonce
+			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		}
 	}
 
@@ -230,15 +236,15 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		this.capaciteMax = "";
 		this.annonceId = "";
 		this.parametre = "";
-		
+
 		this.parametre = request.getParameter("action");
 		if (this.parametre == null) {
-			this.parametre = "";
+			this.parametre = request.getParameter("submitButtonHotelierForm");
 		}
-		
-		this.parametreAnnonce = request.getParameter("submitButtonHotelierForm");
-		if (this.parametreAnnonce == null) {
-			this.parametreAnnonce = "";
+
+		this.parametre = request.getParameter("submitButtonHotelierForm");
+		if (this.parametre == null) {
+			this.parametre = request.getParameter("action");
 		}
 
 		this.titre = request.getParameter("titre");

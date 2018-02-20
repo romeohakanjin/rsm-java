@@ -19,8 +19,8 @@ import beans.session.UtilisateurSessionBean;
 @WebServlet("/Connection")
 public class Connection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String HOME_PAGE = "Template";
-	private static final String CONNECTION_PAGE = "Connexion";
+	private static final String HOME_PAGE = "Home";
+	private static final String CONNECTION_PAGE = "Connection";
 	private static final int ID_TYPE_UTILISATEUR_STANDARD = 3;
 	private static final int ID_TYPE_UTILISATEUR_HOTELIER = 2;
 	private static final int ID_TYPE_UTILISATEUR_ADMIN = 1;

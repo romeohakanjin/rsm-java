@@ -15,12 +15,12 @@ import beans.entity.Annonce;
 import beans.session.AnnonceSessionBean;
 
 /**
- * Servlet implementation class HotelierAnnonceListServlet
+ * Servlet implementation class HotelierBord
  */
-@WebServlet("/HotelierAnnonceListServlet")
-public class HotelierAnnonceListServlet extends HttpServlet {
+@WebServlet("/HotelierBordServlet")
+public class HotelierBordServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String LISTE_ANNONCES = "HotelierAnnoncesListe";
+	private static final String LISTE_ANNONCES = "HotelierBord";
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
@@ -38,8 +38,11 @@ public class HotelierAnnonceListServlet extends HttpServlet {
 		String identifiant = (String) this.session.getAttribute("login");
 		int idUtilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
 
-		List<Annonce> annonces = annonceSessionBean.getAllAnnonceUtilisateur(idUtilisateur);
-		this.request.setAttribute("annonces", annonces);
+		long numberOfAnnounceForHotelier = annonceSessionBean.getNumberOfAnnounceForHotelier(idUtilisateur);
+		List<Object[]> numberOfAnnouncePerState = annonceSessionBean.getNumberOfAnnouncePerReservationStatus(idUtilisateur);
+		
+		this.request.setAttribute("numberOfAnnouncePerState", numberOfAnnouncePerState);
+		this.request.setAttribute("numberOfAnnounceForHotelier", numberOfAnnounceForHotelier);
 		redirectionToView(LISTE_ANNONCES);
 	}
 

@@ -1,15 +1,13 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core"%>
+<core:import url="Header.jsp" />
+
 <div id="main-wrapper">
 	<div class="container">
 		<div id="content">
-			<%
-				if (request.getAttribute("error-form-connection") != null) {
-			%>
-					<p class="error-form"><%= request.getAttribute("error-form-connection") %></p>
-			<%
-				}
-			%>
+		<core:out value="RASPOUTIN"></core:out>
+			<p class="error-form">${ request.getAttribute("error-form-connection") }</p>
 			<h2>Connexion</h2>
-			<form method='get' action='Connection'>
+			<form method="get" action="Connection">
 				<label>Identifiant</label>
 				<input type='text' name='identifiant'/>
 				<label>Mot de passe</label>
@@ -19,3 +17,5 @@
 		</div>
 	</div>
 </div>
+
+<core:import url="Footer.jsp" />

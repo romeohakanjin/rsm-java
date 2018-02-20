@@ -16,13 +16,14 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "annonce")
-public class Annonce implements Serializable{
+public class Annonce implements Serializable {
 	private Integer id_annonce;
 	private Integer id_utilisateur;
 	private String titre;
 	private String description;
 	private Integer capacite_max;
 	private Timestamp date_creation;
+	private Boolean actif;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,5 +73,13 @@ public class Annonce implements Serializable{
 
 	public void setDate_creation(Timestamp date_creation) {
 		this.date_creation = date_creation;
+	}
+
+	public Boolean getActif() {
+		return actif;
+	}
+
+	public void setActif(Boolean actif) {
+		this.actif = actif;
 	}
 }
