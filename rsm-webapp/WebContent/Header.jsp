@@ -43,11 +43,20 @@
 						<%
 							}
 						%>
+						
+						<%
+							if (session.getAttribute("session-standard") != null) {
+						%>
+						<li><a
+							href="StandardServlet">Gestion Utilisateur</a></li>
+						<%
+							}
+						%>
 
 						<%
 							if (session.getAttribute("login") != null) {
 						%>
-						<li id="deconnexion"><a href="Deconnection">Déconnexion</a></li>
+						<li id="deconnexion"><a href="Deconnection">Deconnexion</a></li>
 						<%
 							} else {
 						%>
