@@ -1,4 +1,7 @@
 <jsp:directive.page contentType="text/html;charset=UTF-8" />
+<%@ page import="java.util.List" %>
+<%@ page import="beans.entity.TypeUtilisateur" %>
+<%@ page import="beans.entity.Utilisateur" %>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -21,15 +24,15 @@
 				</div>
 				<nav id="nav">
 					<ul>
-						<li class="current"><a href="TemplateAdmin.jsp">Accueil</a></li>
+						<li><a href="TemplateAdmin.jsp">Accueil</a></li>
 						<%
 							if (session.getAttribute("session-admin") != null) {
 						%>
 						<li id="gestionAdmin">
 							<a href="TemplateAdmin.jsp">Gestion Admin</a>
 							<ul>
-								<li class="current" id="dashboard"><a href="DashboardServlet">Tableau de bord</a></li>
-								<li id="userManagement"><a href="UserManagementServlet">Gestion des utilisateurs</a></li>
+								<li id="dashboard"><a href="DashboardServlet">Tableau de bord</a></li>
+								<li class="current" id="userManagement"><a href="UserManagementServlet">Gestion des utilisateurs</a></li>
 								<li id="announcementManagement"><a href="AnnouncementManagementServlet">Gestion des annonces</a></li>
 								<li id="externAnnouncementManagement"><a href="ExternAnnouncementManagementServlet">Gestion des annonces d'activités externes</a></li>
 							</ul>
@@ -46,7 +49,60 @@
 		</div>
 		
 			<!-- Contenu partiel -->
-		<div class="content"></div>
+		<div class="content">
+			<div id="main-wrapper">
+				<div class="container">
+					<div id="content">
+						<h2>Liste des utilisateurs de l'application</h2>
+						<%
+						List<Utilisateur> userList = (List<Utilisateur>) request.getAttribute( "userList" );
+
+						if (userList.size() == 0) {
+						%>
+						<p>Il n'y a aucun utilisateur inscrit</p>
+						<%
+						} else {
+						%>
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th scope="col">Prénom</th>
+									<th scope="col">Nom</th>
+									<th scope="col">Type d'utilisateur</th>
+									<th scope="col">Supprimer</th>
+								</tr>
+							</thead>
+							<tbody>
+								<%
+								for (Utilisateur user : userList) {
+									String libelle = "";
+									switch(user.getId_type_utilisateur()){
+									case 1:	libelle = "Administrateur";
+										break;
+									case 2: libelle = "Hotelier";
+										break;
+									case 3: libelle = "Utilisateur Standard";
+										break;
+									}
+								%>
+								<tr>
+									<td><a href='UserManagementServlet?action=Display&userId=<%= user.getId_utilisateur() %>' ><%= user.getPrenom() %></a></td>
+									<td><a href='UserManagementServlet?action=Display&userId=<%= user.getId_utilisateur() %>' ><%= user.getNom() %></a></td>
+									<td><a href='UserManagementServlet?action=Display&userId=<%= user.getId_utilisateur() %>' ><%= libelle %></a></td>
+									<td><a href='UserManagementServlet?action=DeleteUser&userId=<%= user.getId_utilisateur() %>'><img alt="delete_icon" src="images/icon_suppression.png"></a></td>
+								</tr>
+								<%
+							}
+							%>
+						</tbody>
+						</table>
+						<%
+						}
+						%>		
+					</div>
+				</div>
+			</div>
+		</div>
 		
 		<div id="footer-wrapper">
 			<footer id="footer" class="container">

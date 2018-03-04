@@ -63,5 +63,4 @@ public class EtatReservationSessionBean {
 		Query query = entityManager.createQuery(queryString);
 		return (List<EtatReservation>) query.getResultList();
 	}
-
 }

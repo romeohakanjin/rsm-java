@@ -18,8 +18,7 @@ import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import beans.entity.ActiviteExterne;
-import beans.entity.TypeActiviteExterne;
-import beans.entity.TypeUtilisateur;
+import beans.entity.Annonce;
 
 /**
  * 
@@ -61,9 +60,41 @@ public class ActiviteExterneSessionBean {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<TypeActiviteExterne> getActiviteesExterne() {
+	public List<ActiviteExterne> getAllActiviteesExterne() {
 		String queryString = "FROM ActiviteExterne";
 		Query query = entityManager.createQuery(queryString);
-		return (List<TypeActiviteExterne>) query.getResultList();
+		return (List<ActiviteExterne>) query.getResultList();
+	}
+	
+	/**
+	 * Récupère une activité externe
+	 * @param idAnnonce
+	 * @return
+	 */
+	public ActiviteExterne getActiviteExterne(int idActiviteExterne) {
+		Annonce annonce = new Annonce();
+
+		String queryString = "FROM ActiviteExterne AS a " + "WHERE a.id_activite = '" + idActiviteExterne + "'";
+		Query query = entityManager.createQuery(queryString);
+
+		return (ActiviteExterne) query.getResultList().get(0);
+	}
+	
+	/**
+	 * Supprime une activité externe
+	 * @param idAnnonce
+	 */
+	public void deleteActiviteExterne(int idActiviteExterne) {
+		try {
+			userTransaction.begin();
+			String query =	"DELETE FROM ActiviteExterne "
+					+ "WHERE id_activite = '" + idActiviteExterne + "' ";
+			Query result = entityManager.createQuery(query);
+			result.executeUpdate();
+			userTransaction.commit();
+		} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

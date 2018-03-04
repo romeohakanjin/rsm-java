@@ -1,7 +1,9 @@
 package beans.entity;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.GenerationType;
 
 /**
@@ -9,6 +11,8 @@ import javax.persistence.GenerationType;
  * @author SLI
  *
  */
+@Entity
+@Table(name = "activite_externe")
 public class ActiviteExterne {
 	private Integer id_activite;
 	private String titre;

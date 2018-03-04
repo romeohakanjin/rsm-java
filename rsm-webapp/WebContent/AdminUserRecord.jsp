@@ -1,4 +1,6 @@
 <jsp:directive.page contentType="text/html;charset=UTF-8" />
+<%@ page import="java.util.List" %>
+<%@ page import="beans.entity.Utilisateur" %>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -21,15 +23,16 @@
 				</div>
 				<nav id="nav">
 					<ul>
-						<li class="current"><a href="TemplateAdmin.jsp">Accueil</a></li>
+						<li><a href="TemplateAdmin.jsp">Accueil</a></li>
 						<%
 							if (session.getAttribute("session-admin") != null) {
 						%>
 						<li id="gestionAdmin">
 							<a href="TemplateAdmin.jsp">Gestion Admin</a>
 							<ul>
-								<li class="current" id="dashboard"><a href="DashboardServlet">Tableau de bord</a></li>
+								<li id="dashboard"><a href="DashboardServlet">Tableau de bord</a></li>
 								<li id="userManagement"><a href="UserManagementServlet">Gestion des utilisateurs</a></li>
+								<li class="current hidden" id="userRecord"><a href="AdminUserRecord.jsp">Profil utilisateur</a></li>
 								<li id="announcementManagement"><a href="AnnouncementManagementServlet">Gestion des annonces</a></li>
 								<li id="externAnnouncementManagement"><a href="ExternAnnouncementManagementServlet">Gestion des annonces d'activités externes</a></li>
 							</ul>
@@ -46,7 +49,55 @@
 		</div>
 		
 			<!-- Contenu partiel -->
-		<div class="content"></div>
+		<div class="content">
+			<div id="main-wrapper">
+				<div class="container">
+					<div id="content">
+						<h2>Fiche utilisateur</h2>
+						<%
+						Utilisateur user = (Utilisateur) request.getAttribute( "user" );
+
+						if (user != null) {
+						%>
+						<h2>Profil de <%= user.getPrenom() %> <%= user.getNom()%></h2>
+						<table>
+							<tr>
+								<td><label> Nom </label></td>
+								<td><%= user.getNom() %></td>
+							</tr>
+							<tr>
+								<td><label> Prénom </label></td>
+								<td><%= user.getPrenom() %></td>
+							</tr>
+							<tr>
+								<td><label> Adresse mail </label></td>
+								<td><%= user.getMail() %></td>
+							</tr>
+							<tr>
+								<td><label> Téléphone </label></td>
+								<td><%= user.getMobile() %></td>
+							</tr>
+							<tr>
+								<td><label> Adresse </label></td>
+								<td><%= user.getAdresse() %></td>
+							</tr>
+							<tr>
+								<td><label> Code Postal </label></td>
+								<td><%= user.getCode_postal() %></td>
+							</tr>
+							<tr>
+								<td><label> Ville </label></td>
+								<td><%= user.getVille() %></td>
+							</tr>
+						</table>
+
+						<%
+						}
+						%>		
+					</div>
+				</div>
+			</div>
+		</div>
 		
 		<div id="footer-wrapper">
 			<footer id="footer" class="container">

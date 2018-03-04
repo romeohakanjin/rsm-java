@@ -28,6 +28,7 @@ public class Utilisateur implements Serializable {
 	private String code_postal;
 	private String ville;
 	private Integer point_bonus;
+	private Boolean actif;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -125,5 +126,13 @@ public class Utilisateur implements Serializable {
 
 	public void setPoint_bonus(Integer point_bonus) {
 		this.point_bonus = point_bonus;
+	}
+
+	public Boolean getActif() {
+		return actif;
+	}
+	
+	public void setActif(Boolean actif) {
+		this.actif = actif;
 	}
 }

@@ -67,6 +67,7 @@ public class Inscription extends HttpServlet {
 				utilisateur.setAdresse(adresse);
 				utilisateur.setCode_postal(codePostal);
 				utilisateur.setVille(ville);
+				utilisateur.setActif(true);
 
 				if (this.isHotelier) {
 					utilisateur.setId_type_utilisateur(2);
@@ -95,6 +96,7 @@ public class Inscription extends HttpServlet {
 						redirectionToView(INSCRIPTION_PAGE);
 					}
 				} else {
+					utilisateur.setId_type_utilisateur(3);
 					request.removeAttribute("error-form-inscription");
 					utilisateurSessionBean.creerUtilisateur(utilisateur);
 					httpSession(identifiant, motDePasse);

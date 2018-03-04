@@ -63,4 +63,16 @@ public class TypeUtilisateurSessionBean {
 		Query query = entityManager.createQuery(queryString);
 		return (List<TypeUtilisateur>) query.getResultList();
 	}
+	
+	/**
+	 * Récupère le type d'utilisateur
+	 * associé à l'id passé en paramètre
+	 * @param idType
+	 * @return
+	 */
+	public List<TypeUtilisateur> getUserTypeById(Integer idType) {
+		String queryString = "FROM TypeUtilisateur WHERE id_type_utilisateur = "+idType;
+		Query query = entityManager.createQuery(queryString);
+		return (List<TypeUtilisateur>) query.getResultList();
+	}
 }

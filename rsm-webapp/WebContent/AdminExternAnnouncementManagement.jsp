@@ -1,4 +1,6 @@
 <jsp:directive.page contentType="text/html;charset=UTF-8" />
+<%@ page import="java.util.List" %>
+<%@ page import="beans.entity.ActiviteExterne" %>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -21,17 +23,17 @@
 				</div>
 				<nav id="nav">
 					<ul>
-						<li class="current"><a href="TemplateAdmin.jsp">Accueil</a></li>
+						<li><a href="TemplateAdmin.jsp">Accueil</a></li>
 						<%
 							if (session.getAttribute("session-admin") != null) {
 						%>
 						<li id="gestionAdmin">
 							<a href="TemplateAdmin.jsp">Gestion Admin</a>
 							<ul>
-								<li class="current" id="dashboard"><a href="DashboardServlet">Tableau de bord</a></li>
+								<li id="dashboard"><a href="DashboardServlet">Tableau de bord</a></li>
 								<li id="userManagement"><a href="UserManagementServlet">Gestion des utilisateurs</a></li>
-								<li id="announcementManagement"><a href="AnnouncementManagementServlet">Gestion des annonces</a></li>
-								<li id="externAnnouncementManagement"><a href="ExternAnnouncementManagementServlet">Gestion des annonces d'activités externes</a></li>
+								<li class="current" id="announcementManagement"><a href="AnnouncementManagementServlet">Gestion des annonce</a></li>
+								<li id="externAnnouncementManagement"><a href="ExternAnnouncementManagementServlet">Gestion des activités externes</a></li>
 							</ul>
 						</li>
 						<%
@@ -46,7 +48,67 @@
 		</div>
 		
 			<!-- Contenu partiel -->
-		<div class="content"></div>
+		<div class="content">
+			<div id="main-wrapper">
+				<div class="container">
+					<div id="content">
+						<%
+						List<ActiviteExterne> activiteExternes = (List<ActiviteExterne>) request.getAttribute( "activiteExternes" );
+						
+						if (activiteExternes.size() == 0) {
+						%>
+						<p>Vous n'avez pas d'activiteExterne publiée</p>
+						<%
+						} else {
+						%>
+						<h2>Liste des activités externes</h2>
+						<table class="table table-striped">
+						  <thead>
+						    <tr>
+						      <th scope="col">N°</th>
+						      <th scope="col">Titre</th>
+						      <th scope="col">Description</th>
+						      <th scope="col">Ville</th>
+						      <th scope="col">Type d'activité</th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						<%
+						int cpt= 1;
+			            for(ActiviteExterne activiteExterne : activiteExternes){
+			            	String libelle = "";
+							switch(activiteExterne.getId_type_activite()){
+							case 1:	libelle = "Restauration";
+								break;
+							case 2: libelle = "Musée";
+								break;
+							case 3: libelle = "Parc d'attractions";
+								break;
+							case 4: libelle = "Zoo";
+								break;
+							case 5: libelle = "Evénements";
+								break;
+							}
+			            	%>	
+						    <tr>
+						      <th scope="row"><%= activiteExterne.getId_activite() %></th>
+						      <td><%= activiteExterne.getTitre() %></td>
+						      <td><%= activiteExterne.getDescription() %></td>
+						      <td><%= activiteExterne.getVille() %></td>
+						      <td><%= libelle %></td>
+						    </tr>
+						    <%
+			            }
+			            %>	
+						  </tbody>
+						</table>
+						<%
+						}
+						%>
+					</div>
+				</div>
+			</div>
+		</div>
 		
 		<div id="footer-wrapper">
 			<footer id="footer" class="container">

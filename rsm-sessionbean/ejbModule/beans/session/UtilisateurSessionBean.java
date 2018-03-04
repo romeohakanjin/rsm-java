@@ -52,6 +52,23 @@ public class UtilisateurSessionBean {
 			return false;
 		}
 	}
+	
+	public Boolean deleteUser(Utilisateur user) {
+		try {
+			Integer userId = user.getId_utilisateur();
+			userTransaction.begin();
+			String queryString =	"UPDATE Utilisateur AS u "
+					+ "SET actif = false "
+					+ "WHERE u.id_utilisateur = '" + userId + "' ";
+			Query query = entityManager.createQuery(queryString);
+			query.executeUpdate();
+			userTransaction.commit();
+			return true;
+		} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	/**
 	 * Récupère tous les utilisateurs
@@ -63,6 +80,19 @@ public class UtilisateurSessionBean {
 		String queryString = "FROM Utilisateur";
 		Query query = entityManager.createQuery(queryString);
 		return (List<Utilisateur>) query.getResultList();
+	}
+	
+	/**
+	 * Récupère tous les utilisateurs avec leurs types d'utilisateurs
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object> getAllUtilisateurWithUserType() {
+		String queryString = "FROM Utilisateur AS u "
+				+ "JOIN TypeUtilisateur AS tu ON u.id_type_utilisateur = tu.id_type_utilisateur";
+		Query query = entityManager.createQuery(queryString);
+		return (List<Object>) query.getResultList();
 	}
 
 	/**
@@ -79,7 +109,7 @@ public class UtilisateurSessionBean {
 		boolean isIdentificationValid = false;
 
 		String query = "SELECT u.mail FROM Utilisateur u WHERE mail = '" + mail + "' AND motDePasse='" + motDePasse
-				+ "'";
+				+ "' AND actif = true";
 		Query query2 = entityManager.createQuery(query);
 
 		List listUser = query2.getResultList();
@@ -196,5 +226,34 @@ public class UtilisateurSessionBean {
 		}
 
 		return idTypeUtilisateur;
+	}
+	
+	/**
+	 * Récupère le nombre d'utilisateur
+	 * regroupé par type d'utilisateur
+	 * @return
+	 */
+	public List<Object[]> getNbUserGroupByUserType() {
+		String queryString = "SELECT COUNT(*), tu.libelle "
+				+ "FROM Utilisateur AS u "
+				+ "JOIN TypeUtilisateur AS tu ON u.id_type_utilisateur = tu.id_type_utilisateur "
+				+ "GROUP BY tu.libelle";
+		Query query = entityManager.createQuery(queryString);
+		return query.getResultList();
+	}
+	
+	/**
+	 * Récupère un utilisateur avec son id
+	 * @param userId
+	 * @return
+	 */
+	public Utilisateur getUserById(Integer userId) {
+		String queryString = "FROM Utilisateur AS a " + "WHERE a.id_utilisateur = '" + userId + "'";
+		Query query = entityManager.createQuery(queryString);
+		Utilisateur user = null;
+		for (int i = 0; i < query.getResultList().size(); i++) {
+			user = (Utilisateur) query.getResultList().get(i);
+		}
+		return user;
 	}
 }

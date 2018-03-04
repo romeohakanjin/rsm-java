@@ -1,4 +1,5 @@
 <jsp:directive.page contentType="text/html;charset=UTF-8" />
+<%@ page import="java.util.List" %>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -21,7 +22,7 @@
 				</div>
 				<nav id="nav">
 					<ul>
-						<li class="current"><a href="TemplateAdmin.jsp">Accueil</a></li>
+						<li><a href="TemplateAdmin.jsp">Accueil</a></li>
 						<%
 							if (session.getAttribute("session-admin") != null) {
 						%>
@@ -46,7 +47,110 @@
 		</div>
 		
 			<!-- Contenu partiel -->
-		<div class="content"></div>
+		<div class="content">
+			<div id="main-wrapper">
+				<div class="container">
+					<div class="content">
+						<h2>Nombre d'utilisateur</h2>
+						<%
+						List<Object[]> nbUserList = (List<Object[]>) request.getAttribute( "nbUserList" );
+
+						if (nbUserList.size() == 0) {
+						%>
+						<p>Il n'y a aucun utilisateur inscrit</p>
+						<%
+						} else {
+						%>
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th scope="col">Nombre</th>
+									<th scope="col">Type d'utilisateur</th>
+								</tr>
+							</thead>
+							<tbody>
+								<%
+
+								for (int i = 0; i < nbUserList.size(); i++) {
+								%>
+								<tr>
+									<th scope="row"><%= Integer.valueOf(nbUserList.get(i)[0].toString()) %></th>
+									<td><%= nbUserList.get(i)[1].toString() %></td>
+								</tr>
+								<%
+							}
+							%>
+						</tbody>
+						</table>
+						<%
+						}
+						%>
+
+						<h2>Nombre d'annonce</h2>
+						<%
+						Integer nbAnnonce = (Integer) request.getAttribute( "nbAnnonce" );
+
+						if (nbAnnonce == 0) {
+						%>
+						<p>Il n'y a aucun annonce publiée</p>
+						<%
+						} else {
+						%>
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th scope="col">Nombre</th>
+								</tr>
+							</thead>
+							<tbody>
+
+								<tr>
+									<th scope="row"><%= nbAnnonce %></th>
+								</tr>
+							</tbody>
+						</table>
+						<%
+						}
+						%>
+
+						<h2>Nombre de réservation</h2>
+						<%
+						List<Object[]> nbReservationList = (List<Object[]>) request.getAttribute( "nbReservationList" );
+
+						if (nbReservationList.size() == 0) {
+						%>
+						<p>Il n'y a aucune réservation</p>
+						<%
+						} else {
+						%>
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th scope="col">Nombre</th>
+									<th scope="col">Etat de la réservation</th>
+								</tr>
+							</thead>
+							<tbody>
+								<%
+
+								for (int i = 0; i < nbReservationList.size(); i++) {
+								%>
+								<tr>
+									<th scope="row"><%= Integer.valueOf(nbReservationList.get(i)[0].toString()) %></th>
+									<td><%= nbReservationList.get(i)[1].toString() %></td>
+								</tr>
+								<%
+							}
+							%>
+						</tbody>
+						</table>
+						<%
+						}
+						%>
+					</div>
+				</div>
+			</div>
+		</div>
 		
 		<div id="footer-wrapper">
 			<footer id="footer" class="container">
