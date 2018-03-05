@@ -61,4 +61,62 @@ public class ReservationSessionBean {
 		Query query = entityManager.createQuery(queryString);
 		return (List<Reservation>) query.getResultList();
 	}
+	
+	/**
+	 * Récupère le nombre de réservation
+	 * regroupé par état de réservation
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object[]> getNbReservationGroupByReservationState(){
+		String queryString = "SELECT COUNT(*), er.libelle "
+				+ "FROM Reservation AS r "
+				+ "JOIN EtatReservation AS er ON er.id_etat = r.id_etat_reservation "
+				+ "GROUP BY er.libelle";
+		Query query = entityManager.createQuery(queryString);
+		return query.getResultList();
+	}
+	
+	/**
+	 * Récupère les réservations ayant pour statut A venir ou En cours
+	 * liées à une annonce
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Reservation> getReservationByAnnonceId(Integer annonceId){
+		String queryString = "FROM Reservation "
+				+ "WHERE id_annonce = '"+annonceId+"' ";
+		Query query = entityManager.createQuery(queryString);
+		return query.getResultList();
+	}
+	
+	/**
+	 * Récupère les réservations faites par un utilisateur
+	 * ayant pour statut En attente, A venir ou En cours
+	 * @param userId
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Reservation> getReservationByUserId(Integer userId){
+		String queryString = "FROM Reservation "
+				+ "WHERE id_utilisateur = '"+userId+"' "
+				+ "AND id_statut_reservation IN (1, 2, 3)";
+		Query query = entityManager.createQuery(queryString);
+		return query.getResultList();
+	}
+	
+	/**
+	 * Récupère les réservations faites par un utilisateur
+	 * ayant pour Terminée
+	 * @param userId
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Reservation> getFinishedReservationByUserId(Integer userId){
+		String queryString = "FROM Reservation "
+				+ "WHERE id_utilisateur = '"+userId+"' "
+				+ "AND id_statut_reservation IN (1, 2, 3)";
+		Query query = entityManager.createQuery(queryString);
+		return query.getResultList();
+	}
 }

@@ -223,6 +223,17 @@ public class AnnonceSessionBean {
 		}
 
 	}
+	
+	/**
+	 * Récupère le nombre d'annonce
+	 * @return
+	 */
+	public List<Object> getNbAnnounce() {
+		String queryString = "SELECT COUNT(*) FROM Annonce";
+		Query query = entityManager.createQuery(queryString);
+
+		return query.getResultList();
+	}
 
 	/**
 	 * get all the comments from a annonce

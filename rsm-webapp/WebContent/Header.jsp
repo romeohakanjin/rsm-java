@@ -28,9 +28,15 @@
 						<%
 							if (session.getAttribute("session-admin") != null) {
 						%>
-						<li id="gestionAdmin"><a
-							href="javascript:setCurrentPage('gestionAdmin');">Gestion
-								Admin</a></li>
+						<li id="gestionAdmin">
+							<a href="TemplateAdmin.jsp">Gestion Admin</a>
+							<ul>
+								<li class="current" id="dashboard"><a href="DashboardServlet">Tableau de bord</a></li>
+								<li id="userManagement"><a href="UserManagementServlet">Gestion des utilisateurs</a></li>
+								<li id="announcementManagement"><a href="AnnouncementManagementServlet">Gestion des annonces</a></li>
+								<li id="externAnnouncementManagement"><a href="ExternAnnouncementManagementServlet">Gestion des annonces d'activités externes</a></li>
+							</ul>
+						</li>
 						<%
 							}
 						%>
