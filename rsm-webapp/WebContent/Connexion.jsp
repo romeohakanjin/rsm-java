@@ -4,7 +4,6 @@
 <div id="main-wrapper">
 	<div class="container">
 		<div id="content">
-		<core:out value="RASPOUTIN"></core:out>
 			<p class="error-form">${ request.getAttribute("error-form-connection") }</p>
 			<h2>Connexion</h2>
 			<form method="get" action="Connection">

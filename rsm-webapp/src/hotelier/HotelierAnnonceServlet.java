@@ -135,11 +135,11 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			annonceSessionBean.creerAnnonce(annonce);
 
 			request.removeAttribute("error-hotelier-annonce-form");
-			System.out.println("gribouti");
+			
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		} else {
 			setVariableToView("error-hotelier-annonce-form", "Informations incorrectes ou manquantes");
-			System.out.println("yata");
+			
 			redirectionToView(ANNONCE_VIEW);
 		}
 	}

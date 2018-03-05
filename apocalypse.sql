@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Jeu 15 Février 2018 à 21:21
+-- Généré le :  Lun 05 Mars 2018 à 10:09
 -- Version du serveur :  10.1.16-MariaDB
 -- Version de PHP :  7.0.9
 
@@ -34,6 +34,18 @@ CREATE TABLE `activite_externe` (
   `id_type_activite` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Contenu de la table `activite_externe`
+--
+
+INSERT INTO `activite_externe` (`id_activite`, `titre`, `description`, `ville`, `id_type_activite`) VALUES
+(1, 'Restaurant', 'Description Restaurant', 'Ville', 1),
+(2, 'Musée', 'Description musée', 'Ville', 2),
+(3, 'Parc d''attractions', 'Description parc d''attractions', 'Ville', 3),
+(4, 'Zoo', 'Description Zoo', 'Ville', 4),
+(5, 'Concert', 'Description concert', 'Ville', 5),
+(6, 'Feux d''artifices', 'Description feux d''artifices', 'Ville', 5);
+
 -- --------------------------------------------------------
 
 --
@@ -55,9 +67,8 @@ CREATE TABLE `annonce` (
 --
 
 INSERT INTO `annonce` (`id_annonce`, `id_utilisateur`, `titre`, `description`, `capacite_max`, `date_creation`, `actif`) VALUES
-(1, 1, 'test1', 'testDescription1', 666, '2018-01-01 00:00:00', 1),
-(15, 2, 'dd1', '515									', 5515, '2018-02-11 18:06:21', 1),
-(20, 2, 'raspouti', 'grasti									', 6024516, '2018-02-13 06:57:51', 1);
+(1, 2, 'test', 'testDescription', 666, '2018-01-01 00:00:00', 1),
+(3, 2, 'Test', 'Suppression', 3, '2018-03-01 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -72,16 +83,6 @@ CREATE TABLE `commentaire` (
   `commentaire` varchar(1000) NOT NULL,
   `signaler` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Contenu de la table `commentaire`
---
-
-INSERT INTO `commentaire` (`id_commentaire`, `id_reservation`, `id_utilisateur`, `commentaire`, `signaler`) VALUES
-(1, 1, 24, 'Gonnier', 0),
-(2, 2, 2, 'razk', 0),
-(3, 3, 2, 'pourrish', 1),
-(4, 3, 3, 'kokonut', 0);
 
 -- --------------------------------------------------------
 
@@ -99,10 +100,9 @@ CREATE TABLE `etat_reservation` (
 --
 
 INSERT INTO `etat_reservation` (`id_etat`, `libelle`) VALUES
-(1, 'En attente de confirmation'),
-(2, 'Hotelier a confirme'),
-(3, 'En attente de validation'),
-(4, 'Validee');
+(1, 'En attente de la confirmation hotelier'),
+(2, 'En attente de la validation voyageur'),
+(3, 'Validee');
 
 -- --------------------------------------------------------
 
@@ -164,9 +164,9 @@ CREATE TABLE `reservation` (
 --
 
 INSERT INTO `reservation` (`id_reservation`, `id_annonce`, `id_utilisateur`, `prix`, `capacite_max`, `date_sejour`, `id_statut_reservation`, `id_etat_reservation`) VALUES
-(1, 1, 1, 5654, 3, '2018-02-08 00:00:00', 2, 2),
-(2, 15, 2, 12644, 789, '2018-02-12 00:00:00', 1, 3),
-(3, 15, 2, 4596, 14, '2018-02-09 00:00:00', 3, 1);
+(1, 1, 3, 23.3, 22, '2018-02-13 00:00:00', 1, 1),
+(2, 1, 28, 99.9, 8, '2018-02-20 00:00:00', 1, 1),
+(3, 3, 28, 234, 2, '2018-03-10 00:00:00', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -176,7 +176,7 @@ INSERT INTO `reservation` (`id_reservation`, `id_annonce`, `id_utilisateur`, `pr
 
 CREATE TABLE `statut_reservation` (
   `id_statut_reservation` int(10) NOT NULL,
-  `libelle` varchar(50) DEFAULT NULL
+  `libelle` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -184,9 +184,10 @@ CREATE TABLE `statut_reservation` (
 --
 
 INSERT INTO `statut_reservation` (`id_statut_reservation`, `libelle`) VALUES
-(1, 'Terminee'),
+(1, 'En attente'),
 (2, 'En cours'),
-(3, 'A venir');
+(3, 'A venir'),
+(4, 'Terminée');
 
 -- --------------------------------------------------------
 
@@ -198,6 +199,17 @@ CREATE TABLE `type_activite` (
   `id_type_activite` int(10) NOT NULL,
   `libelle` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `type_activite`
+--
+
+INSERT INTO `type_activite` (`id_type_activite`, `libelle`) VALUES
+(1, 'Restauration'),
+(2, 'Musées'),
+(3, 'Parc d''attractions'),
+(4, 'Nature et parcs'),
+(5, 'Evenements');
 
 -- --------------------------------------------------------
 
@@ -227,30 +239,29 @@ INSERT INTO `type_utilisateur` (`id_type_utilisateur`, `libelle`) VALUES
 
 CREATE TABLE `utilisateur` (
   `id_utilisateur` int(10) NOT NULL,
-  `id_type_utilisateur` int(10) DEFAULT '3',
+  `id_type_utilisateur` int(10) NOT NULL DEFAULT '3',
   `id_hotel` int(50) DEFAULT NULL,
-  `nom` varchar(50) DEFAULT NULL,
-  `prenom` varchar(50) DEFAULT NULL,
-  `mail` varchar(70) DEFAULT NULL,
+  `nom` varchar(50) NOT NULL,
+  `prenom` varchar(50) NOT NULL,
+  `mail` varchar(70) NOT NULL,
   `motDePasse` varchar(25) NOT NULL,
-  `mobile` varchar(15) DEFAULT NULL,
-  `adresse` varchar(50) DEFAULT NULL,
-  `code_postal` varchar(10) DEFAULT NULL,
-  `ville` varchar(50) DEFAULT NULL,
-  `point_bonus` int(100) NOT NULL DEFAULT '0'
+  `mobile` varchar(15) NOT NULL,
+  `adresse` varchar(50) NOT NULL,
+  `code_postal` varchar(10) NOT NULL,
+  `ville` varchar(50) NOT NULL,
+  `point_bonus` int(100) NOT NULL DEFAULT '0',
+  `actif` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `utilisateur`
 --
 
-INSERT INTO `utilisateur` (`id_utilisateur`, `id_type_utilisateur`, `id_hotel`, `nom`, `prenom`, `mail`, `motDePasse`, `mobile`, `adresse`, `code_postal`, `ville`, `point_bonus`) VALUES
-(1, 1, NULL, 'LIM', 'Sindy', 'sindy.lim91@gmail.com', 'test01', '0635267495', '100 rue des tests', '75015', 'Paris', 0),
-(2, 2, NULL, 'HAKANJIN', 'Romeo', 'hakanjin.romeo96@gmail.com', 'test02', '0635987465', '12 allee des test', '95800', 'CERGY', 0),
-(3, 3, NULL, 'DIAGNE', 'Massamba', 'massdinho10@gmail.com', 'test03', '0745873695', '3 avenue de test', '93600', 'AUNAY-SOUS-BOIS', 0),
-(24, 2, NULL, 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 0),
-(25, 2, NULL, 'lp', 'lp', 'lp', 'lp', 'pl', 'pl', 'pl', 'lp', 0),
-(26, 2, 1, 'lplpl', 'plplpl', 'lpllp', 'plplp', 'plplp', 'lplpl', 'plplpl', 'plplpl', 0);
+INSERT INTO `utilisateur` (`id_utilisateur`, `id_type_utilisateur`, `id_hotel`, `nom`, `prenom`, `mail`, `motDePasse`, `mobile`, `adresse`, `code_postal`, `ville`, `point_bonus`, `actif`) VALUES
+(1, 1, NULL, 'LIM', 'Sindy', 'sindy.lim91@gmail.com', 'test01', '0635267495', '100 rue des tests', '75015', 'Paris', 0, 1),
+(2, 2, NULL, 'HAKANJIN', 'Romeo', 'hakanjin.romeo96@gmail.com', 'test02', '0635987465', '12 allee des test', '95800', 'CERGY', 0, 1),
+(3, 3, NULL, 'DIAGNE', 'Massamba', 'massdinho10@gmail.com', 'test03', '0745873695', '3 avenue de test', '93600', 'AUNAY-SOUS-BOIS', 0, 1),
+(28, 3, NULL, 'Test', 'Suppresion', 'test@gmail.com', 'test01', '0104445324', '2 rue des terres curées', '75015', 'Paris', 0, 1);
 
 --
 -- Index pour les tables exportées
@@ -341,22 +352,22 @@ ALTER TABLE `utilisateur`
 -- AUTO_INCREMENT pour la table `activite_externe`
 --
 ALTER TABLE `activite_externe`
-  MODIFY `id_activite` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_activite` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT pour la table `annonce`
 --
 ALTER TABLE `annonce`
-  MODIFY `id_annonce` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id_annonce` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT pour la table `commentaire`
 --
 ALTER TABLE `commentaire`
-  MODIFY `id_commentaire` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_commentaire` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `etat_reservation`
 --
 ALTER TABLE `etat_reservation`
-  MODIFY `id_etat` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_etat` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT pour la table `hotel`
 --
@@ -376,12 +387,12 @@ ALTER TABLE `reservation`
 -- AUTO_INCREMENT pour la table `statut_reservation`
 --
 ALTER TABLE `statut_reservation`
-  MODIFY `id_statut_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_statut_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT pour la table `type_activite`
 --
 ALTER TABLE `type_activite`
-  MODIFY `id_type_activite` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_type_activite` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT pour la table `type_utilisateur`
 --
@@ -391,7 +402,7 @@ ALTER TABLE `type_utilisateur`
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 --
 -- Contraintes pour les tables exportées
 --

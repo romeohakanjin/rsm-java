@@ -16,7 +16,7 @@ public class Deconnection extends HttpServlet {
     private HttpServletRequest request;
     private HttpServletResponse response;
     private HttpSession session;
-    private static final String HOME_PAGE = "Template";
+    private static final String HOME_PAGE = "Home";
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		initialiser(request, response);

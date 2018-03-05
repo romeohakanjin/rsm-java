@@ -89,17 +89,4 @@ public class DashboardServlet extends HttpServlet {
 		dispatcher.include(request, response);
 	}
 
-	/**
-	 * Redirection to a servlet
-	 * 
-	 * @param String
-	 *            : the servlet name
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void redirectionToServlet(String sevlet) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(sevlet);
-		dispatcher.include(request, response);
-	}
-
 }

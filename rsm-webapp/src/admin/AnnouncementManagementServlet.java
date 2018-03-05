@@ -43,13 +43,13 @@ public class AnnouncementManagementServlet extends HttpServlet {
 		this.response = response;
 
 		initialiser();
-		System.out.println("action apres init" +this.action);
 		
 		switch(this.action) {
 		case DELETE_ANNOUNCEMENT :
 			if(annonceId != null || !annonceId.equals("")) {
 				Integer idAnnonce = Integer.valueOf(annonceId);
 				Boolean isDeleted = deleteAnnouncementById(idAnnonce);
+				System.out.println(isDeleted);
 				getAllAnnouncement();
 				redirectionToView(ANNOUNCEMENT_LIST);
 			}

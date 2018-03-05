@@ -29,7 +29,7 @@
 							if (session.getAttribute("session-admin") != null) {
 						%>
 						<li id="gestionAdmin">
-							<a href="TemplateAdmin.jsp">Gestion Admin</a>
+							<a href="DashboardServlet">Gestion Admin</a>
 							<ul>
 								<li class="current" id="dashboard"><a href="DashboardServlet">Tableau de bord</a></li>
 								<li id="userManagement"><a href="UserManagementServlet">Gestion des utilisateurs</a></li>
@@ -44,8 +44,12 @@
 						<%
 							if (session.getAttribute("session-hotelier") != null) {
 						%>
-						<li><a
-							href="HotelierBordServlet">Gestion Hotelier</a></li>
+						<li id="gestionHotelier">
+							<a href="HotelierBordServlet">Gestion Hotelier</a>
+							<ul>
+								<li id="hotelierListServlet"><a href="HotelierAnnonceListServlet">Annonce</a></li>
+							</ul>
+						</li>
 						<%
 							}
 						%>
