@@ -108,7 +108,7 @@ public class UtilisateurSessionBean {
 	public boolean isIdentificationValid(String mail, String motDePasse) {
 		boolean isIdentificationValid = false;
 
-		String query = "SELECT u.mail FROM Utilisateur u WHERE mail = '" + mail + "' AND motDePasse='" + motDePasse
+		String query = "SELECT u.mail FROM Utilisateur u WHERE mail = '" + mail + "' AND mot_de_passe='" + motDePasse
 				+ "' AND actif = true";
 		Query query2 = entityManager.createQuery(query);
 
@@ -152,7 +152,7 @@ public class UtilisateurSessionBean {
 	public boolean checkExistingHotel(String nomHotel) {
 		boolean isExistingHotel = false;
 
-		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '" + nomHotel + "'";
+		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom_hotel = '" + nomHotel + "'";
 		Query query2 = entityManager.createQuery(query);
 
 		List listHotel = query2.getResultList();
@@ -166,7 +166,7 @@ public class UtilisateurSessionBean {
 
 	public int getIdHotel(String nomHotel) {
 		int idHotel = 0;
-		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '" + nomHotel + "'";
+		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom_hotel = '" + nomHotel + "'";
 		Query query2 = entityManager.createQuery(query);
 
 		List listHotel = query2.getResultList();
@@ -177,14 +177,11 @@ public class UtilisateurSessionBean {
 		return idHotel;
 	}
 
-	public int createHotel(String nomHotel, String adresseHotel, String codePostalHotel, String villeHotel) {
+	public int createHotel(String nomHotel) {
 		int idHotel = 0;
 
 		Hotel hotel = new Hotel();
-		hotel.setNom(nomHotel);
-		hotel.setAdresse(adresseHotel);
-		hotel.setCode_postal(codePostalHotel);
-		hotel.setVille(villeHotel);
+		hotel.setNom_hotel(nomHotel);
 
 		try {
 			userTransaction.begin();
@@ -195,7 +192,7 @@ public class UtilisateurSessionBean {
 			e.printStackTrace();
 		}
 
-		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '" + nomHotel + "'";
+		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom_hotel = '" + nomHotel + "'";
 		Query query2 = entityManager.createQuery(query);
 
 		List listInfoHotel = query2.getResultList();
@@ -215,7 +212,7 @@ public class UtilisateurSessionBean {
 	 */
 	public int getIdTypeUtilisateur(String identifiant, String motDePasse) {
 		int idTypeUtilisateur = 3;
-		String query = "SELECT u.id_type_utilisateur FROM Utilisateur u WHERE mail = '" + identifiant + "' AND motDePasse='" + motDePasse
+		String query = "SELECT u.id_type_utilisateur FROM Utilisateur u WHERE mail = '" + identifiant + "' AND mot_de_passe='" + motDePasse
 				+ "'";
 		Query query2 = entityManager.createQuery(query);
 

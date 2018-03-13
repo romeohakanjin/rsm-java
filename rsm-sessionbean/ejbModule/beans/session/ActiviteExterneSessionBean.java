@@ -74,7 +74,7 @@ public class ActiviteExterneSessionBean {
 	public ActiviteExterne getActiviteExterne(int idActiviteExterne) {
 		Annonce annonce = new Annonce();
 
-		String queryString = "FROM ActiviteExterne AS a " + "WHERE a.id_activite = '" + idActiviteExterne + "'";
+		String queryString = "FROM ActiviteExterne AS a " + "WHERE a.id_activite_externe = '" + idActiviteExterne + "'";
 		Query query = entityManager.createQuery(queryString);
 
 		return (ActiviteExterne) query.getResultList().get(0);
@@ -88,7 +88,7 @@ public class ActiviteExterneSessionBean {
 		try {
 			userTransaction.begin();
 			String query =	"DELETE FROM ActiviteExterne "
-					+ "WHERE id_activite = '" + idActiviteExterne + "' ";
+					+ "WHERE id_activite_externe = '" + idActiviteExterne + "' ";
 			Query result = entityManager.createQuery(query);
 			result.executeUpdate();
 			userTransaction.commit();

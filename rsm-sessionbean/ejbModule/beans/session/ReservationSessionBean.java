@@ -71,7 +71,7 @@ public class ReservationSessionBean {
 	public List<Object[]> getNbReservationGroupByReservationState(){
 		String queryString = "SELECT COUNT(*), er.libelle "
 				+ "FROM Reservation AS r "
-				+ "JOIN EtatReservation AS er ON er.id_etat = r.id_etat_reservation "
+				+ "JOIN EtatReservation AS er ON er.id_etat_reservation = r.id_etat_reservation "
 				+ "GROUP BY er.libelle";
 		Query query = entityManager.createQuery(queryString);
 		return query.getResultList();

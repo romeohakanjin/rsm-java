@@ -19,8 +19,8 @@ public class Reservation {
 	private Integer id_annonce;
 	private Integer id_utilisateur;
 	private double prix;
-	private Integer capacite_max;
 	private Timestamp date_sejour;
+	private Integer duree_sejour;
 	private Integer id_statut_reservation;
 	private Integer id_etat_reservation;
 
@@ -58,20 +58,20 @@ public class Reservation {
 		this.prix = prix;
 	}
 
-	public Integer getCapacite_max() {
-		return capacite_max;
-	}
-
-	public void setCapacite_max(Integer capacite_max) {
-		this.capacite_max = capacite_max;
-	}
-
 	public Timestamp getDate_sejour() {
 		return date_sejour;
 	}
 
 	public void setDate_sejour(Timestamp date_sejour) {
 		this.date_sejour = date_sejour;
+	}
+	
+	public Integer getDuree_sejour() {
+		return duree_sejour;
+	}
+
+	public void setDuree_sejour(Integer duree_sejour) {
+		this.duree_sejour = duree_sejour;
 	}
 
 	public Integer getId_statut_reservation() {

@@ -37,9 +37,6 @@ public class Inscription extends HttpServlet {
 	private String ville;
 	private String selectionHotel;
 	private String nomHotel;
-	private String adresseHotel;
-	private String villeHotel;
-	private String codePostalHotel;
 	private boolean isHotelier;
 	private boolean existingHotelForm;
 
@@ -60,7 +57,7 @@ public class Inscription extends HttpServlet {
 			if (!existingUser) {
 				Utilisateur utilisateur = new Utilisateur();
 				utilisateur.setMail(identifiant);
-				utilisateur.setMotDePasse(motDePasse);
+				utilisateur.setMot_de_passe(motDePasse);
 				utilisateur.setNom(nom);
 				utilisateur.setPrenom(prenom);
 				utilisateur.setMobile(telephone);
@@ -83,8 +80,7 @@ public class Inscription extends HttpServlet {
 						redirectionToView(HOME_PAGE);
 					} else if (!existingHotel && existingHotelForm){
 						// No hotel registred
-						int idHotel = utilisateurSessionBean.createHotel(nomHotel, adresseHotel, codePostalHotel,
-								villeHotel);
+						int idHotel = utilisateurSessionBean.createHotel(nomHotel);
 						utilisateur.setId_hotel(idHotel);
 						
 						request.removeAttribute("error-form-inscription");
@@ -140,20 +136,7 @@ public class Inscription extends HttpServlet {
 					this.existingHotelForm = false;
 				} else if (selectionHotel.equals("addHotel")) {
 					this.existingHotelForm = true;
-
-					if (adresseHotel == null || "".equals(adresseHotel)) {
-						isOkForm = false;
-					}
-
-					if (codePostalHotel == null || "".equals(codePostalHotel)) {
-						isOkForm = false;
-					}
-
-					if (villeHotel == null || "".equals(villeHotel)) {
-						isOkForm = false;
-					}
 				}
-
 			}
 
 			if (typeUtilisateur.equals("utilisateur")) {
@@ -211,9 +194,6 @@ public class Inscription extends HttpServlet {
 		this.selectionHotel = request.getParameter("selectionHotel");
 		this.nomHotel = request.getParameter("nomHotel");
 		this.existingHotelForm = false;
-		this.adresseHotel = request.getParameter("adresseHotel");
-		this.codePostalHotel = request.getParameter("codePostalHotel");
-		this.villeHotel = request.getParameter("villeHotel");
 	}
 
 	/**
