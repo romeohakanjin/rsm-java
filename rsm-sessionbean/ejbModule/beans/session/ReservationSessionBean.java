@@ -119,4 +119,46 @@ public class ReservationSessionBean {
 		Query query = entityManager.createQuery(queryString);
 		return query.getResultList();
 	}
+	
+	/**
+	 * get all the reservations of a user
+	 * 
+	 * @param idUtilisateur
+	 *            : id of a user
+	 * @return List<Reservation> : list of reservations
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object[]> getReservationsHotelByUserId(int userId) {
+		String queryString = "FROM Reservation as r "
+				+ "JOIN Annonce AS a ON a.id_annonce = r.id_annonce "
+				+ "JOIN EtatReservation AS er ON er.id_etat_reservation = r.id_etat_reservation "
+				+ "WHERE a.id_utilisateur = '" + userId + "'";
+		Query query = entityManager.createQuery(queryString);
+
+		return query.getResultList();
+	}
+
+	/**
+	 * 
+	 * @param id_utilisateur
+	 * @param idReservation
+	 * @return
+	 */
+	public boolean isMatchingIdUserReservationAndIdUserAnnonce(int idUser, int idReservation) {
+		boolean isMatchingId = false;
+
+		String query = "FROM Reservation as r, Annonce as a" + 
+				"WHERE a.id_annonce = r.id_annonce " + 
+				"AND a.id_utilisateur = '"+idUser+"' "+ 
+				"AND r.id_reservation = '"+idReservation+"' ";
+		Query query2 = entityManager.createQuery(query);
+
+		List annonces = query2.getResultList();
+
+		if (annonces.size() != 0) {
+			isMatchingId = true;
+		}
+
+		return isMatchingId;
+	}
 }
