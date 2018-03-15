@@ -81,9 +81,9 @@ public class AnnonceSessionBean {
 	 *            : id of the user
 	 */
 	public List<Object[]> getNumberOfAnnouncePerReservationStatus(int idUser) {
-		String query = "SELECT COUNT(er.id_etat), er.libelle "
+		String query = "SELECT COUNT(er.id_etat_reservation), er.libelle "
 				+ "FROM Annonce AS a, Reservation AS r, EtatReservation AS er " + "WHERE a.id_annonce = r.id_annonce "
-				+ "AND r.id_etat_reservation = er.id_etat " + "AND a.id_utilisateur = '" + idUser + "' "
+				+ "AND r.id_etat_reservation = er.id_etat_reservation " + "AND a.id_utilisateur = '" + idUser + "' "
 				+ "GROUP BY er.libelle";
 		Query query2 = entityManager.createQuery(query);
 
@@ -243,7 +243,7 @@ public class AnnonceSessionBean {
 	 * @return
 	 */
 	public List<Commentaire> getCommentsFromAnnonce(int idAnnonce) {
-		String queryString = "SELECT c.id_commentaire, c.commentaire, c.id_reservation, c.signaler "
+		String queryString = "SELECT c.id_commentaire, c.commentaire, c.id_reservation, c.id_etat_commentaire "
 				+ "FROM Commentaire AS c " + "JOIN Reservation AS r ON c.id_reservation = r.id_reservation "
 				+ "JOIN Annonce as a ON r.id_annonce = a.id_annonce " + "WHERE a.id_annonce = '" + idAnnonce + "' ";
 		Query query = entityManager.createQuery(queryString);
@@ -257,8 +257,7 @@ public class AnnonceSessionBean {
 			comment.setId_commentaire((int) line[0]);
 			comment.setCommentaire((String) line[1]);
 			comment.setId_reservation((int) line[2]);
-			comment.setSignaler((boolean) line[3]);
-
+			comment.setId_etat_commentaire((int) line[3]);
 			comments.add(comment);
 		}
 

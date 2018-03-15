@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
--- http://www.phpmyadmin.net
+-- version 4.6.4
+-- https://www.phpmyadmin.net/
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 05 Mars 2018 à 10:09
--- Version du serveur :  10.1.16-MariaDB
--- Version de PHP :  7.0.9
+-- Généré le :  Mar 13 Mars 2018 à 20:22
+-- Version du serveur :  5.7.14
+-- Version de PHP :  5.6.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données :  `apocalypse`
+-- Base de données :  `rsm`
 --
 
 -- --------------------------------------------------------
@@ -27,24 +27,24 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `activite_externe` (
-  `id_activite` int(10) NOT NULL,
-  `titre` varchar(50) NOT NULL,
-  `description` varchar(1000) NOT NULL,
-  `ville` varchar(20) NOT NULL,
-  `id_type_activite` int(10) NOT NULL
+  `id_activite_externe` int(10) NOT NULL,
+  `id_type_activite` int(10) NOT NULL,
+  `date_creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `titre` varchar(70) NOT NULL,
+  `description` varchar(2500) NOT NULL,
+  `ville` varchar(70) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `activite_externe`
 --
 
-INSERT INTO `activite_externe` (`id_activite`, `titre`, `description`, `ville`, `id_type_activite`) VALUES
-(1, 'Restaurant', 'Description Restaurant', 'Ville', 1),
-(2, 'Musée', 'Description musée', 'Ville', 2),
-(3, 'Parc d''attractions', 'Description parc d''attractions', 'Ville', 3),
-(4, 'Zoo', 'Description Zoo', 'Ville', 4),
-(5, 'Concert', 'Description concert', 'Ville', 5),
-(6, 'Feux d''artifices', 'Description feux d''artifices', 'Ville', 5);
+INSERT INTO `activite_externe` (`id_activite_externe`, `id_type_activite`, `date_creation`, `titre`, `description`, `ville`) VALUES
+(1, 1, '2018-03-05 15:49:18', 'Restaurant', 'Description du restaurant', 'Pessac'),
+(2, 2, '2018-03-05 15:49:18', 'Musée', 'Description du musée', 'Cergy'),
+(3, 3, '2018-03-05 15:49:18', 'Parc d\'attractions', 'Description du parc d\'attraction', 'Bergerac'),
+(4, 4, '2018-03-05 15:49:18', 'Zoo', 'Description du zoo.', 'Blanquefort'),
+(5, 5, '2018-03-05 15:49:18', 'Concert', 'Description du concert', 'Dax');
 
 -- --------------------------------------------------------
 
@@ -55,20 +55,24 @@ INSERT INTO `activite_externe` (`id_activite`, `titre`, `description`, `ville`, 
 CREATE TABLE `annonce` (
   `id_annonce` int(10) NOT NULL,
   `id_utilisateur` int(10) NOT NULL,
-  `titre` varchar(50) DEFAULT NULL,
-  `description` varchar(1000) DEFAULT NULL,
-  `capacite_max` int(10) DEFAULT NULL,
-  `date_creation` datetime DEFAULT NULL,
+  `titre` varchar(50) NOT NULL,
+  `description` varchar(2500) NOT NULL,
+  `capacite_max` int(10) NOT NULL,
+  `date_creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_modification` datetime DEFAULT NULL,
+  `prix_nuit` double NOT NULL,
   `actif` tinyint(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `annonce`
 --
 
-INSERT INTO `annonce` (`id_annonce`, `id_utilisateur`, `titre`, `description`, `capacite_max`, `date_creation`, `actif`) VALUES
-(1, 2, 'test', 'testDescription', 666, '2018-01-01 00:00:00', 1),
-(3, 2, 'Test', 'Suppression', 3, '2018-03-01 00:00:00', 1);
+INSERT INTO `annonce` (`id_annonce`, `id_utilisateur`, `titre`, `description`, `capacite_max`, `date_creation`, `date_modification`, `prix_nuit`, `actif`) VALUES
+(1, 2, 'Chambre dtel', 'La chambre del est spacieuse. Elle donne vue sur les cocotiers. ', 4, '2018-03-05 15:38:48', NULL, 45, 1),
+(2, 3, 'Suite royale', 'Située au dernier étage de l\'hôtel, notre suite Royale Mandarin offre de superbes vues panoramiques sur la ville. La décoration de cette suite duplex rappelle l\'opulence des années 1930, avec sa palette de tons or, blanc, beige et prune d\'une grande élégance. Chaque meuble et objet d\'art a été spécialement commandé, tout comme l\'escalier en métal guilloché. La tête de lit brodée reproduit une œuvre de Man Ray, un artiste de légende, pour un effet des plus saisissants. La suite est dotée d\'une spacieuse salle de séjour, d\'une salle à manger, d\'une cuisine, d\'un bar, d\'un bureau et d\'une salle de gym privée, ainsi que d\'une chambre principale aux dimensions généreuses. L\'élégante salle de bains attenante, ornée de cabochons dorés au sol, comprend un hammam et une gigantesque baignoire offrant une magnifique vue sur la ville, dont vous pouvez profiter également depuis la terrasse. De plus, si vous souhaitez bénéficier d\'une deuxième chambre, vous pouvez réserver la Suite Panoramique adjacente, qui offre un splendide intérieur Art déco et comprend un espace salon-salle à manger, une chambre, une salle de bain et une terrasse extérieure privée.', 2, '2018-03-05 15:44:30', NULL, 200, 1),
+(3, 2, 'll', 'szzs', 3, '2018-03-13 21:05:40', NULL, 33.12, 1),
+(4, 2, 'Hey', 'Chambre', 4, '2018-03-13 21:18:09', NULL, 34.56, 0);
 
 -- --------------------------------------------------------
 
@@ -77,12 +81,33 @@ INSERT INTO `annonce` (`id_annonce`, `id_utilisateur`, `titre`, `description`, `
 --
 
 CREATE TABLE `commentaire` (
-  `id_commentaire` int(11) NOT NULL,
-  `id_reservation` int(11) NOT NULL,
-  `id_utilisateur` int(11) NOT NULL,
-  `commentaire` varchar(1000) NOT NULL,
-  `signaler` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `id_commentaire` int(10) NOT NULL,
+  `id_reservation` int(10) NOT NULL,
+  `id_utilisateur` int(10) NOT NULL,
+  `date_creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `commentaire` varchar(2500) NOT NULL,
+  `id_etat_commentaire` int(10) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `etat_commentaire`
+--
+
+CREATE TABLE `etat_commentaire` (
+  `id_etat_commentaire` int(10) NOT NULL,
+  `libelle` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `etat_commentaire`
+--
+
+INSERT INTO `etat_commentaire` (`id_etat_commentaire`, `libelle`) VALUES
+(1, 'Validé'),
+(2, 'Refusé'),
+(3, 'Signalé');
 
 -- --------------------------------------------------------
 
@@ -91,18 +116,18 @@ CREATE TABLE `commentaire` (
 --
 
 CREATE TABLE `etat_reservation` (
-  `id_etat` int(10) NOT NULL,
-  `libelle` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `id_etat_reservation` int(10) NOT NULL,
+  `libelle` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `etat_reservation`
 --
 
-INSERT INTO `etat_reservation` (`id_etat`, `libelle`) VALUES
-(1, 'En attente de la confirmation hotelier'),
-(2, 'En attente de la validation voyageur'),
-(3, 'Validee');
+INSERT INTO `etat_reservation` (`id_etat_reservation`, `libelle`) VALUES
+(1, 'En attente de la confirmation de l\'hôtelier'),
+(2, 'En attente de la confirmation du voyageur'),
+(3, 'Validée');
 
 -- --------------------------------------------------------
 
@@ -111,24 +136,16 @@ INSERT INTO `etat_reservation` (`id_etat`, `libelle`) VALUES
 --
 
 CREATE TABLE `hotel` (
-  `id_hotel` int(11) NOT NULL,
-  `nom` varchar(35) NOT NULL,
-  `adresse` varchar(35) NOT NULL,
-  `code_postal` varchar(15) NOT NULL,
-  `ville` varchar(60) NOT NULL
+  `id_hotel` int(10) NOT NULL,
+  `nom_hotel` varchar(40) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `hotel`
 --
 
-INSERT INTO `hotel` (`id_hotel`, `nom`, `adresse`, `code_postal`, `ville`) VALUES
-(1, 'test1', '556 villa 5', '75013', 'Paris'),
-(2, 'Hotel 1', '100 rue des brebis', '75015', 'Paris'),
-(7, 'vatec', '', '', ''),
-(8, 'popo', '', '', ''),
-(9, 'lm', 'lm', 'lm', 'lm'),
-(10, 'ko', 'ko', 'ko', 'ko');
+INSERT INTO `hotel` (`id_hotel`, `nom_hotel`) VALUES
+(1, 'El Plaza');
 
 -- --------------------------------------------------------
 
@@ -137,9 +154,23 @@ INSERT INTO `hotel` (`id_hotel`, `nom`, `adresse`, `code_postal`, `ville`) VALUE
 --
 
 CREATE TABLE `paiement` (
-  `id_paiement` int(11) NOT NULL,
-  `id_reservation` int(11) NOT NULL,
-  `date_paiement` datetime NOT NULL
+  `id_paiement` int(10) NOT NULL,
+  `id_reservation` int(10) NOT NULL,
+  `date_paiement` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `proposition_modification_annonce`
+--
+
+CREATE TABLE `proposition_modification_annonce` (
+  `id_proposition_modif_annonce` int(10) NOT NULL,
+  `id_annonce` int(10) NOT NULL,
+  `id_utilisateur` int(10) NOT NULL,
+  `modification` varchar(1000) NOT NULL,
+  `date_proposition` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -152,21 +183,19 @@ CREATE TABLE `reservation` (
   `id_reservation` int(10) NOT NULL,
   `id_annonce` int(10) NOT NULL,
   `id_utilisateur` int(10) NOT NULL,
+  `date_sejour` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `duree_sejour` int(10) NOT NULL,
   `prix` double NOT NULL,
-  `capacite_max` int(10) NOT NULL,
-  `date_sejour` datetime NOT NULL,
-  `id_statut_reservation` int(10) NOT NULL,
-  `id_etat_reservation` int(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `id_statut_reservation` int(10) NOT NULL DEFAULT '1',
+  `id_etat_reservation` int(10) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `reservation`
 --
 
-INSERT INTO `reservation` (`id_reservation`, `id_annonce`, `id_utilisateur`, `prix`, `capacite_max`, `date_sejour`, `id_statut_reservation`, `id_etat_reservation`) VALUES
-(1, 1, 3, 23.3, 22, '2018-02-13 00:00:00', 1, 1),
-(2, 1, 28, 99.9, 8, '2018-02-20 00:00:00', 1, 1),
-(3, 3, 28, 234, 2, '2018-03-10 00:00:00', 1, 1);
+INSERT INTO `reservation` (`id_reservation`, `id_annonce`, `id_utilisateur`, `date_sejour`, `duree_sejour`, `prix`, `id_statut_reservation`, `id_etat_reservation`) VALUES
+(1, 1, 3, '2018-03-05 15:40:10', 6, 270, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -176,8 +205,8 @@ INSERT INTO `reservation` (`id_reservation`, `id_annonce`, `id_utilisateur`, `pr
 
 CREATE TABLE `statut_reservation` (
   `id_statut_reservation` int(10) NOT NULL,
-  `libelle` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `libelle` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `statut_reservation`
@@ -207,9 +236,9 @@ CREATE TABLE `type_activite` (
 INSERT INTO `type_activite` (`id_type_activite`, `libelle`) VALUES
 (1, 'Restauration'),
 (2, 'Musées'),
-(3, 'Parc d''attractions'),
+(3, 'Parc d\'attractions'),
 (4, 'Nature et parcs'),
-(5, 'Evenements');
+(5, 'Evènement');
 
 -- --------------------------------------------------------
 
@@ -219,8 +248,8 @@ INSERT INTO `type_activite` (`id_type_activite`, `libelle`) VALUES
 
 CREATE TABLE `type_utilisateur` (
   `id_type_utilisateur` int(10) NOT NULL,
-  `libelle` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `libelle` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `type_utilisateur`
@@ -240,28 +269,27 @@ INSERT INTO `type_utilisateur` (`id_type_utilisateur`, `libelle`) VALUES
 CREATE TABLE `utilisateur` (
   `id_utilisateur` int(10) NOT NULL,
   `id_type_utilisateur` int(10) NOT NULL DEFAULT '3',
-  `id_hotel` int(50) DEFAULT NULL,
+  `id_hotel` int(10) DEFAULT NULL,
   `nom` varchar(50) NOT NULL,
   `prenom` varchar(50) NOT NULL,
   `mail` varchar(70) NOT NULL,
-  `motDePasse` varchar(25) NOT NULL,
+  `mot_de_passe` varchar(25) NOT NULL,
   `mobile` varchar(15) NOT NULL,
-  `adresse` varchar(50) NOT NULL,
+  `adresse` varchar(70) NOT NULL,
   `code_postal` varchar(10) NOT NULL,
   `ville` varchar(50) NOT NULL,
-  `point_bonus` int(100) NOT NULL DEFAULT '0',
+  `point_bonus` int(100) DEFAULT '0',
   `actif` tinyint(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `utilisateur`
 --
 
-INSERT INTO `utilisateur` (`id_utilisateur`, `id_type_utilisateur`, `id_hotel`, `nom`, `prenom`, `mail`, `motDePasse`, `mobile`, `adresse`, `code_postal`, `ville`, `point_bonus`, `actif`) VALUES
-(1, 1, NULL, 'LIM', 'Sindy', 'sindy.lim91@gmail.com', 'test01', '0635267495', '100 rue des tests', '75015', 'Paris', 0, 1),
-(2, 2, NULL, 'HAKANJIN', 'Romeo', 'hakanjin.romeo96@gmail.com', 'test02', '0635987465', '12 allee des test', '95800', 'CERGY', 0, 1),
-(3, 3, NULL, 'DIAGNE', 'Massamba', 'massdinho10@gmail.com', 'test03', '0745873695', '3 avenue de test', '93600', 'AUNAY-SOUS-BOIS', 0, 1),
-(28, 3, NULL, 'Test', 'Suppresion', 'test@gmail.com', 'test01', '0104445324', '2 rue des terres curées', '75015', 'Paris', 0, 1);
+INSERT INTO `utilisateur` (`id_utilisateur`, `id_type_utilisateur`, `id_hotel`, `nom`, `prenom`, `mail`, `mot_de_passe`, `mobile`, `adresse`, `code_postal`, `ville`, `point_bonus`, `actif`) VALUES
+(1, 1, NULL, 'LIM', 'Sindy', 'sindy.lim91@gmail.com', 'test01', '0678653401', '100 rue des tests', '75015', 'Paris', 0, 1),
+(2, 2, 1, 'HAKANJIN', 'Roméo', 'hakanjin.romeo96@gmail.com', 'test02', '0697448295', '3 rue des curés', '95800', 'Cergy', 0, 1),
+(3, 3, NULL, 'DIAGNE', 'Massamba', 'massdinho10@gmail.com', 'test03', '0734546501', '3 avenue du test', '93600', 'Aulnay-sous-bois', 0, 1);
 
 --
 -- Index pour les tables exportées
@@ -271,29 +299,36 @@ INSERT INTO `utilisateur` (`id_utilisateur`, `id_type_utilisateur`, `id_hotel`, 
 -- Index pour la table `activite_externe`
 --
 ALTER TABLE `activite_externe`
-  ADD PRIMARY KEY (`id_activite`),
-  ADD KEY `id_type` (`id_type_activite`);
+  ADD PRIMARY KEY (`id_activite_externe`),
+  ADD KEY `id_type_activite` (`id_type_activite`);
 
 --
 -- Index pour la table `annonce`
 --
 ALTER TABLE `annonce`
   ADD PRIMARY KEY (`id_annonce`),
-  ADD KEY `FK1_ANNONCE` (`id_utilisateur`);
+  ADD KEY `id_utilisateur` (`id_utilisateur`);
 
 --
 -- Index pour la table `commentaire`
 --
 ALTER TABLE `commentaire`
   ADD PRIMARY KEY (`id_commentaire`),
-  ADD KEY `FK2_COMMENTAIRE` (`id_utilisateur`),
-  ADD KEY `id_reservation` (`id_reservation`);
+  ADD KEY `id_reservation` (`id_reservation`),
+  ADD KEY `id_utilisateur` (`id_utilisateur`),
+  ADD KEY `id_etat_commentaire` (`id_etat_commentaire`);
+
+--
+-- Index pour la table `etat_commentaire`
+--
+ALTER TABLE `etat_commentaire`
+  ADD PRIMARY KEY (`id_etat_commentaire`);
 
 --
 -- Index pour la table `etat_reservation`
 --
 ALTER TABLE `etat_reservation`
-  ADD PRIMARY KEY (`id_etat`);
+  ADD PRIMARY KEY (`id_etat_reservation`);
 
 --
 -- Index pour la table `hotel`
@@ -309,14 +344,22 @@ ALTER TABLE `paiement`
   ADD KEY `id_reservation` (`id_reservation`);
 
 --
+-- Index pour la table `proposition_modification_annonce`
+--
+ALTER TABLE `proposition_modification_annonce`
+  ADD PRIMARY KEY (`id_proposition_modif_annonce`),
+  ADD KEY `id_annonce` (`id_annonce`),
+  ADD KEY `id_utilisateur` (`id_utilisateur`);
+
+--
 -- Index pour la table `reservation`
 --
 ALTER TABLE `reservation`
   ADD PRIMARY KEY (`id_reservation`),
-  ADD KEY `FK1_RESERVATION` (`id_annonce`),
-  ADD KEY `FK2_RESERVATION` (`id_utilisateur`),
-  ADD KEY `FK3_RESERVATION` (`id_etat_reservation`),
-  ADD KEY `FK4_RESERVATION` (`id_statut_reservation`);
+  ADD KEY `id_annonce` (`id_annonce`),
+  ADD KEY `id_utilisateur` (`id_utilisateur`),
+  ADD KEY `id_statut_reservation` (`id_statut_reservation`),
+  ADD KEY `id_etat_reservation` (`id_etat_reservation`);
 
 --
 -- Index pour la table `statut_reservation`
@@ -341,8 +384,8 @@ ALTER TABLE `type_utilisateur`
 --
 ALTER TABLE `utilisateur`
   ADD PRIMARY KEY (`id_utilisateur`),
-  ADD KEY `FK1_UTILISATEUR` (`id_type_utilisateur`),
-  ADD KEY `FK2_UTILISATEUR` (`id_hotel`);
+  ADD KEY `id_type_utilisateur` (`id_type_utilisateur`),
+  ADD KEY `id_hotel` (`id_hotel`);
 
 --
 -- AUTO_INCREMENT pour les tables exportées
@@ -352,37 +395,47 @@ ALTER TABLE `utilisateur`
 -- AUTO_INCREMENT pour la table `activite_externe`
 --
 ALTER TABLE `activite_externe`
-  MODIFY `id_activite` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_activite_externe` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT pour la table `annonce`
 --
 ALTER TABLE `annonce`
-  MODIFY `id_annonce` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_annonce` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT pour la table `commentaire`
 --
 ALTER TABLE `commentaire`
-  MODIFY `id_commentaire` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_commentaire` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `etat_commentaire`
+--
+ALTER TABLE `etat_commentaire`
+  MODIFY `id_etat_commentaire` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT pour la table `etat_reservation`
 --
 ALTER TABLE `etat_reservation`
-  MODIFY `id_etat` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_etat_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT pour la table `hotel`
 --
 ALTER TABLE `hotel`
-  MODIFY `id_hotel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_hotel` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT pour la table `paiement`
 --
 ALTER TABLE `paiement`
-  MODIFY `id_paiement` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_paiement` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `proposition_modification_annonce`
+--
+ALTER TABLE `proposition_modification_annonce`
+  MODIFY `id_proposition_modif_annonce` int(10) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `reservation`
 --
 ALTER TABLE `reservation`
-  MODIFY `id_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT pour la table `statut_reservation`
 --
@@ -402,7 +455,7 @@ ALTER TABLE `type_utilisateur`
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- Contraintes pour les tables exportées
 --
@@ -417,14 +470,15 @@ ALTER TABLE `activite_externe`
 -- Contraintes pour la table `annonce`
 --
 ALTER TABLE `annonce`
-  ADD CONSTRAINT `FK1_ANNONCE` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `annonce_ibfk_1` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`);
 
 --
 -- Contraintes pour la table `commentaire`
 --
 ALTER TABLE `commentaire`
-  ADD CONSTRAINT `FK2_COMMENTAIRE` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`),
-  ADD CONSTRAINT `commentaire_ibfk_1` FOREIGN KEY (`id_reservation`) REFERENCES `reservation` (`id_reservation`);
+  ADD CONSTRAINT `commentaire_ibfk_1` FOREIGN KEY (`id_reservation`) REFERENCES `reservation` (`id_reservation`),
+  ADD CONSTRAINT `commentaire_ibfk_2` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`),
+  ADD CONSTRAINT `commentaire_ibfk_3` FOREIGN KEY (`id_etat_commentaire`) REFERENCES `etat_commentaire` (`id_etat_commentaire`);
 
 --
 -- Contraintes pour la table `paiement`
@@ -433,20 +487,27 @@ ALTER TABLE `paiement`
   ADD CONSTRAINT `paiement_ibfk_1` FOREIGN KEY (`id_reservation`) REFERENCES `reservation` (`id_reservation`);
 
 --
+-- Contraintes pour la table `proposition_modification_annonce`
+--
+ALTER TABLE `proposition_modification_annonce`
+  ADD CONSTRAINT `proposition_modification_annonce_ibfk_1` FOREIGN KEY (`id_annonce`) REFERENCES `annonce` (`id_annonce`),
+  ADD CONSTRAINT `proposition_modification_annonce_ibfk_2` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`);
+
+--
 -- Contraintes pour la table `reservation`
 --
 ALTER TABLE `reservation`
-  ADD CONSTRAINT `FK1_RESERVATION` FOREIGN KEY (`id_annonce`) REFERENCES `annonce` (`id_annonce`),
-  ADD CONSTRAINT `FK2_RESERVATION` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`),
-  ADD CONSTRAINT `FK3_RESERVATION` FOREIGN KEY (`id_etat_reservation`) REFERENCES `etat_reservation` (`id_etat`),
-  ADD CONSTRAINT `FK4_RESERVATION` FOREIGN KEY (`id_statut_reservation`) REFERENCES `statut_reservation` (`id_statut_reservation`);
+  ADD CONSTRAINT `reservation_ibfk_1` FOREIGN KEY (`id_annonce`) REFERENCES `annonce` (`id_annonce`),
+  ADD CONSTRAINT `reservation_ibfk_2` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`),
+  ADD CONSTRAINT `reservation_ibfk_3` FOREIGN KEY (`id_statut_reservation`) REFERENCES `statut_reservation` (`id_statut_reservation`),
+  ADD CONSTRAINT `reservation_ibfk_4` FOREIGN KEY (`id_etat_reservation`) REFERENCES `etat_reservation` (`id_etat_reservation`);
 
 --
 -- Contraintes pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  ADD CONSTRAINT `FK1_UTILISATEUR` FOREIGN KEY (`id_type_utilisateur`) REFERENCES `type_utilisateur` (`id_type_utilisateur`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `utilisateur_ibfk_1` FOREIGN KEY (`id_hotel`) REFERENCES `hotel` (`id_hotel`);
+  ADD CONSTRAINT `utilisateur_ibfk_1` FOREIGN KEY (`id_type_utilisateur`) REFERENCES `type_utilisateur` (`id_type_utilisateur`),
+  ADD CONSTRAINT `utilisateur_ibfk_2` FOREIGN KEY (`id_hotel`) REFERENCES `hotel` (`id_hotel`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

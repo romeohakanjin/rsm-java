@@ -41,7 +41,7 @@ public class EtatReservationServlet extends HttpServlet {
 					List<EtatReservation> statutReservations = etatReservationSessionBean.getAllEtatReservation();
 					out.println("<table border='1'>");
 					for (EtatReservation etat : statutReservations) {
-						out.println("<tr><td>" + etat.getId_etat() + "</td><td>" + etat.getLibelle() + "</td></tr>");
+						out.println("<tr><td>" + etat.getId_etat_reservation() + "</td><td>" + etat.getLibelle() + "</td></tr>");
 					}
 					out.println("</table>");
 				} else {

@@ -50,7 +50,7 @@ public class ReservationServlet extends HttpServlet {
 					List<Reservation> reservations = reservationSessionBean.getAllReservation();
 					out.println("<table border='1'>");
 					for (Reservation reserv : reservations) {
-						out.println("<tr><td>" + reserv.getId_annonce() + "</td><td>" + reserv.getCapacite_max() + "</td></tr>");
+						out.println("<tr><td>" + reserv.getId_annonce() + "</td></tr>");
 					}
 					out.println("</table>");
 				} else {

@@ -51,7 +51,7 @@
 									}
 						%>
 						<tr>
-							<th scope="row"><%=activiteExterne.getId_activite()%></th>
+							<th scope="row"><%=activiteExterne.getId_activite_externe()%></th>
 							<td><%=activiteExterne.getTitre()%></td>
 							<td><%=activiteExterne.getDescription()%></td>
 							<td><%=activiteExterne.getVille()%></td>
