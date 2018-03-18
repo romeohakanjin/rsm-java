@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.4
--- https://www.phpmyadmin.net/
+-- version 4.5.1
+-- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Mar 13 Mars 2018 à 20:22
--- Version du serveur :  5.7.14
--- Version de PHP :  5.6.25
+-- Généré le :  Dim 18 Mars 2018 à 19:48
+-- Version du serveur :  10.1.16-MariaDB
+-- Version de PHP :  7.0.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données :  `rsm`
+-- Base de données :  `apocalypse`
 --
 
 -- --------------------------------------------------------
@@ -42,7 +42,7 @@ CREATE TABLE `activite_externe` (
 INSERT INTO `activite_externe` (`id_activite_externe`, `id_type_activite`, `date_creation`, `titre`, `description`, `ville`) VALUES
 (1, 1, '2018-03-05 15:49:18', 'Restaurant', 'Description du restaurant', 'Pessac'),
 (2, 2, '2018-03-05 15:49:18', 'Musée', 'Description du musée', 'Cergy'),
-(3, 3, '2018-03-05 15:49:18', 'Parc d\'attractions', 'Description du parc d\'attraction', 'Bergerac'),
+(3, 3, '2018-03-05 15:49:18', 'Parc d''attractions', 'Description du parc d''attraction', 'Bergerac'),
 (4, 4, '2018-03-05 15:49:18', 'Zoo', 'Description du zoo.', 'Blanquefort'),
 (5, 5, '2018-03-05 15:49:18', 'Concert', 'Description du concert', 'Dax');
 
@@ -70,7 +70,7 @@ CREATE TABLE `annonce` (
 
 INSERT INTO `annonce` (`id_annonce`, `id_utilisateur`, `titre`, `description`, `capacite_max`, `date_creation`, `date_modification`, `prix_nuit`, `actif`) VALUES
 (1, 2, 'Chambre dtel', 'La chambre del est spacieuse. Elle donne vue sur les cocotiers. ', 4, '2018-03-05 15:38:48', NULL, 45, 1),
-(2, 3, 'Suite royale', 'Située au dernier étage de l\'hôtel, notre suite Royale Mandarin offre de superbes vues panoramiques sur la ville. La décoration de cette suite duplex rappelle l\'opulence des années 1930, avec sa palette de tons or, blanc, beige et prune d\'une grande élégance. Chaque meuble et objet d\'art a été spécialement commandé, tout comme l\'escalier en métal guilloché. La tête de lit brodée reproduit une œuvre de Man Ray, un artiste de légende, pour un effet des plus saisissants. La suite est dotée d\'une spacieuse salle de séjour, d\'une salle à manger, d\'une cuisine, d\'un bar, d\'un bureau et d\'une salle de gym privée, ainsi que d\'une chambre principale aux dimensions généreuses. L\'élégante salle de bains attenante, ornée de cabochons dorés au sol, comprend un hammam et une gigantesque baignoire offrant une magnifique vue sur la ville, dont vous pouvez profiter également depuis la terrasse. De plus, si vous souhaitez bénéficier d\'une deuxième chambre, vous pouvez réserver la Suite Panoramique adjacente, qui offre un splendide intérieur Art déco et comprend un espace salon-salle à manger, une chambre, une salle de bain et une terrasse extérieure privée.', 2, '2018-03-05 15:44:30', NULL, 200, 1),
+(2, 3, 'Suite royale', 'Située au dernier étage de l''hôtel, notre suite Royale Mandarin offre de superbes vues panoramiques sur la ville. La décoration de cette suite duplex rappelle l''opulence des années 1930, avec sa palette de tons or, blanc, beige et prune d''une grande élégance. Chaque meuble et objet d''art a été spécialement commandé, tout comme l''escalier en métal guilloché. La tête de lit brodée reproduit une œuvre de Man Ray, un artiste de légende, pour un effet des plus saisissants. La suite est dotée d''une spacieuse salle de séjour, d''une salle à manger, d''une cuisine, d''un bar, d''un bureau et d''une salle de gym privée, ainsi que d''une chambre principale aux dimensions généreuses. L''élégante salle de bains attenante, ornée de cabochons dorés au sol, comprend un hammam et une gigantesque baignoire offrant une magnifique vue sur la ville, dont vous pouvez profiter également depuis la terrasse. De plus, si vous souhaitez bénéficier d''une deuxième chambre, vous pouvez réserver la Suite Panoramique adjacente, qui offre un splendide intérieur Art déco et comprend un espace salon-salle à manger, une chambre, une salle de bain et une terrasse extérieure privée.', 2, '2018-03-05 15:44:30', NULL, 200, 1),
 (3, 2, 'll', 'szzs', 3, '2018-03-13 21:05:40', NULL, 33.12, 1),
 (4, 2, 'Hey', 'Chambre', 4, '2018-03-13 21:18:09', NULL, 34.56, 0);
 
@@ -125,9 +125,10 @@ CREATE TABLE `etat_reservation` (
 --
 
 INSERT INTO `etat_reservation` (`id_etat_reservation`, `libelle`) VALUES
-(1, 'En attente de la confirmation de l\'hôtelier'),
+(1, 'En attente de la confirmation de l''hôtelier'),
 (2, 'En attente de la confirmation du voyageur'),
-(3, 'Validée');
+(3, 'Validée'),
+(4, 'Refusée');
 
 -- --------------------------------------------------------
 
@@ -236,7 +237,7 @@ CREATE TABLE `type_activite` (
 INSERT INTO `type_activite` (`id_type_activite`, `libelle`) VALUES
 (1, 'Restauration'),
 (2, 'Musées'),
-(3, 'Parc d\'attractions'),
+(3, 'Parc d''attractions'),
 (4, 'Nature et parcs'),
 (5, 'Evènement');
 
@@ -415,7 +416,7 @@ ALTER TABLE `etat_commentaire`
 -- AUTO_INCREMENT pour la table `etat_reservation`
 --
 ALTER TABLE `etat_reservation`
-  MODIFY `id_etat_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_etat_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT pour la table `hotel`
 --

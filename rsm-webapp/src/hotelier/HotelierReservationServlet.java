@@ -23,15 +23,20 @@ import beans.session.ReservationSessionBean;
 public class HotelierReservationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String LIST_RESERVATIONS_SERVLET = "HotelierReservationListServlet";
-	private static final String ACCEPT_RESERVATION = "Valider";
-	private static final String REFUSE_RESERVATION = "Refuser";
+	private static final String ACCEPT_RESERVATION = "ValiderReservation";
+	private static final String REFUSE_RESERVATION = "RefuserReservation";
 	/**
-	 * status which correspond to the "waiting confirmation from hotelier" status
+	 * status which correspond to the "waiting confirmation from hotelier" state
 	 */
-	private static final int RESERVATION_STATUS_HOTELIER_ID = 1;
-	private static final int RESERVATION_STATE_VALIDATION_ID = 4;
-	private static final int RESERVATION_STATE_REFUSE_ID = 0;
-	private static final int RESERVATION_STATE_FINISH_ID = 3;
+	private static final int RESERVATION_STATE_HOTELIER = 1;
+	/**
+	 * status which correspond to the "accepted" state
+	 */
+	private static final int RESERVATION_STATE_VALIDATION_HOTELIER = 3;
+	/**
+	 * status which correspond to the "refusing" state
+	 */
+	private static final int RESERVATION_STATE_REFUSING_HOTELIER = 4;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
@@ -49,7 +54,8 @@ public class HotelierReservationServlet extends HttpServlet {
 		this.request = request;
 		this.response = response;
 		initialiser();
-
+		System.out.println("here");
+		System.out.println(action);
 		switch (action) {
 		case ACCEPT_RESERVATION:
 			reservationValidation();
@@ -79,14 +85,15 @@ public class HotelierReservationServlet extends HttpServlet {
 			boolean isMathingId = reservationSessionBean.isMatchingIdUserReservationAndIdUserAnnonce(id_utilisateur,
 					idReservation);
 			if (isMathingId) {
-//				int reservationStatusId = etatReservationSessionBean.getReservationStatusId(idReservation);
-//
-//				if (reservationStatusId == RESERVATION_STATUS_HOTELIER_ID) {
-//					reservationSessionBean.RefuseReservationHotelier(idReservation, RESERVATION_STATE_REFUSE_ID);
-//				} else {
-//					setVariableToView("error-hotelier-reservations-list", "Cette réservation est en attente de confirmation");
-//				}
-				// sinon on fait pas redirection + message d'erreur
+				int reservationStateId = reservationSessionBean.getReservationStateId(idReservation);
+
+				if (reservationStateId == RESERVATION_STATE_HOTELIER) {
+					reservationSessionBean.validationReservationHotelier(idReservation,
+							RESERVATION_STATE_VALIDATION_HOTELIER);
+				} else {
+					setVariableToView("error-hotelier-reservations-list",
+							"Cette annonce n'est pas en attente d'une confirmation");
+				}
 			} else {
 				setVariableToView("error-hotelier-reservations-list", "Numéro d'annonce incorrect");
 			}
@@ -100,13 +107,13 @@ public class HotelierReservationServlet extends HttpServlet {
 
 	/**
 	 * Refuse a reservation
-	 * @param RESERVATION_STATE_VALIDATION 
 	 * 
 	 * @throws IOException
 	 * @throws ServletException
 	 */
 	private void reservationValidation() throws ServletException, IOException {
 		try {
+			System.out.println("1");
 			int idReservation = Integer.valueOf(reservationId);
 			String identifiant = (String) this.session.getAttribute("login");
 			int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
@@ -114,14 +121,16 @@ public class HotelierReservationServlet extends HttpServlet {
 			boolean isMathingId = reservationSessionBean.isMatchingIdUserReservationAndIdUserAnnonce(id_utilisateur,
 					idReservation);
 			if (isMathingId) {
-//				int reservationStatusId = etatReservationSessionBean.getReservationStatusId(idReservation);
-//
-//				if (reservationStatusId == RESERVATION_STATUS_HOTELIER_ID) {
-//					reservationSessionBean.ValidateReservationHotelier(idReservation, RESERVATION_STATE_VALIDATION);
-//				} else {
-//					setVariableToView("error-hotelier-reservations-list", "Cette réservation est en attente de confirmation");
-//				}
-				// sinon on fait pas redirection + message d'erreur
+				int reservationStateId = reservationSessionBean.getReservationStateId(idReservation);
+				System.out.println("2");
+				if (reservationStateId == RESERVATION_STATE_HOTELIER) {
+					System.out.println("3");
+					reservationSessionBean.resufingReservationHotelier(idReservation,
+							RESERVATION_STATE_REFUSING_HOTELIER);
+				} else {
+					setVariableToView("error-hotelier-reservations-list",
+							"Cette annonce n'est pas en attente d'une confirmation");
+				}
 			} else {
 				setVariableToView("error-hotelier-reservations-list", "Numéro d'annonce incorrect");
 			}

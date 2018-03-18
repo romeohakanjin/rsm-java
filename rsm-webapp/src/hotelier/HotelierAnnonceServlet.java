@@ -54,12 +54,13 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		initialiser();
 
 		// Ajouter ou modifier une annonce
-		/*if (this.parametreAnnonce.equals(PARAMETER_ACTION_EDIT_ANNONCE)) {
-			ajouterAnnonceModifierActionPerformed();
-
-		} else if (this.parametreAnnonce.equals(PARAMETER_ACTION_ADD)) {
-			ajouterAnnonceActionPerformed();
-		}*/
+		/*
+		 * if (this.parametreAnnonce.equals(PARAMETER_ACTION_EDIT_ANNONCE)) {
+		 * ajouterAnnonceModifierActionPerformed();
+		 * 
+		 * } else if (this.parametreAnnonce.equals(PARAMETER_ACTION_ADD)) {
+		 * ajouterAnnonceActionPerformed(); }
+		 */
 
 		// Afficher ou supprimer une annonce
 		switch (this.parametre) {
@@ -123,7 +124,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 
 	private void ajouterAnnonceActionPerformed() throws ServletException, IOException {
 		final boolean isOkForm = verificationFormulaire();
-		
+
 		if (isOkForm) {
 			dateCreation = new Date(Calendar.getInstance().getTime().getTime());
 			Annonce annonce = new Annonce();
@@ -140,11 +141,11 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			annonceSessionBean.creerAnnonce(annonce);
 
 			request.removeAttribute("error-hotelier-annonce-form");
-			
+
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		} else {
 			setVariableToView("error-hotelier-annonce-form", "Informations incorrectes ou manquantes");
-			
+
 			redirectionToView(ANNONCE_VIEW);
 		}
 	}
@@ -223,16 +224,16 @@ public class HotelierAnnonceServlet extends HttpServlet {
 				isOkForm = false;
 			}
 		}
-		
-		if(prixNuit == null || "".equals(prixNuit)) {
+
+		if (prixNuit == null || "".equals(prixNuit)) {
 			isOkForm = false;
-		}else {
+		} else {
 			try {
 				this.prixParNuit = Double.parseDouble(prixNuit.trim());
 			} catch (NumberFormatException e) {
 				isOkForm = false;
 			}
-			
+
 		}
 
 		return isOkForm;
