@@ -184,11 +184,6 @@ public class UserManagementServlet extends HttpServlet {
 		case 3:
 			reservationList = reservationSessionBean.getReservationByUserId(userId);
 			if(reservationList.size() != 0) {
-				for(Reservation reservation : reservationList) {
-					if(reservation.getId_statut_reservation().equals(4)) {
-						
-					}
-				}
 				isDeleted = false;
 			}else {
 				isDeleted = utilisateurSessionBean.deleteUser(user);

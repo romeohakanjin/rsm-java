@@ -100,7 +100,7 @@ public class ReservationSessionBean {
 	public List<Reservation> getReservationByUserId(Integer userId){
 		String queryString = "FROM Reservation "
 				+ "WHERE id_utilisateur = '"+userId+"' "
-				+ "AND id_statut_reservation IN (1, 2, 3)";
+				+ "AND id_etat_reservation <> 3";
 		Query query = entityManager.createQuery(queryString);
 		return query.getResultList();
 	}
@@ -115,7 +115,7 @@ public class ReservationSessionBean {
 	public List<Reservation> getFinishedReservationByUserId(Integer userId){
 		String queryString = "FROM Reservation "
 				+ "WHERE id_utilisateur = '"+userId+"' "
-				+ "AND id_statut_reservation IN (1, 2, 3)";
+				+ "AND id_etat_reservation = 3";
 		Query query = entityManager.createQuery(queryString);
 		return query.getResultList();
 	}

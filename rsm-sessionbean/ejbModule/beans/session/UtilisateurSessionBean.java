@@ -77,7 +77,7 @@ public class UtilisateurSessionBean {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Utilisateur> getAllUtilisateur() {
-		String queryString = "FROM Utilisateur";
+		String queryString = "FROM Utilisateur WHERE actif = TRUE";
 		Query query = entityManager.createQuery(queryString);
 		return (List<Utilisateur>) query.getResultList();
 	}
