@@ -191,37 +191,52 @@ public class ReservationSessionBean {
 	 * @param reservationStateValidationHotelier
 	 *            : id of the validation state
 	 */
-	public void validationReservationHotelier(int idReservation, int reservationStateValidationHotelier) {
+	public void validationReservationHotelier(int idReservation, int reservationStateValidationHotelier,
+			int incomingReservationStatusId) {
 		try {
 			userTransaction.begin();
-			String queryString =	"UPDATE Reservation AS r "
-					+ "SET r.id_etat_reservation = '"+reservationStateValidationHotelier+"'"
-					+ "WHERE r.id_reservation = '" + idReservation + "' ";
+			String queryString = "UPDATE Reservation AS r " + "SET r.id_etat_reservation = '"
+					+ reservationStateValidationHotelier + "'" + "WHERE r.id_reservation = '" + idReservation + "' ";
 			Query query = entityManager.createQuery(queryString);
 			query.executeUpdate();
+
+			String queryStringUpdate = "UPDATE Reservation AS r " + "SET r.id_statut_reservation = '"
+					+ reservationStateValidationHotelier + "'" + "WHERE r.id_reservation = '" + idReservation + "' ";
+			Query queryUpdate = entityManager.createQuery(queryStringUpdate);
+			queryUpdate.executeUpdate();
+
 			userTransaction.commit();
-		} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+		} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
 	 * refusing a reservation in a hotel
+	 * 
 	 * @param idReservation
 	 *            : id of the reservation
 	 * @param reservationStateRefusingHotelier
 	 *            : : id of the refusing state
 	 */
-	public void resufingReservationHotelier(int idReservation, int reservationStateRefusingHotelier) {
+	public void resufingReservationHotelier(int idReservation, int reservationStateRefusingHotelier,
+			int finishedReservationStatusId) {
 		try {
 			userTransaction.begin();
-			String queryString =	"UPDATE Reservation AS r "
-					+ "SET r.id_etat_reservation = '"+reservationStateRefusingHotelier+"'"
-					+ "WHERE r.id_reservation = '" + idReservation + "' ";
+			String queryString = "UPDATE Reservation AS r " + "SET r.id_etat_reservation = '"
+					+ reservationStateRefusingHotelier + "' WHERE r.id_reservation = '" + idReservation + "' ";
 			Query query = entityManager.createQuery(queryString);
 			query.executeUpdate();
+
+			String queryStringUpdate = "UPDATE Reservation AS r " + "SET r.id_statut_reservation = '"
+					+ finishedReservationStatusId + "'" + "WHERE r.id_reservation = '" + idReservation + "' ";
+			Query queryUpdate = entityManager.createQuery(queryStringUpdate);
+			queryUpdate.executeUpdate();
+
 			userTransaction.commit();
-		} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+		} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException e) {
 			e.printStackTrace();
 		}
 	}

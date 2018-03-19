@@ -25,6 +25,7 @@ public class HotelierReservationServlet extends HttpServlet {
 	private static final String LIST_RESERVATIONS_SERVLET = "HotelierReservationListServlet";
 	private static final String ACCEPT_RESERVATION = "ValiderReservation";
 	private static final String REFUSE_RESERVATION = "RefuserReservation";
+	private static final int FINISHED_RESERVATION_STATUS_ID = 4;
 	/**
 	 * status which correspond to the "waiting confirmation from hotelier" state
 	 */
@@ -34,9 +35,13 @@ public class HotelierReservationServlet extends HttpServlet {
 	 */
 	private static final int RESERVATION_STATE_VALIDATION_HOTELIER = 3;
 	/**
-	 * status which correspond to the "refusing" state
+	 * status which correspond to "refusing"
 	 */
 	private static final int RESERVATION_STATE_REFUSING_HOTELIER = 4;
+	/**
+	 * status which correspond to "incoming"
+	 */
+	private static final int INCOMING_RESERVATION_STATUS_ID = 2;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
@@ -54,8 +59,7 @@ public class HotelierReservationServlet extends HttpServlet {
 		this.request = request;
 		this.response = response;
 		initialiser();
-		System.out.println("here");
-		System.out.println(action);
+
 		switch (action) {
 		case ACCEPT_RESERVATION:
 			reservationValidation();
@@ -88,8 +92,10 @@ public class HotelierReservationServlet extends HttpServlet {
 				int reservationStateId = reservationSessionBean.getReservationStateId(idReservation);
 
 				if (reservationStateId == RESERVATION_STATE_HOTELIER) {
+					request.removeAttribute("error-hotelier-reservations-list");
+					setVariableToView("ok-hotelier-reservations-list", "Cette annonce vient d'être refusée");
 					reservationSessionBean.validationReservationHotelier(idReservation,
-							RESERVATION_STATE_VALIDATION_HOTELIER);
+							RESERVATION_STATE_VALIDATION_HOTELIER, INCOMING_RESERVATION_STATUS_ID);
 				} else {
 					setVariableToView("error-hotelier-reservations-list",
 							"Cette annonce n'est pas en attente d'une confirmation");
@@ -113,7 +119,6 @@ public class HotelierReservationServlet extends HttpServlet {
 	 */
 	private void reservationValidation() throws ServletException, IOException {
 		try {
-			System.out.println("1");
 			int idReservation = Integer.valueOf(reservationId);
 			String identifiant = (String) this.session.getAttribute("login");
 			int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
@@ -122,11 +127,12 @@ public class HotelierReservationServlet extends HttpServlet {
 					idReservation);
 			if (isMathingId) {
 				int reservationStateId = reservationSessionBean.getReservationStateId(idReservation);
-				System.out.println("2");
+
 				if (reservationStateId == RESERVATION_STATE_HOTELIER) {
-					System.out.println("3");
+					request.removeAttribute("error-hotelier-reservations-list");
+					setVariableToView("ok-hotelier-reservations-list", "Cette annonce vient d'être validée");
 					reservationSessionBean.resufingReservationHotelier(idReservation,
-							RESERVATION_STATE_REFUSING_HOTELIER);
+							RESERVATION_STATE_REFUSING_HOTELIER, FINISHED_RESERVATION_STATUS_ID);
 				} else {
 					setVariableToView("error-hotelier-reservations-list",
 							"Cette annonce n'est pas en attente d'une confirmation");
@@ -155,6 +161,7 @@ public class HotelierReservationServlet extends HttpServlet {
 			this.action = "";
 		}
 		this.reservationId = this.request.getParameter("reservationId");
+		this.request.removeAttribute("ok-hotelier-reservations-list");
 	}
 
 	/**

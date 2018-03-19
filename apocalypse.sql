@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Dim 18 Mars 2018 à 19:48
+-- Généré le :  Lun 19 Mars 2018 à 17:44
 -- Version du serveur :  10.1.16-MariaDB
 -- Version de PHP :  7.0.9
 
@@ -184,7 +184,8 @@ CREATE TABLE `reservation` (
   `id_reservation` int(10) NOT NULL,
   `id_annonce` int(10) NOT NULL,
   `id_utilisateur` int(10) NOT NULL,
-  `date_sejour` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_debut_sejour` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_fin_sejour` datetime NOT NULL,
   `duree_sejour` int(10) NOT NULL,
   `prix` double NOT NULL,
   `id_statut_reservation` int(10) NOT NULL DEFAULT '1',
@@ -195,8 +196,9 @@ CREATE TABLE `reservation` (
 -- Contenu de la table `reservation`
 --
 
-INSERT INTO `reservation` (`id_reservation`, `id_annonce`, `id_utilisateur`, `date_sejour`, `duree_sejour`, `prix`, `id_statut_reservation`, `id_etat_reservation`) VALUES
-(1, 1, 3, '2018-03-05 15:40:10', 6, 270, 1, 1);
+INSERT INTO `reservation` (`id_reservation`, `id_annonce`, `id_utilisateur`, `date_debut_sejour`, `date_fin_sejour`, `duree_sejour`, `prix`, `id_statut_reservation`, `id_etat_reservation`) VALUES
+(1, 1, 3, '2018-03-05 15:40:10', '2018-03-11 15:40:00', 6, 270, 3, 3),
+(2, 1, 3, '2018-03-05 15:40:10', '2018-03-12 15:40:00', 7, 270, 4, 4);
 
 -- --------------------------------------------------------
 
@@ -215,8 +217,8 @@ CREATE TABLE `statut_reservation` (
 
 INSERT INTO `statut_reservation` (`id_statut_reservation`, `libelle`) VALUES
 (1, 'En attente'),
-(2, 'En cours'),
-(3, 'A venir'),
+(2, 'A venir'),
+(3, 'En cours'),
 (4, 'Terminée');
 
 -- --------------------------------------------------------
@@ -436,7 +438,7 @@ ALTER TABLE `proposition_modification_annonce`
 -- AUTO_INCREMENT pour la table `reservation`
 --
 ALTER TABLE `reservation`
-  MODIFY `id_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT pour la table `statut_reservation`
 --
