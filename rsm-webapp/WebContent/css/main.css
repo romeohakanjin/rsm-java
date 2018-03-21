@@ -1452,10 +1452,10 @@
 
 	form label {
 		display: block;
-		font-weight: 800;
+		font-weight: bold;
 		margin: 0 0 1em 0;
 		font-size: 0.8em;
-		color: #444;
+		color: #722424;
 	}
 
 	form input[type="text"],
@@ -1606,7 +1606,7 @@
 		-webkit-appearance: none;
 		position: relative;
 		display: inline-block;
-		background: #0090c5;
+		background: #722424;
 		color: #fff;
 		text-decoration: none;
 		border-radius: 6px;

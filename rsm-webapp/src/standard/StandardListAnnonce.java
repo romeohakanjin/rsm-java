@@ -2,7 +2,6 @@ package standard;
 
 import java.io.IOException;
 import java.util.List;
-
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,19 +9,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import beans.entity.Utilisateur;
+import beans.entity.Annonce;
+import beans.session.AnnonceSessionBean;
 import beans.session.UtilisateurSessionBean;
 
-/**
- * 
- * @author Massneymar
- *
- */
-@WebServlet("/StandardServlet")
-public class StandardServlet extends HttpServlet {
+@WebServlet("/StandardListAnnonce")
+public class StandardListAnnonce extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String INFOS_PERSONNELLES = "StandardPage";
+	private static final String LISTE_ANNONCES = "StandardListAnnonce";
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
@@ -31,12 +25,10 @@ public class StandardServlet extends HttpServlet {
 	UtilisateurSessionBean utilisateurSessionBean;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		this.request = request;
-		this.response = response;
+			throws ServletException, IOException {		
 
-		initialiser();
-		showUserInformations();
+		initialiser(request, response);
+		showListAnnonces();
 	}
 
 	/**
@@ -44,29 +36,30 @@ public class StandardServlet extends HttpServlet {
 	 * 
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialiser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
+		this.request = request;
+		this.response = response;
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
 	}
 	
 	/**
-	 * Affiche les informations de l'utilisateur
+	 * Shows all the Annonces available
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void showUserInformations() throws ServletException, IOException {
-		String identifiant = (String) this.session.getAttribute("login");
-		int idUtilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant); 
-		List<Utilisateur> utilisateur = utilisateurSessionBean.getUserInformation(idUtilisateur);		
-		this.request.setAttribute("userInformations", utilisateur);
-		redirectionToView(INFOS_PERSONNELLES);
+	private void showListAnnonces() throws ServletException, IOException {
+		
+		List<Annonce> annonces = utilisateurSessionBean.getAllAnnonceUtilisateur();
+		this.request.setAttribute("annonces", annonces);
+		redirectionToView(LISTE_ANNONCES);
 	}
 
 	/**
 	 * Redirection to a view
 	 * 
 	 * @param String
-	 *            : the view name
 	 * @throws ServletException
 	 * @throws IOException
 	 */

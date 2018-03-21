@@ -17,10 +17,10 @@ import beans.session.AnnonceSessionBean;
 /**
  * Servlet implementation class HotelierAnnonceListServlet
  */
-@WebServlet("/StandardListUtilisateurs")
-public class StandardListUtilisateurs extends HttpServlet {
+@WebServlet("/HotelierAnnonceListServlet")
+public class StandardAnnonces extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String LISTE_UTILISATEURS = "StandardUtilisateurs";
+	private static final String LISTE_ANNONCES = "StandardAnnonces";
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
@@ -40,7 +40,7 @@ public class StandardListUtilisateurs extends HttpServlet {
 
 		List<Annonce> annonces = annonceSessionBean.getAllAnnonceUtilisateur(idUtilisateur);
 		this.request.setAttribute("annonces", annonces);
-		redirectionToView(LISTE_UTILISATEURS);
+		redirectionToView(LISTE_ANNONCES);
 	}
 
 	/**

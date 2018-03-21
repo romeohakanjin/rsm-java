@@ -56,7 +56,7 @@ public class Inscription extends HttpServlet {
 		boolean isOkForm = verificationFormulaire();
 
 		if (isOkForm) {
-			boolean existingUser = utilisateurSessionBean.isExitingUser(identifiant);
+			boolean existingUser = utilisateurSessionBean.isExistingUser(identifiant);
 			if (!existingUser) {
 				Utilisateur utilisateur = new Utilisateur();
 				utilisateur.setMail(identifiant);

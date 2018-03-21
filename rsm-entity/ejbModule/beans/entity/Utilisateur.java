@@ -28,6 +28,21 @@ public class Utilisateur implements Serializable {
 	private String code_postal;
 	private String ville;
 	private Integer point_bonus;
+	
+	public Utilisateur() {
+		
+	}
+	
+	public Utilisateur(int idUtilisateur, String nom, String prenom, String mobile, String mail, String adresse, String ville, String code_postal) {
+		this.id_utilisateur = idUtilisateur;
+		this.nom = nom;
+		this.prenom = prenom;
+		this.mobile = mobile;
+		this.mail = mail;
+		this.adresse = adresse;
+		this.ville = ville;
+		this.code_postal = code_postal;
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

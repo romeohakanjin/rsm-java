@@ -128,26 +128,26 @@ public class AnnonceSessionBean {
 		}
 		return idUtilisateur;
 	}
-
+	
+	@SuppressWarnings("rawtypes")
 	public Annonce getAnnonce(int idAnnonce) {
+		
 		Annonce annonce = new Annonce();
-
 		String query = "FROM Annonce AS a " + "WHERE a.id_annonce = '" + idAnnonce + "'";
 		Query query2 = entityManager.createQuery(query);
-
 		List listAnnonce = query2.getResultList();
 
 		for (int i = 0; i < listAnnonce.size(); i++) {
 			annonce = (Annonce) listAnnonce.get(0);
 		}
-
 		return annonce;
 	}
-
-	public List<Annonce> getAllAnnonceUtilisateur(int idUtilisateur) {
-		String query = "FROM Annonce AS a " + "WHERE a.id_utilisateur = '" + idUtilisateur + "' AND actif = true";
+	
+	public List<Annonce> getAllAnnonceUtilisateur(int idUser) {
+		
+		String query = "FROM Annonce AS a " + "WHERE a.id_annonce = '" + idUser + "' AND actif = true";
 		Query query2 = entityManager.createQuery(query);
-
+		@SuppressWarnings("rawtypes")
 		List listAnnonce = query2.getResultList();
 		return listAnnonce;
 	}

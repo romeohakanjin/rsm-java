@@ -48,7 +48,7 @@
 							if (session.getAttribute("session-standard") != null) {
 						%>
 						<li><a
-							href="StandardServlet">Gestion Utilisateur</a></li>
+							href="StandardServlet">Informations Personnelles</a></li>
 						<%
 							}
 						%>
