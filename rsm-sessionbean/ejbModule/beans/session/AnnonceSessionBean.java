@@ -103,7 +103,7 @@ public class AnnonceSessionBean {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Annonce> getAllAnnonce() {
-		String queryString = "FROM Annonce";
+		String queryString = "FROM Annonce WHERE actif = TRUE";
 		Query query = entityManager.createQuery(queryString);
 		return (List<Annonce>) query.getResultList();
 	}

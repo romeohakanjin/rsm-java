@@ -90,7 +90,8 @@ public class UtilisateurSessionBean {
 	@SuppressWarnings("unchecked")
 	public List<Object> getAllUtilisateurWithUserType() {
 		String queryString = "FROM Utilisateur AS u "
-				+ "JOIN TypeUtilisateur AS tu ON u.id_type_utilisateur = tu.id_type_utilisateur";
+				+ "JOIN TypeUtilisateur AS tu ON u.id_type_utilisateur = tu.id_type_utilisateur "
+				+ "WHERE u.actif = TRUE";
 		Query query = entityManager.createQuery(queryString);
 		return (List<Object>) query.getResultList();
 	}
@@ -132,7 +133,8 @@ public class UtilisateurSessionBean {
 	public boolean isExitingUser(String mail) {
 		boolean isExitingUser = false;
 
-		String query = "SELECT u.mail FROM Utilisateur u WHERE mail = '" + mail + "'";
+		String query = "SELECT u.mail FROM Utilisateur u WHERE mail = '" + mail + "' "
+				+ "AND u.actif = TRUE ";
 		Query query2 = entityManager.createQuery(query);
 
 		List listUser = query2.getResultList();

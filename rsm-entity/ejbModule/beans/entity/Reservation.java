@@ -19,7 +19,8 @@ public class Reservation {
 	private Integer id_annonce;
 	private Integer id_utilisateur;
 	private double prix;
-	private Timestamp date_sejour;
+	private Timestamp date_debut_sejour;
+	private Timestamp date_fin_sejour;
 	private Integer duree_sejour;
 	private Integer id_statut_reservation;
 	private Integer id_etat_reservation;
@@ -50,22 +51,30 @@ public class Reservation {
 		this.id_utilisateur = id_utilisateur;
 	}
 
-	public Double getPrix() {
+	public double getPrix() {
 		return prix;
 	}
 
-	public void setPrix(Double prix) {
+	public void setPrix(double prix) {
 		this.prix = prix;
 	}
 
-	public Timestamp getDate_sejour() {
-		return date_sejour;
+	public Timestamp getDate_debut_sejour() {
+		return date_debut_sejour;
 	}
 
-	public void setDate_sejour(Timestamp date_sejour) {
-		this.date_sejour = date_sejour;
+	public void setDate_debut_sejour(Timestamp date_debut_sejour) {
+		this.date_debut_sejour = date_debut_sejour;
 	}
-	
+
+	public Timestamp getDate_fin_sejour() {
+		return date_fin_sejour;
+	}
+
+	public void setDate_fin_sejour(Timestamp date_fin_sejour) {
+		this.date_fin_sejour = date_fin_sejour;
+	}
+
 	public Integer getDuree_sejour() {
 		return duree_sejour;
 	}
@@ -89,4 +98,5 @@ public class Reservation {
 	public void setId_etat_reservation(Integer id_etat_reservation) {
 		this.id_etat_reservation = id_etat_reservation;
 	}
+
 }

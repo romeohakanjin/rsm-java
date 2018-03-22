@@ -33,6 +33,8 @@
 					      <th scope="col">Capacité maximum</th>
 					      <th scope="col">Date début séjour</th>
 					      <th scope="col">Date fin séjour</th>
+					      <th scope="col">Durée du séjour</th>
+					      <th scope="col">Prix</th>
 					      <th scope="col">Etat réservation</th>
 					      <th scope="col">Accepter</th>
 					      <th scope="col">Refuser</th>
@@ -50,11 +52,15 @@
 					      <td><%= annonce.getTitre() %></td>
 					      <td><%= reservation.getPrix() %></td>
 					      <td><%= annonce.getCapacite_max() %></td>
-					      <td><%= reservation.getDate_sejour() %></td>
-					      <td><%= reservation.getDate_sejour() %></td>
+					      <td><%= reservation.getDate_debut_sejour() %></td>
+					      <td><%= reservation.getDate_fin_sejour() %></td>
+					      <td><%= reservation.getDuree_sejour() %></td>
+					      <td><%= reservation.getPrix() %></td>
 					      <td><%= etatReservation.getLibelle() %></td>
+					      <% if(reservation.getId_etat_reservation() == 1){ %>
 					      <td><a href='HotelierReservationServlet?action=ValiderReservation&reservationId=<%= reservation.getId_reservation() %>' ><img alt="validate_icon" src="images/icon_valid.png"></a></td>
 					      <td><a href='HotelierReservationServlet?action=RefuserReservation&reservationId=<%= reservation.getId_reservation() %>'><img alt="refuse_icon" src="images/icon_ban.png"></a></td>
+					      <% } %>
 					    </tr>
 					    <%
 		            }
