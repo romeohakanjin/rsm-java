@@ -51,8 +51,8 @@ public class CommentManagementServlet extends HttpServlet {
 				if (commentToRefuse != null) {
 					Boolean isRefuse = refuseCommentById(idComment);
 					if (isRefuse) {
-						request.removeAttribute("commentList");
-						redirectionToServlet(COMMENT_MANAGEMENT_SERVLET);
+						getAllComment();
+						redirectionToView(COMMENT_MANAGEMENT);
 					} else {
 						setVariableToView("erreurRefuse", "La suppression de ce commentaire n'a pas pu être effectuée");
 					}
@@ -66,8 +66,8 @@ public class CommentManagementServlet extends HttpServlet {
 				if (commentToValidate != null) {
 					Boolean isValidate = validateCommentById(idComment);
 					if (isValidate) {
-						request.removeAttribute("commentList");
-						redirectionToServlet(COMMENT_MANAGEMENT_SERVLET);
+						getAllComment();
+						redirectionToView(COMMENT_MANAGEMENT);
 					} else {
 						setVariableToView("erreurValidate",
 								"La validation de ce commentaire n'a pas pu être effectuée");

@@ -40,7 +40,7 @@
 							      <td><%= commentList.get(i)[2] %> <%= commentList.get(i)[3] %></td>
 							      <td><%= commentList.get(i)[4] %></td>
 							      <td><%= commentList.get(i)[5] %></td>
-							      <td><a href='CommentManagementServlet?action=ValidateComment&commentId=<%= commentList.get(i)[0] %>'><img alt="delete_icon" src="images/icon_suppression.png"></a></td>
+							      <td><a href='CommentManagementServlet?action=ValidateComment&commentId=<%= commentList.get(i)[0] %>'><img alt="delete_icon" src="images/icon_valid.png"></a></td>
 							      <td><a href='CommentManagementServlet?action=RefuseComment&commentId=<%= commentList.get(i)[0] %>'><img alt="delete_icon" src="images/icon_suppression.png"></a></td>
 							    </tr>
 							<%
