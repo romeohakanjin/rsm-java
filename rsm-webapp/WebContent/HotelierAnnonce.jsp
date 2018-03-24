@@ -27,7 +27,8 @@
 									<textarea rows="10" cols="50" name="description" maxlength="1000" required><%= annonce.getDescription() %></textarea>
 									<label>Capacite maximum</label>
 									<input type='text' name='capaciteMax' value="<%= annonce.getCapacite_max() %>" required />
-									
+									<label>Prix par nuit</label>
+									<input type='text' name='prixNuit' value="<%= annonce.getPrix_nuit() %>" required />
 									<input type='submit' name='submitButtonHotelierForm' value="Modifier">
 								</form>
 								<%
@@ -41,6 +42,8 @@
 									</textarea>
 									<label>Capacite maximum</label>
 									<input type='text' name='capaciteMax' required />
+									<label>Prix par nuit</label>
+									<input type='text' name='prixNuit' required />
 									
 									<input type='submit' name='submitButtonHotelierForm' value="Ajouter">
 								</form>

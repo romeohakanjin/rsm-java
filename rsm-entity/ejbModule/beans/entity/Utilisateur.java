@@ -22,12 +22,13 @@ public class Utilisateur implements Serializable {
 	private String nom;
 	private String prenom;
 	private String mail;
-	private String motDePasse;
+	private String mot_de_passe;
 	private String mobile;
 	private String adresse;
 	private String code_postal;
 	private String ville;
 	private Integer point_bonus;
+	private Boolean actif;
 	
 	public Utilisateur() {
 		
@@ -94,12 +95,12 @@ public class Utilisateur implements Serializable {
 		this.mail = mail;
 	}
 
-	public String getMotDePasse() {
-		return motDePasse;
+	public String getMot_de_passe() {
+		return mot_de_passe;
 	}
 
-	public void setMotDePasse(String motDePasse) {
-		this.motDePasse = motDePasse;
+	public void setMot_de_passe(String mot_de_passe) {
+		this.mot_de_passe = mot_de_passe;
 	}
 
 	public String getMobile() {
@@ -140,5 +141,13 @@ public class Utilisateur implements Serializable {
 
 	public void setPoint_bonus(Integer point_bonus) {
 		this.point_bonus = point_bonus;
+	}
+
+	public Boolean getActif() {
+		return actif;
+	}
+	
+	public void setActif(Boolean actif) {
+		this.actif = actif;
 	}
 }

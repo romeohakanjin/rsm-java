@@ -14,10 +14,7 @@ import javax.persistence.Table;
 @Table(name = "hotel")
 public class Hotel {
 	private Integer id_hotel;
-	private String nom;
-	private String adresse;
-	private String code_postal;
-	private String ville;
+	private String nom_hotel;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,35 +26,11 @@ public class Hotel {
 		this.id_hotel = id_hotel;
 	}
 
-	public String getNom() {
-		return nom;
+	public String getNom_hotel() {
+		return nom_hotel;
 	}
 
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-
-	public String getAdresse() {
-		return adresse;
-	}
-
-	public void setAdresse(String adresse) {
-		this.adresse = adresse;
-	}
-
-	public String getCode_postal() {
-		return code_postal;
-	}
-
-	public void setCode_postal(String code_postal) {
-		this.code_postal = code_postal;
-	}
-
-	public String getVille() {
-		return ville;
-	}
-
-	public void setVille(String ville) {
-		this.ville = ville;
+	public void setNom_hotel(String nom_hotel) {
+		this.nom_hotel = nom_hotel;
 	}
 }

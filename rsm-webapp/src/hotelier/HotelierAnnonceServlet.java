@@ -36,6 +36,8 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	private String description;
 	private String capaciteMax;
 	private int capaciteMaxValue;
+	private String prixNuit;
+	private Double prixParNuit;
 	private Date dateCreation;
 	private String parametre;
 	private String annonceId;
@@ -50,7 +52,14 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		this.response = response;
 
 		initialiser();
-
+		// Ajouter ou modifier une annonce
+		/*
+		 * if (this.parametreAnnonce.equals(PARAMETER_ACTION_EDIT_ANNONCE)) {
+		 * ajouterAnnonceModifierActionPerformed();
+		 * 
+		 * } else if (this.parametreAnnonce.equals(PARAMETER_ACTION_ADD)) {
+		 * ajouterAnnonceActionPerformed(); }
+		 */
 		// Afficher ou supprimer une annonce
 		switch (this.parametre) {
 		case PARAMETER_ACTION_ADD:
@@ -99,6 +108,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 					annonce.setTitre(titre);
 					annonce.setDescription(description);
 					annonce.setCapacite_max(this.capaciteMaxValue);
+					annonce.setPrix_nuit(prixParNuit);
 					annonceSessionBean.updateAnnonce(annonce);
 
 					this.request.removeAttribute("annonceEdited");
@@ -116,9 +126,11 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		if (isOkForm) {
 			dateCreation = new Date(Calendar.getInstance().getTime().getTime());
 			Annonce annonce = new Annonce();
-			annonce.setTitre(titre);
-			annonce.setDescription(description);
+			annonce.setTitre(titre.trim());
+			annonce.setDescription(description.trim());
 			annonce.setCapacite_max(capaciteMaxValue);
+			annonce.setPrix_nuit(prixParNuit);
+			annonce.setActif(true);
 
 			String identifiant = (String) this.session.getAttribute("login");
 			int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
@@ -127,11 +139,11 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			annonceSessionBean.creerAnnonce(annonce);
 
 			request.removeAttribute("error-hotelier-annonce-form");
-			System.out.println("gribouti");
+
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		} else {
 			setVariableToView("error-hotelier-annonce-form", "Informations incorrectes ou manquantes");
-			System.out.println("yata");
+
 			redirectionToView(ANNONCE_VIEW);
 		}
 	}
@@ -211,6 +223,17 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			}
 		}
 
+		if (prixNuit == null || "".equals(prixNuit)) {
+			isOkForm = false;
+		} else {
+			try {
+				this.prixParNuit = Double.parseDouble(prixNuit.trim());
+			} catch (NumberFormatException e) {
+				isOkForm = false;
+			}
+
+		}
+
 		return isOkForm;
 	}
 
@@ -226,6 +249,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		this.titre = "";
 		this.description = "";
 		this.capaciteMax = "";
+		this.prixNuit = "";
 		this.annonceId = "";
 		this.parametre = "";
 
@@ -242,6 +266,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		this.titre = request.getParameter("titre");
 		this.description = request.getParameter("description");
 		this.capaciteMax = request.getParameter("capaciteMax");
+		this.prixNuit = request.getParameter("prixNuit");
 		this.annonceId = request.getParameter("annonceId");
 	}
 

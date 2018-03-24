@@ -7,23 +7,23 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * @author RHA
+ * @author SLI
  *
  */
 @Entity
-@Table(name = "etat_reservation")
-public class EtatReservation {
-	private Integer id_etat_reservation;
+@Table(name = "etat_commentaire")
+public class EtatCommentaire {
+	private Integer id_etat_commentaire;
 	private String libelle;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer getId_etat_reservation() {
-		return id_etat_reservation;
+	public Integer getId_etat_commentaire() {
+		return id_etat_commentaire;
 	}
 
-	public void setId_etat_reservation(Integer id_etat_reservation) {
-		this.id_etat_reservation = id_etat_reservation;
+	public void setId_etat_commentaire(Integer id_etat_commentaire) {
+		this.id_etat_commentaire = id_etat_commentaire;
 	}
 
 	public String getLibelle() {

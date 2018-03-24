@@ -20,7 +20,8 @@ import beans.session.UtilisateurSessionBean;
 public class Connection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String HOME_PAGE = "Home";
-	private static final String CONNECTION_PAGE = "Connection";
+	private static final String CONNECTION_PAGE = "Connexion";
+	private static final String ADMIN_HOME_PAGE = "DashboardServlet";
 	private static final int ID_TYPE_UTILISATEUR_STANDARD = 3;
 	private static final int ID_TYPE_UTILISATEUR_HOTELIER = 2;
 	private static final int ID_TYPE_UTILISATEUR_ADMIN = 1;
@@ -59,7 +60,11 @@ public class Connection extends HttpServlet {
 
 				request.removeAttribute("error-form-connection");
 				httpSession(identifiant, motDePasse);
-				redirectionToView(HOME_PAGE);
+				if(id_type_utilisateur == ID_TYPE_UTILISATEUR_ADMIN) {
+					redirectionToServlet(ADMIN_HOME_PAGE);
+				}else {
+					redirectionToView(HOME_PAGE);
+				}
 			} else {
 				setVariableToView("error-form-connection", "Identifiants incorrect");
 				redirectionToView(CONNECTION_PAGE);
@@ -136,5 +141,18 @@ public class Connection extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(view + ".jsp");
 		dispatcher.include(request, response);
 	}
-
+	
+	/**
+	 * Redirection to a servlet
+	 * 
+	 * @param String
+	 *            : the servlet name
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void redirectionToServlet(String sevlet) throws ServletException, IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher(sevlet);
+		dispatcher.include(request, response);
+	}
+	
 }

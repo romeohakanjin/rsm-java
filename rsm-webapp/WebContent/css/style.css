@@ -30,6 +30,8 @@
 .submit-utilisateur{
 	background: burlywood;
 }
-.modification{
-	
+.modification{}
+
+.error-form{
+	color: red;
 }

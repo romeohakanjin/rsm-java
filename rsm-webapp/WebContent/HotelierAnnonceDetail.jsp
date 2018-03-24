@@ -50,7 +50,7 @@
 								      <th scope="row"><%= comment.getId_commentaire() %></th>
 								      <td><%= comment.getCommentaire() %></td>
 								      <%
-										if(comment.isSignaler()){
+										if(comment.getId_etat_commentaire() == 3){
 										%>
 								      		<td><a href='HotelierAnnonceDetailsServlet?action=ignore&commentaireId=<%= comment.getId_commentaire() %>'>
 								      		<img alt="ignore_icon" src="images/ignore_icon.png"></a>

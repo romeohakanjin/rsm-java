@@ -5,11 +5,7 @@
 <%
 	if (session.getAttribute("session-hotelier") != null) {
 %>
-<div>
-	<ul>
-		<li><a href="HotelierAnnonceListServlet">Annonce</a></li>
-	</ul>
-</div>
+
 <%
 	}
 %>

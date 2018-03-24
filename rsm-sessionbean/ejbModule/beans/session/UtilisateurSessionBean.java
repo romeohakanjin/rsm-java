@@ -53,6 +53,23 @@ public class UtilisateurSessionBean {
 			return false;
 		}
 	}
+	
+	public Boolean deleteUser(Utilisateur user) {
+		try {
+			Integer userId = user.getId_utilisateur();
+			userTransaction.begin();
+			String queryString =	"UPDATE Utilisateur AS u "
+					+ "SET actif = false "
+					+ "WHERE u.id_utilisateur = '" + userId + "' ";
+			Query query = entityManager.createQuery(queryString);
+			query.executeUpdate();
+			userTransaction.commit();
+			return true;
+		} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	/**
 	 * Récupère tous les utilisateurs
@@ -61,10 +78,23 @@ public class UtilisateurSessionBean {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Utilisateur> getAllUtilisateur() {
-		
-		String queryString = "FROM Utilisateur";
+		String queryString = "FROM Utilisateur WHERE actif = TRUE";
 		Query query = entityManager.createQuery(queryString);
 		return (List<Utilisateur>) query.getResultList();
+	}
+	
+	/**
+	 * Récupère tous les utilisateurs avec leurs types d'utilisateurs
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object> getAllUtilisateurWithUserType() {
+		String queryString = "FROM Utilisateur AS u "
+				+ "JOIN TypeUtilisateur AS tu ON u.id_type_utilisateur = tu.id_type_utilisateur "
+				+ "WHERE u.actif = TRUE";
+		Query query = entityManager.createQuery(queryString);
+		return (List<Object>) query.getResultList();
 	}
 
 	/**
@@ -80,7 +110,8 @@ public class UtilisateurSessionBean {
 	public boolean isIdentificationValid(String mail, String motDePasse) {
 		
 		boolean isIdentificationValid = false;
-		String query = "SELECT u.mail FROM Utilisateur u WHERE mail = '" + mail + "' AND motDePasse='" + motDePasse + "'";
+		String query = "SELECT u.mail FROM Utilisateur u WHERE mail = '" + mail + "' AND mot_de_passe='" + motDePasse
+				+ "' AND actif = true";
 		Query query2 = entityManager.createQuery(query);
 		@SuppressWarnings("rawtypes")
 		List listUser = query2.getResultList();
@@ -100,7 +131,9 @@ public class UtilisateurSessionBean {
 	public boolean isExistingUser(String mail) {
 		
 		boolean isExitingUser = false;
-		String query = "SELECT u.mail FROM Utilisateur u WHERE mail = '" + mail + "'";
+
+		String query = "SELECT u.mail FROM Utilisateur u WHERE mail = '" + mail + "' "
+				+ "AND u.actif = TRUE ";
 		Query query2 = entityManager.createQuery(query);
 		@SuppressWarnings("rawtypes")
 		List listUser = query2.getResultList();
@@ -119,7 +152,7 @@ public class UtilisateurSessionBean {
 	public boolean checkExistingHotel(String nomHotel) {
 		boolean isExistingHotel = false;
 
-		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '" + nomHotel + "'";
+		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom_hotel = '" + nomHotel + "'";
 		Query query2 = entityManager.createQuery(query);
 
 		@SuppressWarnings("rawtypes")
@@ -134,7 +167,7 @@ public class UtilisateurSessionBean {
 
 	public int getIdHotel(String nomHotel) {
 		int idHotel = 0;
-		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '" + nomHotel + "'";
+		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom_hotel = '" + nomHotel + "'";
 		Query query2 = entityManager.createQuery(query);
 
 		@SuppressWarnings("rawtypes")
@@ -146,14 +179,11 @@ public class UtilisateurSessionBean {
 		return idHotel;
 	}
 
-	public int createHotel(String nomHotel, String adresseHotel, String codePostalHotel, String villeHotel) {
+	public int createHotel(String nomHotel) {
 
 		int idHotel = 0;
 		Hotel hotel = new Hotel();
-		hotel.setNom(nomHotel);
-		hotel.setAdresse(adresseHotel);
-		hotel.setCode_postal(codePostalHotel);
-		hotel.setVille(villeHotel);
+		hotel.setNom_hotel(nomHotel);
 
 		try {
 			userTransaction.begin();
@@ -164,7 +194,7 @@ public class UtilisateurSessionBean {
 			e.printStackTrace();
 		}
 
-		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom = '" + nomHotel + "'";
+		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom_hotel = '" + nomHotel + "'";
 		Query query2 = entityManager.createQuery(query);
 
 		@SuppressWarnings("rawtypes")
@@ -185,7 +215,8 @@ public class UtilisateurSessionBean {
 	public int getIdTypeUtilisateur(String identifiant, String motDePasse) {
 		
 		int idTypeUtilisateur = 3;
-		String query = "SELECT u.id_type_utilisateur FROM Utilisateur u WHERE mail = '" + identifiant + "' AND motDePasse='" + motDePasse + "'";
+		String query = "SELECT u.id_type_utilisateur FROM Utilisateur u WHERE mail = '" + identifiant + "' AND mot_de_passe='" + motDePasse
+				+ "'";
 		Query query2 = entityManager.createQuery(query);
 
 		@SuppressWarnings("rawtypes")
@@ -311,5 +342,34 @@ public class UtilisateurSessionBean {
 				| HeuristicMixedException | HeuristicRollbackException exception) {
 			exception.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Récupère le nombre d'utilisateur
+	 * regroupé par type d'utilisateur
+	 * @return
+	 */
+	public List<Object[]> getNbUserGroupByUserType() {
+		String queryString = "SELECT COUNT(*), tu.libelle "
+				+ "FROM Utilisateur AS u "
+				+ "JOIN TypeUtilisateur AS tu ON u.id_type_utilisateur = tu.id_type_utilisateur "
+				+ "GROUP BY tu.libelle";
+		Query query = entityManager.createQuery(queryString);
+		return query.getResultList();
+	}
+	
+	/**
+	 * Récupère un utilisateur avec son id
+	 * @param userId
+	 * @return
+	 */
+	public Utilisateur getUserById(Integer userId) {
+		String queryString = "FROM Utilisateur AS a " + "WHERE a.id_utilisateur = '" + userId + "'";
+		Query query = entityManager.createQuery(queryString);
+		Utilisateur user = null;
+		for (int i = 0; i < query.getResultList().size(); i++) {
+			user = (Utilisateur) query.getResultList().get(i);
+		}
+		return user;
 	}
 }
