@@ -55,12 +55,9 @@
 								<li id="hotelierListServlet"><a
 									href="HotelierReservationListServlet">Réservations</a></li>
 							</ul></li>
-							<%} else { %>
-								<li id="standard"><a href="AnnoncesServlet">Annonces</a>
-									<ul>
-										<li id="standard"><a
-										href="AnnoncesServlet">Liste Annonces</a></li>
-									</ul>
+							<%} else if (session.getAttribute("session-standard") != null){ %>
+								<li id="standard">
+									<a href="StandardServlet">Informations personnelles</a>
 								</li>							
 							<% }
 						
