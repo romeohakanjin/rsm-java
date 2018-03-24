@@ -46,6 +46,7 @@
 						<%
 							} else if (session.getAttribute("session-hotelier") != null) {
 						%>
+
 						<li id="gestionHotelier"><a href="HotelierBordServlet">Gestion
 								Hotelier</a>
 							<ul>
@@ -54,19 +55,15 @@
 								<li id="hotelierListServlet"><a
 									href="HotelierReservationListServlet">Réservations</a></li>
 							</ul></li>
-						<%
-							} else { %>
-								<li id="standard"><a href="AnnoncesServlet">Annonces</a>
-									<ul>
-										<li id="standard"><a
-										href="AnnoncesServlet">Liste Annonces</a></li>
-									</ul>
+							<%} else if (session.getAttribute("session-standard") != null){ %>
+								<li id="standard">
+									<a href="StandardServlet">Informations personnelles</a>
 								</li>							
 							<% }
 						
 							if (session.getAttribute("login") != null) {
 						%>
-						<li id="deconnexion"><a href="Deconnection">Déconnexion</a></li>
+						<li id="deconnexion"><a href="Deconnection">Deconnexion</a></li>
 						<%
 							} else {
 						%>

@@ -32,7 +32,6 @@
 					  </thead>
 					  <tbody>
 					<%
-					int cpt= 1;
 		            for(Annonce annonce : annonces){
 		            	%>	
 					    <tr>

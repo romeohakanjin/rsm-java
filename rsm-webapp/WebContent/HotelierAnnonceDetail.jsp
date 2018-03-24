@@ -11,7 +11,7 @@
 							if (request.getAttribute("annonceDetails") != null) {
 								Annonce annonce = (Annonce) request.getAttribute("annonceDetails");
 							%>
-							<h3>Annnonce</h3>
+							<h3>Annonce</h3>
 								<label>Titre</label>
 								<p><%= annonce.getTitre() %> </p>
 								<label>Description</label>

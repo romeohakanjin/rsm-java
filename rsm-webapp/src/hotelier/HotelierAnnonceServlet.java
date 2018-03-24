@@ -41,7 +41,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	private Date dateCreation;
 	private String parametre;
 	private String annonceId;
-	private String parametreAnnonce;
+	// private String parametreAnnonce;
 
 	@EJB
 	AnnonceSessionBean annonceSessionBean;
@@ -52,7 +52,6 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		this.response = response;
 
 		initialiser();
-
 		// Ajouter ou modifier une annonce
 		/*
 		 * if (this.parametreAnnonce.equals(PARAMETER_ACTION_EDIT_ANNONCE)) {
@@ -61,7 +60,6 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		 * } else if (this.parametreAnnonce.equals(PARAMETER_ACTION_ADD)) {
 		 * ajouterAnnonceActionPerformed(); }
 		 */
-
 		// Afficher ou supprimer une annonce
 		switch (this.parametre) {
 		case PARAMETER_ACTION_ADD:
