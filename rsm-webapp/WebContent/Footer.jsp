@@ -81,6 +81,5 @@
 	<script src="js/skel.min.js"></script>
 	<script src="js/util.js"></script>
 	<script src="js/main.js"></script>
-
 </body>
 </html>

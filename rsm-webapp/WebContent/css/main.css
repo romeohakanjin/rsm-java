@@ -2188,23 +2188,6 @@
 				display: none;
 			}
 
-		/* Banner */
-
-			#banner {
-				padding: 4.5em 3em;
-				text-align: center;
-			}
-
-				#banner ul {
-					margin: 2em 0 0 0;
-				}
-
-				#banner .button.icon:before {
-					position: relative;
-					right: auto;
-					top: auto;
-				}
-
 		/* Content */
 
 			#content {
