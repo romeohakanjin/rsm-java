@@ -1,5 +1,6 @@
 package beans.session;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -239,5 +240,29 @@ public class ReservationSessionBean {
 				| HeuristicMixedException | HeuristicRollbackException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * If there is any reservation already coming for this ad
+	 * @param annonceIdInt 
+	 * @param timestampBegining
+	 * @param timestampEnd
+	 */
+	public boolean isOkDateForReservation(int annonceIdInt, Timestamp timestampBegining, Timestamp timestampEnd) {
+		boolean isOkDate = false;
+		
+		String query = "SELECT date_debut_sejour, date_fin_sejour" + 
+				" FROM Reservation " + 
+				" WHERE date_debut_sejour >= '"+timestampBegining+"' " + 
+				" AND date_fin_sejour <= '"+timestampEnd+"' "
+				+ " AND id_annonce = '"+annonceIdInt+"' ";
+		Query query2 = entityManager.createQuery(query);
+		List reservation = query2.getResultList();
+
+		if (reservation.size() != 0) {
+			isOkDate = true;
+		}
+		
+		return isOkDate;
 	}
 }

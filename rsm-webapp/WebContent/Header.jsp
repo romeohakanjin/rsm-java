@@ -26,7 +26,11 @@
 				<nav id="nav">
 					<ul>
 						<li id="home" class="current"><a href="Home.jsp">Accueil</a></li>
-
+						<li id="standard"><a href="AnnoncesServlet">Annonces</a>
+							<ul>
+								<li id="standard"><a href="AnnoncesServlet">Liste
+										Annonces</a></li>
+							</ul></li>
 						<%
 							if (session.getAttribute("session-admin") != null) {
 						%>
@@ -46,7 +50,6 @@
 						<%
 							} else if (session.getAttribute("session-hotelier") != null) {
 						%>
-
 						<li id="gestionHotelier"><a href="HotelierBordServlet">Gestion
 								Hotelier</a>
 							<ul>
@@ -55,15 +58,17 @@
 								<li id="hotelierListServlet"><a
 									href="HotelierReservationListServlet">Réservations</a></li>
 							</ul></li>
-							<%} else if (session.getAttribute("session-standard") != null){ %>
+						<%
+							} else if (session.getAttribute("session-standard") != null){ %>
 								<li id="standard">
 									<a href="StandardServlet">Informations personnelles</a>
 								</li>							
 							<% }
-						
+						%>
+						<%
 							if (session.getAttribute("login") != null) {
 						%>
-						<li id="deconnexion"><a href="Deconnection">Deconnexion</a></li>
+						<li id="deconnexion"><a href="Deconnection">Déconnexion</a></li>
 						<%
 							} else {
 						%>

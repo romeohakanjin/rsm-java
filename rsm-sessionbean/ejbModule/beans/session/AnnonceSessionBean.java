@@ -332,4 +332,26 @@ public class AnnonceSessionBean {
 			exception.printStackTrace();
 		}
 	}
+	
+	/**
+	 * if the ad is active or not
+	 * 
+	 * @param annonceIdInt
+	 *            : ad id
+	 * @return true/false : if the ad is active
+	 */
+	public boolean isActiveAd(int annonceIdInt) {
+		boolean isActive = false;
+
+		String queryString = "SELECT a.actif " + "FROM Annonce AS a " + "WHERE a.actif = true";
+		Query query = entityManager.createQuery(queryString);
+		List<Annonce> annonce = query.getResultList();
+
+		if (annonce.size() != 0) {
+			isActive = true;
+		}
+
+		return isActive;
+
+	}
 }

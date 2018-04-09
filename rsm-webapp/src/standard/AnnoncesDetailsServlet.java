@@ -1,6 +1,8 @@
 package standard;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import beans.entity.Annonce;
 import beans.session.AnnonceSessionBean;
+import beans.session.ReservationSessionBean;
 
 /**
  * Servlet implementation class AnnoncesDetailsServlet
@@ -20,16 +23,29 @@ import beans.session.AnnonceSessionBean;
 @WebServlet("/AnnoncesDetailsServlet")
 public class AnnoncesDetailsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final String HOME_VIEW = "Home";
+	private static final String CONNECTION_VIEW = "Connexion";
 	private static final String ANNONCE_DETAILS_VIEW = "AnnonceDetails";
 	private static final String ANNONCES_LISTE_SERVLET = "AnnoncesServlet";
+	private static final String ANNONCES_DETAILS_SERVLET = "AnnoncesDetailsServlet";
+	private static final String RESERVATION_ACTION = "reserver";
+	private static final String RESERVATION_VALIDATE_SERVLET = "ReservationConfirmationServlet";
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
 	private String annonceId;
+	private int annonceIdInt;
 	private String action;
+	private String dateDebut;
+	private String dateFin;
+	private Timestamp timestampBegining;
+	private Timestamp timestampEnd;
 
 	@EJB
 	AnnonceSessionBean annonceSessionBean;
+
+	@EJB
+	ReservationSessionBean reservationSessionBean;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -38,21 +54,133 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 
 		initialiser();
 
-		switch (action) {
-
-		default:
-			try {
-				int idAnnonce = Integer.valueOf(annonceId);
-				Annonce annonce = annonceSessionBean.getAnnonce(idAnnonce);
-
-				request.setAttribute("annonceDetails", annonce);
-
-				redirectionToView(ANNONCE_DETAILS_VIEW);
-			} catch (NumberFormatException exception) {
-				redirectionToServlet(ANNONCES_LISTE_SERVLET);
+		try {
+			if (annonceId != null) {
+				annonceIdInt = Integer.valueOf(annonceId);
 			}
-			break;
+
+			switch (action) {
+			case RESERVATION_ACTION:
+				reservationActionPerformed();
+				break;
+			default:
+				Annonce annonce = annonceSessionBean.getAnnonce(annonceIdInt);
+				request.setAttribute("annonceDetails", annonce);
+				redirectionToView(ANNONCE_DETAILS_VIEW);
+				break;
+			}
+		} catch (NumberFormatException exception) {
+			redirectionToServlet(ANNONCES_LISTE_SERVLET);
 		}
+
+	}
+
+	/**
+	 * Action for the Reservation button for a announce
+	 * 
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void reservationActionPerformed() throws ServletException, IOException {
+		System.out.println("reservation");
+		if (session.getAttribute("session-standard") != null) {
+			final boolean isOkForm = verificationFormulaire();
+			System.out.println("bien un user normal");
+			if (isOkForm) {
+				System.out.println("form ok");
+				// Vérifier si l'id de l'utilisateur est bien celui d'un utilisateurs standard
+				String identifiant = (String) this.session.getAttribute("login");
+				int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+
+				boolean isActiveAd = annonceSessionBean.isActiveAd(annonceIdInt);
+
+				if (isActiveAd) {
+					boolean isAlreadyReservedAdForThisDate = reservationSessionBean.isOkDateForReservation(annonceIdInt,
+							timestampBegining, timestampEnd);
+					if (!isAlreadyReservedAdForThisDate) {
+						// alors send sur la page de résumer de réservation
+						session.setAttribute("reservationToValidate", annonceIdInt);
+						session.setAttribute("reservationIdUser", id_utilisateur);
+						session.setAttribute("reservationDateDebut", timestampBegining);
+						session.setAttribute("reservationDateFin", timestampEnd);
+						redirectionToServlet(RESERVATION_VALIDATE_SERVLET);
+					}
+
+				} else {
+					System.out.println("pas active");
+					setVariableToView("error-form-annonce-details", "Numéro d'annonce incorrect");
+					redirectionToServlet(ANNONCES_LISTE_SERVLET);
+				}
+			} else {
+				System.out.println("form incorrect");
+				setVariableToView("error-form-annonce-details", "Date incorect");
+				// redirectionToServletWithParameter(ANNONCES_LISTE_SERVLET, "annonceId",
+				// annonceIdInt);
+			}
+		} else {
+			System.out.println("pas connecté");
+			setVariableToView("error-form-connection", "Vous devez être connecté pour accéder à cette page");
+			redirectionToView(CONNECTION_VIEW);
+		}
+		System.out.println("Done");
+	}
+
+	/**
+	 * Veirfication des champs saisies
+	 * 
+	 * @return boolean isOkForm
+	 * @throws ServletException
+	 */
+	private boolean verificationFormulaire() throws ServletException {
+		boolean isOkForm = true;
+
+		if (dateDebut == null || "".equals(dateDebut) && dateFin == null || "".equals(dateFin)) {
+			isOkForm = false;
+			System.out.println("tout est nul");
+		} else {
+			Date dateBegining = new Date(dateDebut);
+			Date dateEnd = new Date(dateFin);
+
+			if (dateEnd.getTime() < dateBegining.getTime()) {
+				isOkForm = false;
+			}
+
+			// verifier si les dates sont pas avant la date actuelle
+			// TODO : la date actuelle est avec une heure, tandis que quand on créer le
+			// timestamp on donne pas l'heuredonc ne compare pas correctement pour les reservation le jour j
+			//TODO: FIXE THAT
+
+			Date actualDate = new Date();
+			System.out.println(actualDate);
+			System.out.println(actualDate.getTime());
+			System.out.println(dateBegining.getTime());
+			if (dateEnd.getTime() < actualDate.getTime() && dateBegining.getTime() < actualDate.getTime()) {
+				isOkForm = false;
+				System.out.println("111111111111111111");
+			} else {
+				System.out.println("222222222222222222");
+			}
+			
+			//TODO : contrôle sur la date
+			//Vérifier si le mois est pas supérieur à 12 ou inférieur à 1
+			//Vérifier que les jours c'est pas supérieur à 31 et inférieur à 1
+			//Vérifier que en fevrier on dépasse aps 28 jours
+
+			timestampBegining = new java.sql.Timestamp(dateBegining.getTime());
+			timestampEnd = new java.sql.Timestamp(dateEnd.getTime());
+		}
+
+		if (annonceId == null || "".equals(annonceId)) {
+			isOkForm = false;
+		} else {
+			try {
+				this.annonceIdInt = Integer.parseInt(annonceId);
+			} catch (NumberFormatException exception) {
+				isOkForm = false;
+			}
+		}
+
+		return isOkForm;
 	}
 
 	/**
@@ -63,11 +191,23 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 	private void initialiser() throws IOException {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
+		this.dateDebut = request.getParameter("dateDebut");
+		this.dateFin = request.getParameter("dateFin");
 		this.annonceId = request.getParameter("annonceId");
 		this.action = request.getParameter("action");
 		if (this.action == null) {
 			this.action = "";
 		}
+	}
+
+	/**
+	 * Feed request attribute
+	 * 
+	 * @param variable
+	 * @param message
+	 */
+	private void setVariableToView(String variable, String message) {
+		request.setAttribute(variable, message);
 	}
 
 	/**

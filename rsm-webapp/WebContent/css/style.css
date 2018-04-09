@@ -1,37 +1,17 @@
 .img-add-annonce{
 	float: right;
 }
-.header-container{
-	display: flex;
-	justify-content: space-around;
+
+.error-form{
+	color: red;
 }
-.modifier{
-	color: #722424;
-	font-size: xx-large;
+
+.reservationButton{
+	float : right;
 }
-.annonces{
-	color: #722424;
-	font-size: xx-large;
-}
-.annonce{
-	font-weight: bold;
-	text-align: center;
-}
+
 .info-perso{
 	background: burlywood;
 	font-weight: bold;
 	text-align: center;
-}
-.gestion-utilisateur{
-	background: burlywood;
-	padding: 45px;
-	
-}
-.submit-utilisateur{
-	background: burlywood;
-}
-.modification{}
-
-.error-form{
-	color: red;
 }
