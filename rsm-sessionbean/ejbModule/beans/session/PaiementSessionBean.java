@@ -50,15 +50,14 @@ public class PaiementSessionBean {
     		return false;
     	}
     }
-
-    /**
-     * Récupère les paiements
-     * @return
-     */
+    
     @SuppressWarnings("unchecked")
-	public List<Paiement> getAllPaiements(){
-    	String queryString = "FROM Paiement";
+	public List<Object[]> getHistoriquePaiement(){
+    	String queryString = "SELECT u.nom, u.prenom, p.id_reservation, r.prix, p.date_paiement "
+    			+ "FROM Paiement as p "
+    			+ "JOIN Reservation as r ON r.id_reservation = p.id_reservation "
+    			+ "JOIN Utilisateur as u ON u.id_utilisateur = r.id_utilisateur";
     	Query query = entityManager.createQuery(queryString);
-    	return (List<Paiement>) query.getResultList();
+    	return query.getResultList();
     }
 }

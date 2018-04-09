@@ -13,6 +13,7 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body class="homepage">
 	<div id="page-wrapper">
@@ -46,6 +47,10 @@
 								<li id="externAnnouncementManagement"><a
 									href="ExternAnnouncementManagementServlet">Gestion des
 										annonces d'activités externes</a></li>
+								<li id="commentManagement"><a href="CommentManagementServlet">
+								Gestion des commentaires signalés</a></li>
+								<li id="payementManagement"><a href="PayementManagementServlet">
+								Gestion des paiements</a></li>
 							</ul></li>
 						<%
 							} else if (session.getAttribute("session-hotelier") != null) {

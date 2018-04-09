@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core"%>
 <core:import url="Header.jsp" />
+<core:import url="Search.jsp" />
 <%@ page import="java.util.List" %>
 <%@ page import="beans.entity.Annonce" %>
 <!-- Contenu partiel -->
@@ -16,17 +17,17 @@
 					<table class="table table-striped">
 					  <thead>
 					    <tr>
-					      <th scope="col">Titre</th>
-					      <th scope="col">Description</th>
-					      <th scope="col">Capacité maximum</th>
-					      <th scope="col">Prix/nuit</th>
+					      	<th scope="col">Titre</th>
+					      	<th scope="col">Description</th>
+						     <th scope="col">Capacité maximum</th>
+						     <th scope="col">Prix/nuit</th>
 					    </tr>
 					  </thead>
 					  <tbody>
 					<%
 					int cpt= 1;
 		            for(Annonce annonce : annonces){
-		            	%>	
+		            	%>	 
 					    <tr>
 					      <td><a href='AnnoncesDetailsServlet?annonceId=<%= annonce.getId_annonce() %>'><%= annonce.getTitre() %></a></td>
 					      <% if((annonce.getDescription()).length() >= 129){ %>

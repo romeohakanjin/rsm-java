@@ -93,10 +93,6 @@ public class AnnonceSessionBean {
 	}
 
 	/**
-	 * 
-	 */
-
-	/**
 	 * Récupère toutes les annonces
 	 * 
 	 * @return
@@ -106,6 +102,41 @@ public class AnnonceSessionBean {
 		String queryString = "FROM Annonce WHERE actif = TRUE";
 		Query query = entityManager.createQuery(queryString);
 		return (List<Annonce>) query.getResultList();
+	}
+	
+	/**
+	 * Récupère l'annonce associé à l'id
+	 * @param idAnnonce
+	 * @return
+	 */
+	public Annonce getAnnonceById(Integer idAnnonce) {
+		String queryString = "FROM Annonce WHERE actif = TRUE AND id_annonce = "+idAnnonce;
+		Query query = entityManager.createQuery(queryString);
+		return (Annonce) query.getResultList().get(0);
+	}
+	
+	/**
+	 * Récupère les annonces en fonction des champs saisis
+	 * par l'utilisateur
+	 * @param destination
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Integer> getAnnouncementSearched(String destination, String keywords, String[] keywordsList){
+		String queryString = "SELECT a.id_annonce "
+				+ "FROM Annonce as a "
+				+ "JOIN Utilisateur as u ON a.id_utilisateur = u.id_utilisateur "
+				+ "WHERE a.actif = TRUE "
+				+ "AND u.ville LIKE '%"+ destination +"%' "
+				+ "AND (a.description LIKE '%"+keywords+"%' ";
+		if(keywordsList != null) {
+			for(int i=0; i<keywordsList.length; i++) {
+				queryString = queryString+"OR a.description LIKE '%"+keywordsList[i]+"%' ";
+			}
+		}
+		queryString = queryString+")";			
+		Query query = entityManager.createQuery(queryString);
+		return (List<Integer>) query.getResultList();
 	}
 
 	/**
