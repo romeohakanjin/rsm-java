@@ -68,9 +68,9 @@ public class UpdateUserServlet extends HttpServlet {
 		int id_utilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);		
 		try {
 			// Vérifier si l'id utilisateur match
-			boolean isMathingId = utilisateurSessionBean.isMatchingIdUser(id_utilisateur);
-			System.out.println(isMathingId);
-			if (isMathingId) {
+			boolean isExistingUserId = utilisateurSessionBean.isExistingUserId(id_utilisateur);
+			System.out.println(isExistingUserId);
+			if (isExistingUserId) {
 				Utilisateur utilisateur = utilisateurSessionBean.getUtilisateur(id_utilisateur);
 				request.setAttribute("userInformations", utilisateur);
 				redirectionToView(EDIT_USER_INFORMATION_VIEW);
@@ -91,8 +91,8 @@ public class UpdateUserServlet extends HttpServlet {
 		
 		String identifiant = (String) this.session.getAttribute("login");
 		int id_utilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);
-		boolean isMathingId = utilisateurSessionBean.isMatchingIdUser(id_utilisateur);
-		if (isMathingId) {
+		boolean isExistingUserId = utilisateurSessionBean.isExistingUserId(id_utilisateur);
+		if (isExistingUserId) {
 			
 			Utilisateur utilisateur = new Utilisateur();
 			utilisateur.setId_utilisateur(id_utilisateur);

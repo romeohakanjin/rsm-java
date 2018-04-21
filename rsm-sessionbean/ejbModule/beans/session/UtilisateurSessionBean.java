@@ -232,17 +232,17 @@ public class UtilisateurSessionBean {
 	 * @param idUser
 	 * @return
 	 */
-	public boolean isMatchingIdUser(int id_utilisateur) {
+	public boolean isExistingUserId(int id_utilisateur) {
 		
-		boolean isMatchingId = false;
+		boolean isExistingUserId = false;
 		String query = "SELECT id_utilisateur FROM Utilisateur WHERE id_utilisateur = '" + id_utilisateur + "'";
 		Query query2 = entityManager.createQuery(query);
 		@SuppressWarnings("rawtypes")
 		List utilisateurs = query2.getResultList();
 		if (utilisateurs.size() != 0) {
-			isMatchingId = true;
+			isExistingUserId = true;
 		}
-		return isMatchingId;
+		return isExistingUserId;
 	}
 	
 	/**
