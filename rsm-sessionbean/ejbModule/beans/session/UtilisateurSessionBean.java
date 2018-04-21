@@ -257,32 +257,19 @@ public class UtilisateurSessionBean {
 		Utilisateur utilisateur = (Utilisateur) query.getSingleResult();
 		return utilisateur;
 	}
-
-	/**
-	 * 
-	 * @param idUtilisateur
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Annonce> getAllAnnonceUtilisateur() {
-		String query = "FROM Annonce";
-		Query query2 = entityManager.createQuery(query);
-		@SuppressWarnings("rawtypes")
-		List listAnnonce = query2.getResultList();
-		return listAnnonce;
-	}
 	
 	/**
+	 * Récupère l'id de l'utilisateur
 	 * 
 	 * @param identifiant
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	public int getIdUtilisateur(String identifiant) {
 		
 		int idUtilisateur = 0;
-		String query = "SELECT u.id_utilisateur FROM Utilisateur AS u " + "WHERE u.mail = '" + identifiant + "'";
+		String query = "SELECT u.id_utilisateur FROM Utilisateur AS u " + "WHERE u.mail = '" + identifiant + "' AND actif = TRUE";
 		Query query2 = entityManager.createQuery(query);
-		@SuppressWarnings("rawtypes")
 		List listUser = query2.getResultList();
 		idUtilisateur = (int) listUser.get(0);
 		return idUtilisateur;
@@ -293,16 +280,12 @@ public class UtilisateurSessionBean {
 	 * @param identifiant
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
 	public Utilisateur getUtilisateur(int idUser) {
 		
 		Utilisateur utilisateur = new Utilisateur();
-		String query = "FROM Utilisateur AS u " + "WHERE u.id_utilisateur = '" + idUser + "'";
+		String query = "FROM Utilisateur AS u " + "WHERE u.id_utilisateur = '" + idUser + "' AND actif = TRUE";
 		Query query2 = entityManager.createQuery(query);
-		List listUser = query2.getResultList();
-		for (int i = 0; i < listUser.size(); i++) {
-			utilisateur = (Utilisateur) listUser.get(0);
-		}
+		utilisateur = (Utilisateur) query2.getSingleResult();
 		System.out.println(utilisateur);
 		return utilisateur;
 	}
