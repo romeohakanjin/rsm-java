@@ -19,7 +19,7 @@
 <div  class="gestion-utilisateur">
 	<div class="container">
 		<div id="content">
-			<%	List<Utilisateur> utilisateurs = (List<Utilisateur>) request.getAttribute("userInformations"); %>
+			<%	Utilisateur user = (Utilisateur) request.getAttribute("userInformations"); %>
 			<h2 class="info-perso">Informations personnelles</h2>
 			<div id="content">
 					<table class="table table-striped">
@@ -37,7 +37,8 @@
 					    </tr>
 					  </thead>
 					  <tbody>
-					  <% for(Utilisateur utilisateur : utilisateurs){ %>	
+					  <% Utilisateur utilisateur = new Utilisateur();
+							utilisateur = user; %>
 					    <tr>
 					      <th scope="row" style = "text-align: center"><%= utilisateur.getId_utilisateur() %></th>
 					      <td style = "text-align: center"><%= utilisateur.getNom() %></td>
@@ -49,7 +50,6 @@
 					      <td style = "text-align: center"><%= utilisateur.getCode_postal() %></td>
 					      <td style = "text-align: center"><%= utilisateur.getPoint_bonus() %></td>
 					    </tr>
-					    <% } %>
 					  </tbody>
 					</table>
 					</div>            

@@ -250,14 +250,12 @@ public class UtilisateurSessionBean {
 	 * @param idUtilisateur
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<Utilisateur> getUserInformation(int idUtilisateur){
+	public Utilisateur getUserInformation(int idUtilisateur){
 		
 		String queryString = "FROM Utilisateur AS a " + "WHERE a.id_utilisateur = '"+idUtilisateur+"' ";
 		Query query = entityManager.createQuery(queryString);
-		@SuppressWarnings("rawtypes")
-		List listUser = query.getResultList();
-		return listUser; 
+		Utilisateur utilisateur = (Utilisateur) query.getSingleResult();
+		return utilisateur;
 	}
 
 	/**
@@ -349,6 +347,7 @@ public class UtilisateurSessionBean {
 	 * regroupé par type d'utilisateur
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Object[]> getNbUserGroupByUserType() {
 		String queryString = "SELECT COUNT(*), tu.libelle "
 				+ "FROM Utilisateur AS u "

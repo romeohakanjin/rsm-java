@@ -1,7 +1,6 @@
 package standard;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -56,8 +55,9 @@ public class StandardServlet extends HttpServlet {
 	 */
 	private void showUserInformations() throws ServletException, IOException {
 		String identifiant = (String) this.session.getAttribute("login");
-		int idUtilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant); 
-		List<Utilisateur> utilisateur = utilisateurSessionBean.getUserInformation(idUtilisateur);		
+		int idUtilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);
+		Utilisateur utilisateur = new Utilisateur();
+		utilisateur = (Utilisateur) utilisateurSessionBean.getUserInformation(idUtilisateur);
 		this.request.setAttribute("userInformations", utilisateur);
 		redirectionToView(INFOS_PERSONNELLES);
 	}
