@@ -276,6 +276,7 @@ public class UtilisateurSessionBean {
 	}
 	
 	/**
+	 * Fait un select * sur la table Utilisateur
 	 * 
 	 * @param identifiant
 	 * @return
@@ -283,14 +284,14 @@ public class UtilisateurSessionBean {
 	public Utilisateur getUtilisateur(int idUser) {
 		
 		Utilisateur utilisateur = new Utilisateur();
-		String query = "FROM Utilisateur AS u " + "WHERE u.id_utilisateur = '" + idUser + "' AND actif = TRUE";
+		String query = "FROM Utilisateur AS u WHERE u.id_utilisateur = '" + idUser + "' AND actif = TRUE";
 		Query query2 = entityManager.createQuery(query);
 		utilisateur = (Utilisateur) query2.getSingleResult();
-		System.out.println(utilisateur);
 		return utilisateur;
 	}
 	
 	/**
+	 * Update un utilisateur
 	 * 
 	 * @param utilisateur
 	 */

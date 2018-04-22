@@ -14,6 +14,8 @@ import beans.entity.Utilisateur;
 import beans.session.UtilisateurSessionBean;
 
 /**
+ * @author Massneymar
+ * 
  * Servlet implementation class UpdateUserServlet
  */
 @WebServlet("/UpdateUserServlet")
@@ -61,13 +63,14 @@ public class UpdateUserServlet extends HttpServlet {
 	/**
 	 * @throws ServletException
 	 * @throws IOException
+	 * 
+	 * Cette fonction permet d'éditer un utilisateur si son id existe
 	 */
 	private void EditUserActionPerformed() throws ServletException, IOException {
 		
 		String identifiant = (String) this.session.getAttribute("login");
 		int id_utilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);		
 		try {
-			// Vérifier si l'id utilisateur match
 			boolean isExistingUserId = utilisateurSessionBean.isExistingUserId(id_utilisateur);
 			System.out.println(isExistingUserId);
 			if (isExistingUserId) {
@@ -86,6 +89,8 @@ public class UpdateUserServlet extends HttpServlet {
 	 * 
 	 * @throws ServletException
 	 * @throws IOException
+	 * 
+	 * Cette fonction permet d'updater un utilisateur si son id existe
 	 */
 	private void addUserEditedActionPerformed() throws ServletException, IOException {
 		

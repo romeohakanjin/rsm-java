@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="rsm-projet-EAR">
-        <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
         <dependent-module archiveName="rsm-projet-entity.jar" deploy-path="/" handle="module:/resource/rsm-projet-entity/rsm-projet-entity">
             <dependent-object/>
             <dependency-type>uses</dependency-type>

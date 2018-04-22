@@ -50,6 +50,7 @@ public class StandardServlet extends HttpServlet {
 	
 	/**
 	 * Affiche les informations de l'utilisateur
+	 * 
 	 * @throws ServletException
 	 * @throws IOException
 	 */
@@ -65,8 +66,7 @@ public class StandardServlet extends HttpServlet {
 	/**
 	 * Redirection to a view
 	 * 
-	 * @param String
-	 *            : the view name
+	 * @param String : the view name
 	 * @throws ServletException
 	 * @throws IOException
 	 */
