@@ -10,11 +10,6 @@
 			<li><a href="UpdateUserServlet?action=modifierUtilisateur" class="modifier">Modifier</a></li>
 		</ul>
 	</div>
-	<div>
-		<ul>
-			<li><a href="StandardListAnnonce" class="annonces">Annonces</a></li>
-		</ul>
-	</div>
 </div>
 <div  class="gestion-utilisateur">
 	<div class="container">
