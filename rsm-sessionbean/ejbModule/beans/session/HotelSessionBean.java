@@ -61,4 +61,15 @@ public class HotelSessionBean {
 		Query query = entityManager.createQuery(queryString);
 		return (List<Hotel>) query.getResultList();
 	}
+	
+	/**
+	 * Récupère un hotel
+	 * @param idHotel
+	 * @return
+	 */
+	public Hotel getHotelById(Integer idHotel) {
+		String queryString = "FROM Hotel h WHERE h.id_hotel = "+idHotel;
+		Query query = entityManager.createQuery(queryString);
+		return (Hotel) query.getResultList().get(0);
+	}
 }

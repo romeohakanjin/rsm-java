@@ -174,12 +174,15 @@ public class AnnonceSessionBean {
 		return annonce;
 	}
 	
-	public List<Annonce> getAllAnnonceUtilisateur(int idUser) {
-		
+	/**
+	 * Récupère les annonces actives postées pas un utilisateur
+	 * @param idUser
+	 * @return
+	 */
+	public List<Annonce> getAllAnnonceUtilisateur(int idUser) {	
 		String query = "FROM Annonce AS a " + "WHERE a.id_annonce = '" + idUser + "' AND actif = true";
 		Query query2 = entityManager.createQuery(query);
-		@SuppressWarnings("rawtypes")
-		List listAnnonce = query2.getResultList();
+		List<Annonce> listAnnonce = query2.getResultList();
 		return listAnnonce;
 	}
 
@@ -371,6 +374,7 @@ public class AnnonceSessionBean {
 	 *            : ad id
 	 * @return true/false : if the ad is active
 	 */
+	//TODO: pas de traitement dans le session bean
 	public boolean isActiveAd(int annonceIdInt) {
 		boolean isActive = false;
 
@@ -383,6 +387,25 @@ public class AnnonceSessionBean {
 		}
 
 		return isActive;
-
+	}
+	
+	/**
+	 * Récupère les annonces actives d'un utilisateur
+	 * pour lesquels il existe des réservations
+	 * à l'état Validé et au statut autre que Terminé
+	 * @param idUser
+	 * @return
+	 */
+	public List<Annonce> getAnnonceByUserWithReservationValide(Integer idUser){
+		String queryString = "SELECT a.actif, a.capacite_max, a.date_creation, a.date_modification, "
+				+ "a.description, a.id_annonce, a.id_utilisateur, a.prix_nuit, a.titre "
+				+ "FROM Annonce a "
+				+ "JOIN Reservation r ON a.id_annonce = r.id_annonce "
+				+ "WHERE a.actif = true "
+				+ "AND r.id_etat_reservation = 3 "
+				+ "AND r.id_statut_reservation <> 4 "
+				+ "AND a.id_utilisateur = "+idUser;
+		Query query = entityManager.createQuery(queryString);
+		return query.getResultList();
 	}
 }
