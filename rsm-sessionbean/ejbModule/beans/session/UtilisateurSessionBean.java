@@ -54,6 +54,11 @@ public class UtilisateurSessionBean {
 		}
 	}
 	
+	/**
+	 * Désactive un utilisateur
+	 * @param user
+	 * @return
+	 */
 	public Boolean deleteUser(Utilisateur user) {
 		try {
 			Integer userId = user.getId_utilisateur();
@@ -149,6 +154,7 @@ public class UtilisateurSessionBean {
 	 * 
 	 * @param nomHotel
 	 */
+	//TODO : deplacer dans hotelSessionBean
 	public boolean checkExistingHotel(String nomHotel) {
 		boolean isExistingHotel = false;
 
@@ -164,7 +170,13 @@ public class UtilisateurSessionBean {
 
 		return isExistingHotel;
 	}
-
+	
+	/**
+	 * Récupere l'id d'un hotel grâce à son nom
+	 * @param nomHotel
+	 * @return
+	 */
+	//TODO : deplacer dans hotelSessionBean
 	public int getIdHotel(String nomHotel) {
 		int idHotel = 0;
 		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom_hotel = '" + nomHotel + "'";
@@ -179,6 +191,12 @@ public class UtilisateurSessionBean {
 		return idHotel;
 	}
 
+	/**
+	 * Créé un hotel
+	 * @param nomHotel
+	 * @return
+	 */
+	//TODO : deplacer dans hotelSessionBean
 	public int createHotel(String nomHotel) {
 
 		int idHotel = 0;
@@ -212,6 +230,7 @@ public class UtilisateurSessionBean {
 	 * @param motDePasse
 	 * @return
 	 */
+	//TODO : deplacer dans typeUtilisateurSessionBean
 	public int getIdTypeUtilisateur(String identifiant, String motDePasse) {
 		
 		int idTypeUtilisateur = 3;
@@ -251,7 +270,6 @@ public class UtilisateurSessionBean {
 	 * @return
 	 */
 	public Utilisateur getUserInformation(int idUtilisateur){
-		
 		String queryString = "FROM Utilisateur AS a " + "WHERE a.id_utilisateur = '"+idUtilisateur+"' ";
 		Query query = entityManager.createQuery(queryString);
 		Utilisateur utilisateur = (Utilisateur) query.getSingleResult();
@@ -261,12 +279,46 @@ public class UtilisateurSessionBean {
 	/**
 	 * Récupère l'id de l'utilisateur
 	 * 
+	@SuppressWarnings("unchecked")
+	//TODO : REVOIR => PAS CORRECTE ON NE RENVOIE PAS UNE LISTE SI ON RECUPERE QU'UN OBJET
+	public List<Utilisateur> getUserInformation(int idUtilisateur){
+		String queryString = "FROM Utilisateur AS a " + "WHERE a.id_utilisateur = '"+idUtilisateur+"' ";
+		Query query = entityManager.createQuery(queryString);
+		List<Utilisateur> listUser = (List<Utilisateur>) query.getResultList();
+		return listUser; 
+	}
+	
+	/**
+	 * Récupère un utilisateur grâce à son id
+	 * @param idUtilisateur
+	 * @return
+	 */
+	public Utilisateur getUserInformationById(int idUtilisateur){
+		String queryString = "FROM Utilisateur AS a " + "WHERE a.id_utilisateur = '"+idUtilisateur+"' ";
+		Query query = entityManager.createQuery(queryString);
+		return (Utilisateur) query.getResultList().get(0);
+	}
+
+	/**
+	 * 
+	 * @param idUtilisateur
+	 * @return
+	 */
+	//TODO : changer le nom, ajouter le commentaire et deplacer dans annonceSessionBean
+	public List<Annonce> getAllAnnonceUtilisateur() {
+		String query = "FROM Annonce";
+		Query query2 = entityManager.createQuery(query);
+		@SuppressWarnings("rawtypes")
+		List listAnnonce = query2.getResultList();
+		return listAnnonce;
+	}
+	
+	/**
+	 * Récupère  l'id d'un utilisateur grâce à son adresse mail
 	 * @param identifiant
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
 	public int getIdUtilisateur(String identifiant) {
-		
 		int idUtilisateur = 0;
 		String query = "SELECT u.id_utilisateur FROM Utilisateur AS u " + "WHERE u.mail = '" + identifiant + "' AND actif = TRUE";
 		Query query2 = entityManager.createQuery(query);
@@ -281,12 +333,15 @@ public class UtilisateurSessionBean {
 	 * @param identifiant
 	 * @return
 	 */
+
 	public Utilisateur getUtilisateur(int idUser) {
 		
 		Utilisateur utilisateur = new Utilisateur();
 		String query = "FROM Utilisateur AS u WHERE u.id_utilisateur = '" + idUser + "' AND actif = TRUE";
 		Query query2 = entityManager.createQuery(query);
+
 		utilisateur = (Utilisateur) query2.getSingleResult();
+
 		return utilisateur;
 	}
 	
@@ -331,7 +386,6 @@ public class UtilisateurSessionBean {
 	 * regroupé par type d'utilisateur
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Object[]> getNbUserGroupByUserType() {
 		String queryString = "SELECT COUNT(*), tu.libelle "
 				+ "FROM Utilisateur AS u "

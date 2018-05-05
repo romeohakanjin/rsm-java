@@ -1,4 +1,4 @@
-package standard;
+package hotelier;
 
 import java.io.IOException;
 
@@ -10,24 +10,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import beans.entity.Hotel;
 import beans.entity.Utilisateur;
+import beans.session.HotelSessionBean;
 import beans.session.UtilisateurSessionBean;
 
 /**
- * 
- * @author Massneymar
- *
+ * @author SLI
  */
-@WebServlet("/StandardServlet")
-public class StandardServlet extends HttpServlet {
+@WebServlet("/HotelierProfilServlet")
+public class HotelierProfilServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String INFOS_PERSONNELLES = "StandardPage";
+	private static final String INFOS_HOTELIER = "HotelierProfilPage";
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
 
 	@EJB
 	UtilisateurSessionBean utilisateurSessionBean;
+	@EJB
+	HotelSessionBean hotelSessionBean;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -50,32 +52,28 @@ public class StandardServlet extends HttpServlet {
 	
 	/**
 	 * Affiche les informations de l'utilisateur
-	 * 
 	 * @throws ServletException
 	 * @throws IOException
 	 */
 	private void showUserInformations() throws ServletException, IOException {
 		String identifiant = (String) this.session.getAttribute("login");
-<<<<<<< HEAD
-		int idUtilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);
-		Utilisateur utilisateur = new Utilisateur();
-		utilisateur = (Utilisateur) utilisateurSessionBean.getUserInformation(idUtilisateur);
-=======
 		int idUtilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant); 
-		Utilisateur utilisateur = utilisateurSessionBean.getUserInformationById(idUtilisateur);	
->>>>>>> 3e9a6911f2b7a149498280df287dc48e318bbd45
+		Utilisateur utilisateur = utilisateurSessionBean.getUserInformationById(idUtilisateur);
+		Hotel hotel = hotelSessionBean.getHotelById(utilisateur.getId_hotel());
 		this.request.setAttribute("userInformations", utilisateur);
-		redirectionToView(INFOS_PERSONNELLES);
+		this.request.setAttribute("hotelInformations", hotel);
+		redirectionToView(INFOS_HOTELIER);
 	}
 
 	/**
 	 * Redirection to a view
 	 * 
-	 * @param String : the view name
+	 * @param String
+	 *            : the view name
 	 * @throws ServletException
 	 * @throws IOException
 	 */
 	private void redirectionToView(String view) throws ServletException, IOException {
 		this.getServletContext().getRequestDispatcher("/" + view + ".jsp").forward(request, response);
-	}
+	}	
 }

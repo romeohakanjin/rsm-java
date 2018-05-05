@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import beans.entity.Utilisateur;
+import beans.session.HotelSessionBean;
 import beans.session.UtilisateurSessionBean;
 
 /**
@@ -22,6 +23,9 @@ public class Inscription extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String HOME_PAGE = "Home";
 	private static final String INSCRIPTION_PAGE = "Inscription";
+	private static final int ID_TYPE_UTILISATEUR_STANDARD = 3;
+	private static final int ID_TYPE_UTILISATEUR_HOTELIER = 2;
+	private static final int ID_TYPE_UTILISATEUR_ADMIN = 1;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
@@ -35,10 +39,8 @@ public class Inscription extends HttpServlet {
 	private String adresse;
 	private String codePostal;
 	private String ville;
-	private String selectionHotel;
 	private String nomHotel;
 	private boolean isHotelier;
-	private boolean existingHotelForm;
 
 	@EJB
 	UtilisateurSessionBean utilisateurSessionBean;
@@ -69,7 +71,7 @@ public class Inscription extends HttpServlet {
 				if (this.isHotelier) {
 					utilisateur.setId_type_utilisateur(2);
 					boolean existingHotel = utilisateurSessionBean.checkExistingHotel(nomHotel);
-					if (existingHotel && !existingHotelForm) {
+					if (existingHotel) {
 						// Hotel already registred
 						int idHotel = utilisateurSessionBean.getIdHotel(nomHotel);
 						utilisateur.setId_hotel(idHotel);
@@ -77,8 +79,9 @@ public class Inscription extends HttpServlet {
 						request.removeAttribute("error-form-inscription");
 						utilisateurSessionBean.creerUtilisateur(utilisateur);
 						httpSession(identifiant, motDePasse);
+						setSession(utilisateur.getId_type_utilisateur());
 						redirectionToView(HOME_PAGE);
-					} else if (!existingHotel && existingHotelForm){
+					} else if (!existingHotel){
 						// No hotel registred
 						int idHotel = utilisateurSessionBean.createHotel(nomHotel);
 						utilisateur.setId_hotel(idHotel);
@@ -86,6 +89,7 @@ public class Inscription extends HttpServlet {
 						request.removeAttribute("error-form-inscription");
 						utilisateurSessionBean.creerUtilisateur(utilisateur);
 						httpSession(identifiant, motDePasse);
+						setSession(utilisateur.getId_type_utilisateur());
 						redirectionToView(HOME_PAGE);
 					} else{
 						setVariableToView("error-form-inscription", "Hôtel inexistant");
@@ -94,8 +98,10 @@ public class Inscription extends HttpServlet {
 				} else {
 					utilisateur.setId_type_utilisateur(3);
 					request.removeAttribute("error-form-inscription");
+					this.setSession(utilisateur.getId_type_utilisateur());
 					utilisateurSessionBean.creerUtilisateur(utilisateur);
 					httpSession(identifiant, motDePasse);
+					
 					redirectionToView(HOME_PAGE);
 				}
 			} else {
@@ -130,12 +136,6 @@ public class Inscription extends HttpServlet {
 				
 				if (nomHotel == null || "".equals(nomHotel)) {
 					isOkForm = false;
-				}
-
-				if (selectionHotel.equals("hotel")) {
-					this.existingHotelForm = false;
-				} else if (selectionHotel.equals("addHotel")) {
-					this.existingHotelForm = true;
 				}
 			}
 
@@ -190,10 +190,8 @@ public class Inscription extends HttpServlet {
 		this.adresse = request.getParameter("adresse");
 		this.codePostal = request.getParameter("codePostal");
 		this.ville = request.getParameter("ville");
-
-		this.selectionHotel = request.getParameter("selectionHotel");
+		
 		this.nomHotel = request.getParameter("nomHotel");
-		this.existingHotelForm = false;
 	}
 
 	/**
@@ -215,6 +213,26 @@ public class Inscription extends HttpServlet {
 	protected void httpSession(String login, String password) {
 		session.setAttribute("login", login);
 		session.setAttribute("password", password);
+	}
+	
+	/**
+	 * Set the session type
+	 * @param userType
+	 */
+	protected void setSession(Integer userType) {
+		switch (userType) {
+		case ID_TYPE_UTILISATEUR_ADMIN:
+			session.setAttribute("session-admin", "admin");
+			break;
+		case ID_TYPE_UTILISATEUR_HOTELIER:
+			session.setAttribute("session-hotelier", "hotelier");
+			break;
+		case ID_TYPE_UTILISATEUR_STANDARD:
+			session.setAttribute("session-standard", "standard");
+			break;
+		default:
+			break;
+		}
 	}
 
 	/**

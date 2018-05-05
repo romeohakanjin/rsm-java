@@ -15,6 +15,7 @@ Chaque personne travaille uniquement sur sa branche pour ne pas créer de conflit
 La branche master doit uniquement contenir les fonctionnalités finalisés (approuvé par tous, et tester)
 Aucun fichier d'environnement, "personnel" (généré par eclipse) ne doit être commit.
 Ne pas travailler en même temps sur un même fichier pour faciliter le merge de la branche dev à la branche master.
+Vérifier qu'aucun message en console n'est laissé avant de commit!
 
 3/Convention
 Les noms de fichiers, variables et méthodes doivent être :
@@ -22,6 +23,8 @@ Les noms de fichiers, variables et méthodes doivent être :
 - en anglais
 - en camel : premier mot de la variable en miniscule, chaque première lettre des autres mots en majuscule
 	EX: nomVariableCamel
+Les annotations ne doivent en aucun cas être mis dans la méthode!
+Chaque méthode doit être EXPLICITEMENT commenté, avec le but de la méthode ainsi que les paramètres utilisés.
 
 4/Guide de récupèration du projet
 

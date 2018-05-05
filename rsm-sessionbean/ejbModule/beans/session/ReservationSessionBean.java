@@ -100,6 +100,7 @@ public class ReservationSessionBean {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
+	//TODO renommer : getReservationByUserIdNotFinish
 	public List<Reservation> getReservationByUserId(Integer userId) {
 		String queryString = "FROM Reservation " + "WHERE id_utilisateur = '" + userId + "' "
 				+ "AND id_etat_reservation <> 3";
@@ -108,7 +109,7 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * Récupère les réservations faites par un utilisateur ayant pour Terminée
+	 * Récupère les réservations faites par un utilisateur ayant pour état Terminée
 	 * 
 	 * @param userId
 	 * @return
@@ -129,6 +130,7 @@ public class ReservationSessionBean {
 	 * @return List<Reservation> : list of reservations
 	 */
 	@SuppressWarnings("unchecked")
+	//TODO JOIN inutile si c'est juste pour trouver la liste des reservation d'hotel
 	public List<Object[]> getReservationsHotelByUserId(int userId) {
 		String queryString = "FROM Reservation as r " + "JOIN Annonce AS a ON a.id_annonce = r.id_annonce "
 				+ "JOIN EtatReservation AS er ON er.id_etat_reservation = r.id_etat_reservation "
@@ -168,6 +170,8 @@ public class ReservationSessionBean {
 	 * 
 	 * @return int : state (id) of the reservation
 	 */
+	//TODO : Déplacer cette méthode dans EtatReservationSessionBean
+	//TODO : Enlever le traitement et le faire dans la servlet appelant cette méthode
 	public int getReservationStateId(int reservationId) {
 		int idStateReservation = 0;
 
@@ -192,6 +196,7 @@ public class ReservationSessionBean {
 	 * @param reservationStateValidationHotelier
 	 *            : id of the validation state
 	 */
+	//TODO : Paramètre incomingReservationStatusId pas utilisé dans la méthode donc pourquoi le mettre en param
 	public void validationReservationHotelier(int idReservation, int reservationStateValidationHotelier,
 			int incomingReservationStatusId) {
 		try {
@@ -221,6 +226,7 @@ public class ReservationSessionBean {
 	 * @param reservationStateRefusingHotelier
 	 *            : : id of the refusing state
 	 */
+	//TODO : renommer resufing en refusing
 	public void resufingReservationHotelier(int idReservation, int reservationStateRefusingHotelier,
 			int finishedReservationStatusId) {
 		try {
@@ -248,6 +254,7 @@ public class ReservationSessionBean {
 	 * @param timestampBegining
 	 * @param timestampEnd
 	 */
+	//TODO : pas de traitement en session bean
 	public boolean isOkDateForReservation(int annonceIdInt, Timestamp timestampBegining, Timestamp timestampEnd) {
 		boolean isOkDate = false;
 		
@@ -264,5 +271,20 @@ public class ReservationSessionBean {
 		}
 		
 		return isOkDate;
+	}
+	
+	/**
+	 * Récupère les réservations qui ne sont pas encore passés
+	 * d'un utilisateur
+	 * @param userId
+	 * @return
+	 */
+	public List<Reservation> getReservationNonPasseeByUserId(Integer userId){
+		String queryString = "FROM Reservation r "
+				+ "WHERE r.id_etat_reservation = 3 "
+				+ "AND r.id_statut_reservation <> 4 "
+				+ "ANd r.id_utilisateur = "+userId;
+		Query query = entityManager.createQuery(queryString);
+		return query.getResultList();
 	}
 }

@@ -29,9 +29,9 @@
 						<li id="home" class="current"><a href="Home.jsp">Accueil</a></li>
 						<li id="standard"><a href="AnnoncesServlet">Annonces</a>
 							<ul>
-								<li id="standard"><a href="AnnoncesServlet">Liste
-										Annonces</a></li>
-							</ul></li>
+								<li id="standard"><a href="AnnoncesServlet">Liste Annonces</a></li>
+							</ul>
+						</li>
 						<%
 							if (session.getAttribute("session-admin") != null) {
 						%>
@@ -51,7 +51,8 @@
 								Gestion des commentaires signalés</a></li>
 								<li id="payementManagement"><a href="PayementManagementServlet">
 								Gestion des paiements</a></li>
-							</ul></li>
+							</ul>
+						</li>
 						<%
 							} else if (session.getAttribute("session-hotelier") != null) {
 						%>
@@ -62,7 +63,9 @@
 									href="HotelierAnnonceListServlet">Annonces</a></li>
 								<li id="hotelierListServlet"><a
 									href="HotelierReservationListServlet">Réservations</a></li>
-							</ul></li>
+							</ul>
+						</li>
+						<li id="updateUser"><a href="HotelierProfilServlet">Informations Hotelier</a></li>
 						<%
 							} else if (session.getAttribute("session-standard") != null){ %>
 								<li id="standard">
