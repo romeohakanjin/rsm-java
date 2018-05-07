@@ -56,14 +56,11 @@ public class StandardServlet extends HttpServlet {
 	 */
 	private void showUserInformations() throws ServletException, IOException {
 		String identifiant = (String) this.session.getAttribute("login");
-<<<<<<< HEAD
+
 		int idUtilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);
 		Utilisateur utilisateur = new Utilisateur();
 		utilisateur = (Utilisateur) utilisateurSessionBean.getUserInformation(idUtilisateur);
-=======
-		int idUtilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant); 
-		Utilisateur utilisateur = utilisateurSessionBean.getUserInformationById(idUtilisateur);	
->>>>>>> 3e9a6911f2b7a149498280df287dc48e318bbd45
+		
 		this.request.setAttribute("userInformations", utilisateur);
 		redirectionToView(INFOS_PERSONNELLES);
 	}

@@ -256,13 +256,30 @@ public class UtilisateurSessionBean {
 		boolean isExistingUserId = false;
 		String query = "SELECT id_utilisateur FROM Utilisateur WHERE id_utilisateur = '" + id_utilisateur + "'";
 		Query query2 = entityManager.createQuery(query);
-		@SuppressWarnings("rawtypes")
+		
 		List utilisateurs = query2.getResultList();
 		if (utilisateurs.size() != 0) {
 			isExistingUserId = true;
 		}
 		return isExistingUserId;
 	}
+	/**
+	 * Verification of the existence of a user id
+	 * @param idUser
+ 	 * @return
+ 	 */
+	public boolean isMatchingIdUser(int id_utilisateur) {
+ 			 		
+		boolean isMatchingId = false;
+ 		String query = "SELECT id_utilisateur FROM Utilisateur WHERE id_utilisateur = '" + id_utilisateur + "'";
+ 		Query query2 = entityManager.createQuery(query);
+ 		
+ 		List utilisateurs = query2.getResultList();
+ 		if (utilisateurs.size() != 0) {
+			isMatchingId = true;
+ 		}
+		return isMatchingId;
+ 	}
 	
 	/**
 	 * 
