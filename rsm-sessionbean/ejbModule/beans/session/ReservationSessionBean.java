@@ -18,6 +18,7 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
+import beans.entity.Annonce;
 import beans.entity.Reservation;
 
 /**
@@ -73,7 +74,8 @@ public class ReservationSessionBean {
 	@SuppressWarnings("unchecked")
 	public List<Object[]> getNbReservationGroupByReservationState() {
 		String queryString = "SELECT COUNT(*), er.libelle " + "FROM Reservation AS r "
-				+ "JOIN EtatReservation AS er ON er.id_etat_reservation = r.id_etat_reservation "
+				+ "JOIN EtatReservation AS er ON er.id_etat_reservation = r.id_etat_reservation"
+				+ " WHERE etat_reservation = true "
 				+ "GROUP BY er.libelle";
 		Query query = entityManager.createQuery(queryString);
 		return query.getResultList();
@@ -85,9 +87,9 @@ public class ReservationSessionBean {
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Reservation> getReservationByAnnonceId(Integer annonceId) {
-		String queryString = "FROM Reservation " + "WHERE id_annonce = '" + annonceId + "' ";
+		String queryString = "FROM Reservation " + "WHERE id_annonce = '" + annonceId + "' "
+				+ "AND etat_reservation = true";
 		Query query = entityManager.createQuery(queryString);
 		return query.getResultList();
 	}
@@ -99,10 +101,10 @@ public class ReservationSessionBean {
 	 * @param userId
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	//TODO renommer : getReservationByUserIdNotFinish
+	// TODO renommer : getReservationByUserIdNotFinish
 	public List<Reservation> getReservationByUserId(Integer userId) {
 		String queryString = "FROM Reservation " + "WHERE id_utilisateur = '" + userId + "' "
+				+ "AND etat_reservation = true "
 				+ "AND id_etat_reservation <> 3";
 		Query query = entityManager.createQuery(queryString);
 		return query.getResultList();
@@ -114,10 +116,24 @@ public class ReservationSessionBean {
 	 * @param userId
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Reservation> getFinishedReservationByUserId(Integer userId) {
 		String queryString = "FROM Reservation " + "WHERE id_utilisateur = '" + userId + "' "
+				+ "AND etat_reservation = true "
 				+ "AND id_etat_reservation = 3";
+		Query query = entityManager.createQuery(queryString);
+		return query.getResultList();
+	}
+
+	/**
+	 * get all the reservations for a user with a state 1 or 2
+	 * 
+	 * @param userId
+	 * @return List<Reservation>
+	 */
+	public List<Reservation> getPendingReservationByUserId(Integer userId) {
+		String queryString = "FROM Reservation " + "WHERE id_utilisateur = '" + userId + "' "
+				+ "AND etat_reservation = true "
+				+ "AND id_etat_reservation = 1 OR id_etat_reservation = 2";
 		Query query = entityManager.createQuery(queryString);
 		return query.getResultList();
 	}
@@ -129,12 +145,13 @@ public class ReservationSessionBean {
 	 *            : id of a user
 	 * @return List<Reservation> : list of reservations
 	 */
-	@SuppressWarnings("unchecked")
-	//TODO JOIN inutile si c'est juste pour trouver la liste des reservation d'hotel
+	// TODO JOIN inutile si c'est juste pour trouver la liste des reservation
+	// d'hotel
 	public List<Object[]> getReservationsHotelByUserId(int userId) {
 		String queryString = "FROM Reservation as r " + "JOIN Annonce AS a ON a.id_annonce = r.id_annonce "
 				+ "JOIN EtatReservation AS er ON er.id_etat_reservation = r.id_etat_reservation "
-				+ "WHERE a.id_utilisateur = '" + userId + "'";
+				+ "WHERE a.id_utilisateur = '" + userId + "' "
+				+ "AND etat_reservation = true";
 		Query query = entityManager.createQuery(queryString);
 
 		return query.getResultList();
@@ -153,6 +170,7 @@ public class ReservationSessionBean {
 		boolean isMatchingId = false;
 
 		String query = "FROM Reservation as r, Annonce as a " + "WHERE a.id_annonce = r.id_annonce "
+				+ "AND etat_reservation = true "
 				+ "AND a.id_utilisateur = '" + idUser + "' " + "AND r.id_reservation = '" + idReservation + "' ";
 		Query query2 = entityManager.createQuery(query);
 
@@ -170,13 +188,15 @@ public class ReservationSessionBean {
 	 * 
 	 * @return int : state (id) of the reservation
 	 */
-	//TODO : Déplacer cette méthode dans EtatReservationSessionBean
-	//TODO : Enlever le traitement et le faire dans la servlet appelant cette méthode
+	// TODO : Déplacer cette méthode dans EtatReservationSessionBean
+	// TODO : Enlever le traitement et le faire dans la servlet appelant cette
+	// méthode
 	public int getReservationStateId(int reservationId) {
 		int idStateReservation = 0;
 
-		String queryString = "SELECT r.id_etat_reservation " + "FROM Reservation as r " + "WHERE r.id_reservation = '"
-				+ reservationId + "'";
+		String queryString = "SELECT r.id_etat_reservation " 
+				+ "FROM Reservation as r " + "WHERE r.id_reservation = '"+ reservationId + "' "
+				+ "AND etat_reservation = true";
 		Query query2 = entityManager.createQuery(queryString);
 
 		List listStateReservation = query2.getResultList();
@@ -196,7 +216,8 @@ public class ReservationSessionBean {
 	 * @param reservationStateValidationHotelier
 	 *            : id of the validation state
 	 */
-	//TODO : Paramètre incomingReservationStatusId pas utilisé dans la méthode donc pourquoi le mettre en param
+	// TODO : Paramètre incomingReservationStatusId pas utilisé dans la méthode donc
+	// pourquoi le mettre en param
 	public void validationReservationHotelier(int idReservation, int reservationStateValidationHotelier,
 			int incomingReservationStatusId) {
 		try {
@@ -226,7 +247,7 @@ public class ReservationSessionBean {
 	 * @param reservationStateRefusingHotelier
 	 *            : : id of the refusing state
 	 */
-	//TODO : renommer resufing en refusing
+	// TODO : renommer resufing en refusing
 	public void resufingReservationHotelier(int idReservation, int reservationStateRefusingHotelier,
 			int finishedReservationStatusId) {
 		try {
@@ -247,44 +268,86 @@ public class ReservationSessionBean {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * If there is any reservation already coming for this ad
-	 * @param annonceIdInt 
+	 * 
+	 * @param annonceIdInt
 	 * @param timestampBegining
 	 * @param timestampEnd
 	 */
-	//TODO : pas de traitement en session bean
+	// TODO : pas de traitement en session bean
 	public boolean isOkDateForReservation(int annonceIdInt, Timestamp timestampBegining, Timestamp timestampEnd) {
 		boolean isOkDate = false;
-		
-		String query = "SELECT date_debut_sejour, date_fin_sejour" + 
-				" FROM Reservation " + 
-				" WHERE date_debut_sejour >= '"+timestampBegining+"' " + 
-				" AND date_fin_sejour <= '"+timestampEnd+"' "
-				+ " AND id_annonce = '"+annonceIdInt+"' ";
+
+		String query = "SELECT date_debut_sejour, date_fin_sejour" + " FROM Reservation "
+				+ " WHERE date_debut_sejour >= '" + timestampBegining + "' " + " AND date_fin_sejour <= '"
+				+ timestampEnd + "' " + " AND id_annonce = '" + annonceIdInt + "' "
+				+ "AND etat_reservation = true";
 		Query query2 = entityManager.createQuery(query);
 		List reservation = query2.getResultList();
 
 		if (reservation.size() != 0) {
 			isOkDate = true;
 		}
-		
+
 		return isOkDate;
 	}
-	
+
 	/**
-	 * Récupère les réservations qui ne sont pas encore passés
-	 * d'un utilisateur
+	 * Récupère les réservations qui ne sont pas encore passés d'un utilisateur
+	 * 
 	 * @param userId
 	 * @return
 	 */
-	public List<Reservation> getReservationNonPasseeByUserId(Integer userId){
-		String queryString = "FROM Reservation r "
-				+ "WHERE r.id_etat_reservation = 3 "
-				+ "AND r.id_statut_reservation <> 4 "
-				+ "ANd r.id_utilisateur = "+userId;
+	public List<Reservation> getReservationNonPasseeByUserId(Integer userId) {
+		String queryString = "FROM Reservation r " + "WHERE r.id_etat_reservation = 3 "
+				+ "AND etat_reservation = true "
+				+ "AND r.id_statut_reservation <> 4 " + "ANd r.id_utilisateur = " + userId;
 		Query query = entityManager.createQuery(queryString);
 		return query.getResultList();
+	}
+	
+	/**
+	 * check if the reservation is waiting for approval for this user
+	 * @param idUtilisateur 
+	 * @param reservationId
+	 * @return true / false if the reservation is OK
+	 */
+	public boolean isReservationPending(int idUtilisateur, String reservationId) {
+		boolean isOkReservation = false;
+		
+		String queryString = "FROM Reservation " + "WHERE id_utilisateur = '" + idUtilisateur + "' "
+				+ "AND etat_reservation = true "
+				+ "AND id_reservation = '"+reservationId+"' "
+				+ "AND id_etat_reservation = 1 OR id_etat_reservation = 2";
+		Query query = entityManager.createQuery(queryString);
+		List reservation = query.getResultList();
+		
+		if (reservation.size() != 0) {
+			isOkReservation =  true;
+		}
+		return isOkReservation;
+	}
+	
+	/**
+	 * change the state of a reservation to false
+	 * @param reservationId
+	 */
+	public void deleteReservation(String reservationId) {
+		try {
+			userTransaction.begin();
+			String queryString = "UPDATE Reservation AS r"
+					+ " SET etat_reservation = false "
+					+ "WHERE r.id_reservation = '" + reservationId + "' ";
+			Query query = entityManager.createQuery(queryString);
+			query.executeUpdate();
+
+			userTransaction.commit();
+		} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

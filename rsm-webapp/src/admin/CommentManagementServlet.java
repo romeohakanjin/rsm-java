@@ -14,8 +14,6 @@ import javax.servlet.http.HttpSession;
 
 import beans.entity.Commentaire;
 import beans.session.CommentaireSessionBean;
-import beans.session.ReservationSessionBean;
-import beans.session.UtilisateurSessionBean;
 
 /**
  * @author SLI
@@ -24,7 +22,6 @@ import beans.session.UtilisateurSessionBean;
 public class CommentManagementServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String COMMENT_MANAGEMENT = "AdminCommentManagement";
-	private static final String COMMENT_MANAGEMENT_SERVLET = "CommentManagementServlet";
 	private static final String REFUSE_COMMENT = "RefuseComment";
 	private static final String VALIDATE_COMMENT = "ValidateComment";
 	private HttpServletRequest request;
@@ -52,9 +49,10 @@ public class CommentManagementServlet extends HttpServlet {
 					Boolean isRefuse = refuseCommentById(idComment);
 					if (isRefuse) {
 						getAllComment();
+						setVariableToView("alert-success", "Commentaire supprimé");
 						redirectionToView(COMMENT_MANAGEMENT);
 					} else {
-						setVariableToView("erreurRefuse", "La suppression de ce commentaire n'a pas pu être effectuée");
+						setVariableToView("alert-danger", "La suppression de ce commentaire n'a pas pu être effectuée");
 					}
 				}
 			}
@@ -67,17 +65,17 @@ public class CommentManagementServlet extends HttpServlet {
 					Boolean isValidate = validateCommentById(idComment);
 					if (isValidate) {
 						getAllComment();
+						setVariableToView("alert-success", "Commentaire validé");
 						redirectionToView(COMMENT_MANAGEMENT);
 					} else {
-						setVariableToView("erreurValidate",
-								"La validation de ce commentaire n'a pas pu être effectuée");
+						setVariableToView("alert-warning", "La validation de ce commentaire n'a pas pu être effectuée");
 					}
 				}
 			}
 			break;
 		default:
 			getAllComment();
-			redirectionToView(COMMENT_MANAGEMENT); 
+			redirectionToView(COMMENT_MANAGEMENT);
 			break;
 		}
 	}
@@ -129,19 +127,6 @@ public class CommentManagementServlet extends HttpServlet {
 	 */
 	private void redirectionToView(String view) throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(view + ".jsp");
-		dispatcher.include(request, response);
-	}
-
-	/**
-	 * Redirection to a servlet
-	 * 
-	 * @param String
-	 *            : the servlet name
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void redirectionToServlet(String sevlet) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(sevlet);
 		dispatcher.include(request, response);
 	}
 

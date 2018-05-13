@@ -6,13 +6,6 @@
 			<div id="main-wrapper">
 				<div class="container">
 					<div id="content">
-						<%
-							if (request.getAttribute("error-hotelier-annonce-form") != null) {
-						%>
-								<p class="error-form"><%= request.getAttribute("error-hotelier-annonce-form") %></p>
-						<%
-							}
-						%>
 						<h2>Annnonce hotelier</h2>
 						<%
 							if (request.getAttribute("annonceEdited") != null) {

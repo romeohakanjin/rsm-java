@@ -2,7 +2,11 @@ package standard;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -23,11 +27,9 @@ import beans.session.ReservationSessionBean;
 @WebServlet("/AnnoncesDetailsServlet")
 public class AnnoncesDetailsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String HOME_VIEW = "Home";
 	private static final String CONNECTION_VIEW = "Connexion";
 	private static final String ANNONCE_DETAILS_VIEW = "AnnonceDetails";
 	private static final String ANNONCES_LISTE_SERVLET = "AnnoncesServlet";
-	private static final String ANNONCES_DETAILS_SERVLET = "AnnoncesDetailsServlet";
 	private static final String RESERVATION_ACTION = "reserver";
 	private static final String RESERVATION_VALIDATE_SERVLET = "ReservationConfirmationServlet";
 	private HttpServletRequest request;
@@ -38,6 +40,9 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 	private String action;
 	private String dateDebut;
 	private String dateFin;
+	private double price;
+	private double pricePerNight;
+	private long numberOfDays;
 	private Timestamp timestampBegining;
 	private Timestamp timestampEnd;
 
@@ -82,12 +87,10 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void reservationActionPerformed() throws ServletException, IOException {
-		System.out.println("reservation");
 		if (session.getAttribute("session-standard") != null) {
 			final boolean isOkForm = verificationFormulaire();
-			System.out.println("bien un user normal");
+
 			if (isOkForm) {
-				System.out.println("form ok");
 				// Vérifier si l'id de l'utilisateur est bien celui d'un utilisateurs standard
 				String identifiant = (String) this.session.getAttribute("login");
 				int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
@@ -103,26 +106,23 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 						session.setAttribute("reservationIdUser", id_utilisateur);
 						session.setAttribute("reservationDateDebut", timestampBegining);
 						session.setAttribute("reservationDateFin", timestampEnd);
+						session.setAttribute("reservationNumberOfDays", numberOfDays);
+						session.setAttribute("reservationPrice", price);
 						redirectionToServlet(RESERVATION_VALIDATE_SERVLET);
 					}
 
 				} else {
-					System.out.println("pas active");
-					setVariableToView("error-form-annonce-details", "Numéro d'annonce incorrect");
+					setVariableToView("alert-danger", "Numéro d'annonce incorrect");
 					redirectionToServlet(ANNONCES_LISTE_SERVLET);
 				}
 			} else {
-				System.out.println("form incorrect");
-				setVariableToView("error-form-annonce-details", "Date incorect");
-				// redirectionToServletWithParameter(ANNONCES_LISTE_SERVLET, "annonceId",
-				// annonceIdInt);
+				setVariableToView("alert-danger", "Date incorect");
+				redirectionToServlet(ANNONCES_LISTE_SERVLET);
 			}
 		} else {
-			System.out.println("pas connecté");
-			setVariableToView("error-form-connection", "Vous devez être connecté pour accéder à cette page");
+			setVariableToView("alert-danger", "Vous devez être connecté pour accéder à cette page");
 			redirectionToView(CONNECTION_VIEW);
 		}
-		System.out.println("Done");
 	}
 
 	/**
@@ -130,14 +130,15 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 	 * 
 	 * @return boolean isOkForm
 	 * @throws ServletException
+	 * @throws ParseException
 	 */
 	private boolean verificationFormulaire() throws ServletException {
 		boolean isOkForm = true;
 
 		if (dateDebut == null || "".equals(dateDebut) && dateFin == null || "".equals(dateFin)) {
 			isOkForm = false;
-			System.out.println("tout est nul");
 		} else {
+			boolean reservationForActualDate = false;
 			Date dateBegining = new Date(dateDebut);
 			Date dateEnd = new Date(dateFin);
 
@@ -147,27 +148,45 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 
 			// verifier si les dates sont pas avant la date actuelle
 			// TODO : la date actuelle est avec une heure, tandis que quand on créer le
-			// timestamp on donne pas l'heuredonc ne compare pas correctement pour les reservation le jour j
-			//TODO: FIXE THAT
+			// timestamp on donne pas l'heuredonc ne compare pas correctement pour les
+			// reservation le jour j
+			// TODO: FIXE THAT
 
 			Date actualDate = new Date();
-			System.out.println(actualDate);
-			System.out.println(actualDate.getTime());
-			System.out.println(dateBegining.getTime());
-			if (dateEnd.getTime() < actualDate.getTime() && dateBegining.getTime() < actualDate.getTime()) {
+			if ((dateEnd.getTime() < actualDate.getTime()) && (dateBegining.getTime() < actualDate.getTime())) {
 				isOkForm = false;
-				System.out.println("111111111111111111");
 			} else {
-				System.out.println("222222222222222222");
+				// if it is a reservation for the actual date
+				if (dateBegining.getTime() == dateEnd.getTime()) {
+					reservationForActualDate = true;
+					this.numberOfDays = 1;
+					pricePerNight = annonceSessionBean.getPricePerNightAd(annonceIdInt);
+					this.price = pricePerNight;
+				}
 			}
-			
-			//TODO : contrôle sur la date
-			//Vérifier si le mois est pas supérieur à 12 ou inférieur à 1
-			//Vérifier que les jours c'est pas supérieur à 31 et inférieur à 1
-			//Vérifier que en fevrier on dépasse aps 28 jours
 
 			timestampBegining = new java.sql.Timestamp(dateBegining.getTime());
 			timestampEnd = new java.sql.Timestamp(dateEnd.getTime());
+
+			if (!reservationForActualDate) {
+				// TODO : contrôle sur la date
+				// Vérifier si le mois est pas supérieur à 12 ou inférieur à 1
+				// Vérifier que les jours c'est pas supérieur à 31 et inférieur à 1
+				// Vérifier que en fevrier on dépasse aps 28 jours
+				try {
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+					Date firstDate = sdf.parse(dateDebut);
+					Date secondDate = sdf.parse(dateFin);
+
+					long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
+					this.numberOfDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+
+					pricePerNight = annonceSessionBean.getPricePerNightAd(annonceIdInt);
+					this.price = pricePerNight * numberOfDays;
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 		if (annonceId == null || "".equals(annonceId)) {

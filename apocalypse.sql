@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 19 Mars 2018 à 17:44
+-- Généré le :  Sam 12 Mai 2018 à 16:24
 -- Version du serveur :  10.1.16-MariaDB
 -- Version de PHP :  7.0.9
 
@@ -188,6 +188,7 @@ CREATE TABLE `reservation` (
   `date_fin_sejour` datetime NOT NULL,
   `duree_sejour` int(10) NOT NULL,
   `prix` double NOT NULL,
+  `etat_reservation` tinyint(1) NOT NULL DEFAULT '1',
   `id_statut_reservation` int(10) NOT NULL DEFAULT '1',
   `id_etat_reservation` int(10) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -196,9 +197,12 @@ CREATE TABLE `reservation` (
 -- Contenu de la table `reservation`
 --
 
-INSERT INTO `reservation` (`id_reservation`, `id_annonce`, `id_utilisateur`, `date_debut_sejour`, `date_fin_sejour`, `duree_sejour`, `prix`, `id_statut_reservation`, `id_etat_reservation`) VALUES
-(1, 1, 3, '2018-03-05 15:40:10', '2018-03-11 15:40:00', 6, 270, 3, 3),
-(2, 1, 3, '2018-03-05 15:40:10', '2018-03-12 15:40:00', 7, 270, 4, 4);
+INSERT INTO `reservation` (`id_reservation`, `id_annonce`, `id_utilisateur`, `date_debut_sejour`, `date_fin_sejour`, `duree_sejour`, `prix`, `etat_reservation`, `id_statut_reservation`, `id_etat_reservation`) VALUES
+(1, 1, 3, '2018-03-05 15:40:10', '2018-03-11 15:40:00', 6, 270, 1, 3, 3),
+(2, 1, 3, '2018-03-05 15:40:10', '2018-03-12 15:40:00', 7, 270, 1, 4, 4),
+(3, 2, 2, '2018-05-07 22:33:30', '2018-05-16 00:00:00', 5, 25, 1, 1, 1),
+(5, 1, 3, '2021-03-05 00:00:00', '2021-06-05 00:00:00', 3, 135, 1, 1, 1),
+(6, 1, 3, '2019-03-05 00:00:00', '2019-03-05 00:00:00', 1, 45, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -292,7 +296,8 @@ CREATE TABLE `utilisateur` (
 INSERT INTO `utilisateur` (`id_utilisateur`, `id_type_utilisateur`, `id_hotel`, `nom`, `prenom`, `mail`, `mot_de_passe`, `mobile`, `adresse`, `code_postal`, `ville`, `point_bonus`, `actif`) VALUES
 (1, 1, NULL, 'LIM', 'Sindy', 'sindy.lim91@gmail.com', 'test01', '0678653401', '100 rue des tests', '75015', 'Paris', 0, 1),
 (2, 2, 1, 'HAKANJIN', 'Roméo', 'hakanjin.romeo96@gmail.com', 'test02', '0697448295', '3 rue des curés', '95800', 'Cergy', 0, 1),
-(3, 3, NULL, 'DIAGNE', 'Massamba', 'massdinho10@gmail.com', 'test03', '0734546501', '3 avenue du test', '93600', 'Aulnay-sous-bois', 0, 1);
+(3, 3, NULL, 'DIAGNE', 'Massamba', 'massdinho10@gmail.com', 'test03', '0734546501', '3 avenue du test', '93600', 'Aulnay-sous-bois', 0, 1),
+(4, 3, NULL, 'testos', 'rockos', 'test', 'test', '015161', '6 rue du test', 'test05', 'Testos', 50, 1);
 
 --
 -- Index pour les tables exportées
@@ -438,7 +443,7 @@ ALTER TABLE `proposition_modification_annonce`
 -- AUTO_INCREMENT pour la table `reservation`
 --
 ALTER TABLE `reservation`
-  MODIFY `id_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT pour la table `statut_reservation`
 --
@@ -458,7 +463,7 @@ ALTER TABLE `type_utilisateur`
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_utilisateur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- Contraintes pour les tables exportées
 --

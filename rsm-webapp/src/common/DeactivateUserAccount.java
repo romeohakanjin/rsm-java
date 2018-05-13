@@ -20,7 +20,6 @@ import beans.session.AnnonceSessionBean;
 import beans.session.ReservationSessionBean;
 import beans.session.TypeUtilisateurSessionBean;
 import beans.session.UtilisateurSessionBean;
-import session.Deconnection;
 
 /**
  * @author SLI
@@ -36,8 +35,7 @@ public class DeactivateUserAccount extends HttpServlet {
 	private HttpServletResponse response;
 	private HttpSession session;
 	private String action;
-	private String userId;
-	
+
 	@EJB
 	UtilisateurSessionBean utilisateurSessionBean;
 	@EJB
@@ -46,40 +44,41 @@ public class DeactivateUserAccount extends HttpServlet {
 	AnnonceSessionBean annonceSessionBean;
 	@EJB
 	ReservationSessionBean reservationSessionBean;
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		this.request = request;
 		this.response = response;
 
 		initialize();
 
-		switch(this.action) {
-		case DEACTIVATE_USER :
-			if(userId != null || !userId.equals("")) {
-				Integer idUser = Integer.valueOf(userId);
-				Utilisateur userToDelete = utilisateurSessionBean.getUserById(idUser);
-				if(userToDelete != null) {
-					Boolean isDeleted = this.deleteUserById(userToDelete);
-					if(!isDeleted) {
-						request.setAttribute("erreurDelete", "Le compte n\'a pas pu être supprimé car vous avez des réservations en cours");
-						switch(userToDelete.getId_type_utilisateur()) {
-						case 2:
-							redirectionToServlet(PROFIL_PAGE_HOTELIER);
-							break;
-						case  3:
-							redirectionToServlet(PROFIL_PAGE_STANDARD);
-							break;
-						}
-					}else {
-						request.removeAttribute("error-hotelier-annonce-form");
-						redirectionToServlet(DECONNEXION);
+		switch (this.action) {
+		case DEACTIVATE_USER:
+			String identifiant = (String) this.session.getAttribute("login");
+			int idUser = annonceSessionBean.getIdUtilisateur(identifiant);
+			Utilisateur userToDelete = utilisateurSessionBean.getUserById(idUser);
+			if (userToDelete != null) {
+				Boolean isDeleted = this.deleteUserById(userToDelete);
+				if (!isDeleted) {
+					request.setAttribute("alert-danger",
+							"Le compte n\'a pas pu être supprimé car vous avez des réservations en cours");
+					switch (userToDelete.getId_type_utilisateur()) {
+					case 2:
+						redirectionToServlet(PROFIL_PAGE_HOTELIER);
+						break;
+					case 3:
+						redirectionToServlet(PROFIL_PAGE_STANDARD);
+						break;
 					}
+				} else {
+					redirectionToServlet(DECONNEXION);
 				}
+
 			}
 			break;
 		}
 	}
-	
+
 	/**
 	 * Initialise les variables
 	 * 
@@ -91,13 +90,12 @@ public class DeactivateUserAccount extends HttpServlet {
 		this.action = request.getParameter("action");
 		if (this.action == null) {
 			this.action = "";
-		}else {
-			this.userId = request.getParameter("userId");
 		}
 	}
-	
+
 	/**
 	 * Supprime un utilisateur à l'aide de son id et son type
+	 * 
 	 * @param userId
 	 * @param userTypeId
 	 * @return
@@ -106,36 +104,26 @@ public class DeactivateUserAccount extends HttpServlet {
 		Boolean isDeleted = false;
 		List<Annonce> annonceList = new ArrayList<Annonce>();
 		List<Reservation> reservationList = new ArrayList<Reservation>();
-		
-		switch(userToDelete.getId_type_utilisateur()) {
+
+		switch (userToDelete.getId_type_utilisateur()) {
 		case 2:
 			annonceList = annonceSessionBean.getAnnonceByUserWithReservationValide(userToDelete.getId_utilisateur());
-			if(annonceList.size() == 0) {
+			if (annonceList.size() == 0) {
 				isDeleted = utilisateurSessionBean.deleteUser(userToDelete);
-			}else {
+			} else {
 				isDeleted = false;
 			}
 			break;
 		case 3:
 			reservationList = reservationSessionBean.getReservationNonPasseeByUserId(userToDelete.getId_utilisateur());
-			if(reservationList.size() == 0) {
+			if (reservationList.size() == 0) {
 				isDeleted = utilisateurSessionBean.deleteUser(userToDelete);
-			}else {
+			} else {
 				isDeleted = false;
 			}
 			break;
 		}
 		return isDeleted;
-	}
-	
-	/**
-	 * Feed request attribute
-	 * 
-	 * @param variable
-	 * @param message
-	 */
-	private void setVariableToView(String variable, String message) {
-		request.setAttribute(variable, message);
 	}
 
 	/**
@@ -150,26 +138,25 @@ public class DeactivateUserAccount extends HttpServlet {
 	}
 
 	/**
-	 * Redirection to a view
-	 * 
-	 * @param String : the view name
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void redirectionToView(String view) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(view + ".jsp");
-		dispatcher.include(request, response);
-	}
-	
-	/**
 	 * Redirection to a servlet
 	 * 
-	 * @param String : the servlet name
+	 * @param String
+	 *            : the servlet name
 	 * @throws ServletException
 	 * @throws IOException
 	 */
 	private void redirectionToServlet(String sevlet) throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(sevlet);
 		dispatcher.include(request, response);
+	}
+	
+	/**
+	 * Feed request attribute
+	 * 
+	 * @param variable
+	 * @param message
+	 */
+	public void setVariableToView(String variable, String message) {
+		request.setAttribute(variable, message);
 	}
 }

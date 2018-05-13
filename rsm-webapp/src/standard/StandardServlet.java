@@ -47,7 +47,7 @@ public class StandardServlet extends HttpServlet {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
 	}
-	
+
 	/**
 	 * Affiche les informations de l'utilisateur
 	 * 
@@ -60,7 +60,7 @@ public class StandardServlet extends HttpServlet {
 		int idUtilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);
 		Utilisateur utilisateur = new Utilisateur();
 		utilisateur = (Utilisateur) utilisateurSessionBean.getUserInformation(idUtilisateur);
-		
+
 		this.request.setAttribute("userInformations", utilisateur);
 		redirectionToView(INFOS_PERSONNELLES);
 	}
@@ -68,7 +68,8 @@ public class StandardServlet extends HttpServlet {
 	/**
 	 * Redirection to a view
 	 * 
-	 * @param String : the view name
+	 * @param String
+	 *            : the view name
 	 * @throws ServletException
 	 * @throws IOException
 	 */

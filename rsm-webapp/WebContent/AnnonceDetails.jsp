@@ -8,13 +8,6 @@
 	<div class="container">
 		<div id="content">
 			<%
-				if (request.getAttribute("error-form-annonce-details") != null) {
-			%>
-			<p class="error-form"><%=request.getAttribute("error-form-annonce-details")%></p>
-			<%
-				}
-			%>
-			<%
 				if (request.getAttribute("annonceDetails") != null) {
 					Annonce annonce = (Annonce) request.getAttribute("annonceDetails");
 			%>

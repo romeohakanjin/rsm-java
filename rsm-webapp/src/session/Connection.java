@@ -58,7 +58,6 @@ public class Connection extends HttpServlet {
 					break;
 				}
 
-				request.removeAttribute("error-form-connection");
 				httpSession(identifiant, motDePasse);
 				if(id_type_utilisateur == ID_TYPE_UTILISATEUR_ADMIN) {
 					redirectionToServlet(ADMIN_HOME_PAGE);
@@ -66,11 +65,11 @@ public class Connection extends HttpServlet {
 					redirectionToView(HOME_PAGE);
 				}
 			} else {
-				setVariableToView("error-form-connection", "Identifiants incorrect");
+				setVariableToView("alert-danger", "Identifiants incorrect");
 				redirectionToView(CONNECTION_PAGE);
 			}
 		} else {
-			setVariableToView("error-form-connection", "Veuillez saisir tous les champs");
+			setVariableToView("alert-danger", "Veuillez saisir tous les champs");
 			redirectionToView(CONNECTION_PAGE);
 		}
 
@@ -101,7 +100,6 @@ public class Connection extends HttpServlet {
 		this.request = request;
 		this.response = response;
 		this.session = request.getSession();
-		this.request.removeAttribute("error-form-connection");
 
 		identifiant = request.getParameter("identifiant");
 		motDePasse = request.getParameter("motDePasse");

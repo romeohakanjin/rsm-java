@@ -10,7 +10,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import beans.session.AnnonceSessionBean;
 import beans.session.ReservationSessionBean;
@@ -25,7 +24,6 @@ public class DashboardServlet extends HttpServlet {
 	private static final String DASHBOARD = "AdminBoard";
 	private HttpServletRequest request;
 	private HttpServletResponse response;
-	private HttpSession session;
 
 	@EJB
 	AnnonceSessionBean annonceSessionBean;
@@ -62,18 +60,7 @@ public class DashboardServlet extends HttpServlet {
 	}
 
 	private void initialize() {
-		this.session = request.getSession();
 		this.response.setContentType("text/html");
-	}
-
-	/**
-	 * Feed request attribute
-	 * 
-	 * @param variable
-	 * @param message
-	 */
-	private void setVariableToView(String variable, String message) {
-		request.setAttribute(variable, message);
 	}
 
 	/**

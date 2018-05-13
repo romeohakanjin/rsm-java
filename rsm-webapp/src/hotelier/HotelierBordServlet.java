@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import beans.entity.Annonce;
 import beans.session.AnnonceSessionBean;
 
 /**
@@ -39,8 +38,9 @@ public class HotelierBordServlet extends HttpServlet {
 		int idUtilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
 
 		long numberOfAnnounceForHotelier = annonceSessionBean.getNumberOfAnnounceForHotelier(idUtilisateur);
-		List<Object[]> numberOfAnnouncePerState = annonceSessionBean.getNumberOfAnnouncePerReservationStatus(idUtilisateur);
-		
+		List<Object[]> numberOfAnnouncePerState = annonceSessionBean
+				.getNumberOfAnnouncePerReservationStatus(idUtilisateur);
+
 		this.request.setAttribute("numberOfAnnouncePerState", numberOfAnnouncePerState);
 		this.request.setAttribute("numberOfAnnounceForHotelier", numberOfAnnounceForHotelier);
 		redirectionToView(LISTE_ANNONCES);

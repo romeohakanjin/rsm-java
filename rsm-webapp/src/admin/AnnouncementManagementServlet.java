@@ -9,7 +9,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import beans.entity.Annonce;
 import beans.entity.Reservation;
@@ -28,7 +27,6 @@ public class AnnouncementManagementServlet extends HttpServlet {
 	private static final String EDIT_ANNOUNCEMENT = "Edit";
 	private HttpServletRequest request;
 	private HttpServletResponse response;
-	private HttpSession session;
 	private String action;
 	private String annonceId;
 
@@ -43,30 +41,30 @@ public class AnnouncementManagementServlet extends HttpServlet {
 		this.response = response;
 
 		initialiser();
-		
-		switch(this.action) {
-		case DELETE_ANNOUNCEMENT :
-			if(annonceId != null || !annonceId.equals("")) {
+
+		switch (this.action) {
+		case DELETE_ANNOUNCEMENT:
+			if (annonceId != null || !annonceId.equals("")) {
 				Integer idAnnonce = Integer.valueOf(annonceId);
 				Boolean isDeleted = deleteAnnouncementById(idAnnonce);
 				System.out.println(isDeleted);
 				getAllAnnouncement();
+				setVariableToView("alert-success", "Annonce suprimée");
 				redirectionToView(ANNOUNCEMENT_LIST);
 			}
 			break;
-		case EDIT_ANNOUNCEMENT :
-			if(annonceId != null || !annonceId.equals("")) {
+		case EDIT_ANNOUNCEMENT:
+			if (annonceId != null || !annonceId.equals("")) {
 				int idAnnonce = Integer.valueOf(annonceId);
 				Annonce annonce = annonceSessionBean.getAnnonce(idAnnonce);
-
 				request.setAttribute("annonceEdited", annonce);
 				redirectionToView(ANNONCE_VIEW);
 			}
 			break;
-			default:
-				getAllAnnouncement();
-				redirectionToView(ANNOUNCEMENT_LIST);
-				break;
+		default:
+			getAllAnnouncement();
+			redirectionToView(ANNOUNCEMENT_LIST);
+			break;
 		}
 	}
 
@@ -76,24 +74,13 @@ public class AnnouncementManagementServlet extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void initialiser() throws IOException {
-		this.session = request.getSession();
 		this.response.setContentType("text/html");
 		this.action = request.getParameter("action");
-		if(this.action == null) {
+		if (this.action == null) {
 			this.action = "";
-		}else {
+		} else {
 			this.annonceId = request.getParameter("annonceId");
 		}
-	}
-
-	/**
-	 * Feed request attribute
-	 * 
-	 * @param variable
-	 * @param message
-	 */
-	private void setVariableToView(String variable, String message) {
-		request.setAttribute(variable, message);
 	}
 
 	/**
@@ -105,10 +92,20 @@ public class AnnouncementManagementServlet extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void redirectionToView(String view) throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher("/"+view + ".jsp").forward(request, response);
+		this.getServletContext().getRequestDispatcher("/" + view + ".jsp").forward(request, response);
 
 	}
 	
+	/**
+	 * Feed request attribute
+	 * 
+	 * @param variable
+	 * @param message
+	 */
+	public void setVariableToView(String variable, String message) {
+		request.setAttribute(variable, message);
+	}
+
 	/**
 	 * Récupère toutes les annonces
 	 */
@@ -116,17 +113,18 @@ public class AnnouncementManagementServlet extends HttpServlet {
 		List<Annonce> annonces = annonceSessionBean.getAllAnnonce();
 		this.request.setAttribute("annonces", annonces);
 	}
-	
+
 	/**
 	 * Supprime l'annonce passée en paramètre
 	 */
 	private Boolean deleteAnnouncementById(Integer idAnnonce) {
 		Boolean isDeleted = false;
 		Annonce annonceToDelete = annonceSessionBean.getAnnonce(idAnnonce);
-		List<Reservation> reservationList = reservationSessionBean.getReservationByAnnonceId(annonceToDelete.getId_annonce());
-		if(reservationList.size() != 0) {
+		List<Reservation> reservationList = reservationSessionBean
+				.getReservationByAnnonceId(annonceToDelete.getId_annonce());
+		if (reservationList.size() != 0) {
 			isDeleted = false;
-		}else {
+		} else {
 			annonceSessionBean.deleteAnnonce(idAnnonce);
 			isDeleted = true;
 		}

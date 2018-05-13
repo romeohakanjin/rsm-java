@@ -3,7 +3,6 @@ package session;
 import java.io.IOException;
 
 import javax.ejb.EJB;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import beans.entity.Utilisateur;
-import beans.session.HotelSessionBean;
 import beans.session.UtilisateurSessionBean;
+import common.Utils;
 
 /**
  * Servlet implementation class Inscription
@@ -29,6 +28,7 @@ public class Inscription extends HttpServlet {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
+	private Utils utils;
 
 	private String typeUtilisateur;
 	private String identifiant;
@@ -75,41 +75,40 @@ public class Inscription extends HttpServlet {
 						// Hotel already registred
 						int idHotel = utilisateurSessionBean.getIdHotel(nomHotel);
 						utilisateur.setId_hotel(idHotel);
-						
-						request.removeAttribute("error-form-inscription");
+
 						utilisateurSessionBean.creerUtilisateur(utilisateur);
 						httpSession(identifiant, motDePasse);
 						setSession(utilisateur.getId_type_utilisateur());
+						setVariableToView("alert-sucess", "Création de compte prise en compte");
 						redirectionToView(HOME_PAGE);
-					} else if (!existingHotel){
+					} else if (!existingHotel) {
 						// No hotel registred
 						int idHotel = utilisateurSessionBean.createHotel(nomHotel);
 						utilisateur.setId_hotel(idHotel);
-						
-						request.removeAttribute("error-form-inscription");
+
 						utilisateurSessionBean.creerUtilisateur(utilisateur);
 						httpSession(identifiant, motDePasse);
 						setSession(utilisateur.getId_type_utilisateur());
+						setVariableToView("alert-sucess", "Création de compte prise en compte");
 						redirectionToView(HOME_PAGE);
-					} else{
-						setVariableToView("error-form-inscription", "Hôtel inexistant");
+					} else {
+						setVariableToView("alert-danger", "Hôtel inexistant");
 						redirectionToView(INSCRIPTION_PAGE);
 					}
 				} else {
 					utilisateur.setId_type_utilisateur(3);
-					request.removeAttribute("error-form-inscription");
 					this.setSession(utilisateur.getId_type_utilisateur());
 					utilisateurSessionBean.creerUtilisateur(utilisateur);
 					httpSession(identifiant, motDePasse);
-					
+					setVariableToView("alert-sucess", "Création de compte prise en compte");
 					redirectionToView(HOME_PAGE);
 				}
 			} else {
-				setVariableToView("error-form-inscription", "Cette adresse e-mail est déjà utilisée");
+				setVariableToView("alert-danger", "Cette adresse e-mail est déjà utilisée");
 				redirectionToView(INSCRIPTION_PAGE);
 			}
 		} else {
-			setVariableToView("error-form-inscription", "Informations manquantes");
+			setVariableToView("alert-danger", "Informations manquantes");
 			redirectionToView(INSCRIPTION_PAGE);
 		}
 
@@ -133,7 +132,7 @@ public class Inscription extends HttpServlet {
 
 			if (typeUtilisateur.equals("hotelier")) {
 				this.isHotelier = true;
-				
+
 				if (nomHotel == null || "".equals(nomHotel)) {
 					isOkForm = false;
 				}
@@ -190,18 +189,8 @@ public class Inscription extends HttpServlet {
 		this.adresse = request.getParameter("adresse");
 		this.codePostal = request.getParameter("codePostal");
 		this.ville = request.getParameter("ville");
-		
-		this.nomHotel = request.getParameter("nomHotel");
-	}
 
-	/**
-	 * Feed request attribute
-	 * 
-	 * @param variable
-	 * @param message
-	 */
-	private void setVariableToView(String variable, String message) {
-		request.setAttribute(variable, message);
+		this.nomHotel = request.getParameter("nomHotel");
 	}
 
 	/**
@@ -214,9 +203,10 @@ public class Inscription extends HttpServlet {
 		session.setAttribute("login", login);
 		session.setAttribute("password", password);
 	}
-	
+
 	/**
 	 * Set the session type
+	 * 
 	 * @param userType
 	 */
 	protected void setSession(Integer userType) {
@@ -243,8 +233,17 @@ public class Inscription extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void redirectionToView(String view) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(view + ".jsp");
-		dispatcher.include(request, response);
+	public void redirectionToView(String view) throws ServletException, IOException {
+		this.getServletContext().getRequestDispatcher("/" + view + ".jsp").forward(request, response);
+	}
+
+	/**
+	 * Feed request attribute
+	 * 
+	 * @param variable
+	 * @param message
+	 */
+	public void setVariableToView(String variable, String message) {
+		request.setAttribute(variable, message);
 	}
 }

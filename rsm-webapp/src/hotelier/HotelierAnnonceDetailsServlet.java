@@ -55,10 +55,11 @@ public class HotelierAnnonceDetailsServlet extends HttpServlet {
 
 				if (isMathingId) {
 					annonceSessionBean.reportComment(commentId);
-
+					setVariableToView("alert-success", "Commentaire signalé");
 					redirectionToServlet(ANNONCE_LISTE_SERVLET);
 				}
 			} catch (NumberFormatException exception) {
+				setVariableToView("alert-danger", "Numéro de commentaire incorrect");
 				redirectionToServlet(ANNONCE_LISTE_SERVLET);
 			}
 			break;
@@ -72,10 +73,11 @@ public class HotelierAnnonceDetailsServlet extends HttpServlet {
 
 				if (isMathingId) {
 					annonceSessionBean.ignoreComment(commentId);
-
+					setVariableToView("alert-success", "Commentaire ignoré");
 					redirectionToServlet(ANNONCE_LISTE_SERVLET);
 				}
 			} catch (NumberFormatException exception) {
+				setVariableToView("alert-danger", "Numéro incorrect");
 				redirectionToServlet(ANNONCE_LISTE_SERVLET);
 			}
 			break;
@@ -92,13 +94,15 @@ public class HotelierAnnonceDetailsServlet extends HttpServlet {
 
 					request.setAttribute("annonceDetails", annonce);
 					request.setAttribute("commentsList", commentaires);
-
+					
 					redirectionToView(ANNONCE_DETAILS_VIEW);
 				} else {
+					setVariableToView("alert-danger", "Numéro incorrect");
 					redirectionToServlet(LISTE_ANNONCES);
 				}
 
 			} catch (NumberFormatException exception) {
+				setVariableToView("alert-danger", "Numéro d'annonce incorrect");
 				redirectionToServlet(LISTE_ANNONCES);
 			}
 
@@ -146,5 +150,15 @@ public class HotelierAnnonceDetailsServlet extends HttpServlet {
 	private void redirectionToServlet(String sevlet) throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(sevlet);
 		dispatcher.include(request, response);
+	}
+	
+	/**
+	 * Feed request attribute
+	 * 
+	 * @param variable
+	 * @param message
+	 */
+	public void setVariableToView(String variable, String message) {
+		request.setAttribute(variable, message);
 	}
 }

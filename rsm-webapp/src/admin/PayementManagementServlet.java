@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import beans.session.PaiementSessionBean;
-import beans.session.ReservationSessionBean;
-import beans.session.UtilisateurSessionBean;
 
 /**
  * @author SLI
@@ -27,11 +25,12 @@ public class PayementManagementServlet extends HttpServlet {
 	private HttpServletResponse response;
 	private HttpSession session;
 	private String action;
-	
+
 	@EJB
 	PaiementSessionBean paiementSessionBean;
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		this.request = request;
 		this.response = response;
 
@@ -39,7 +38,7 @@ public class PayementManagementServlet extends HttpServlet {
 		getAllPaiement();
 		redirectionToView(PAYEMENT_MANAGEMENT);
 	}
-	
+
 	/**
 	 * Initialise les variables
 	 * 
@@ -52,16 +51,6 @@ public class PayementManagementServlet extends HttpServlet {
 		if (this.action == null) {
 			this.action = "";
 		}
-	}
-	
-	/**
-	 * Feed request attribute
-	 * 
-	 * @param variable
-	 * @param message
-	 */
-	private void setVariableToView(String variable, String message) {
-		request.setAttribute(variable, message);
 	}
 
 	/**
@@ -78,7 +67,8 @@ public class PayementManagementServlet extends HttpServlet {
 	/**
 	 * Redirection to a view
 	 * 
-	 * @param String : the view name
+	 * @param String
+	 *            : the view name
 	 * @throws ServletException
 	 * @throws IOException
 	 */
@@ -86,23 +76,12 @@ public class PayementManagementServlet extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(view + ".jsp");
 		dispatcher.include(request, response);
 	}
-	
-	/**
-	 * Redirection to a servlet
-	 * 
-	 * @param String : the servlet name
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void redirectionToServlet(String sevlet) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(sevlet);
-		dispatcher.include(request, response);
-	}
-	
+
 	/**
 	 * Récupère tous les paiements
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * 
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	private void getAllPaiement() throws ServletException, IOException {
 		List<Object[]> paiementList = paiementSessionBean.getHistoriquePaiement();

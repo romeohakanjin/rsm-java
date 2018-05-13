@@ -5,19 +5,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="beans.entity.Utilisateur" %>
 <%	Utilisateur utilisateur = (Utilisateur) request.getAttribute("userInformations"); %>
-<div class="header-container">
-	<div id="content">
-		<% if (request.getAttribute("erreurDelete") != null) { %>
-		<p class="error-deactivate"><%= request.getAttribute("erreurDelete") %></p>
-		<% } %>
-	<div>
-	<div>
-		<ul>
-			<li><a href="UpdateUserServlet?action=modifierUtilisateur" class="modifier">Modifier</a></li>
-			<li><a href="DeactivateUserAccount?action=deactivateUser&userId=<%=  utilisateur.getId_utilisateur()%>">Désactiver le compte</a></li>
-		</ul>
-	</div>
-</div>
 <div  class="gestion-utilisateur">
 	<div class="container">
 		<div id="content">

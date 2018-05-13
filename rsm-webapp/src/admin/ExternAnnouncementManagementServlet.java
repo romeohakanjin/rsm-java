@@ -9,12 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import beans.entity.ActiviteExterne;
-import beans.entity.Annonce;
 import beans.session.ActiviteExterneSessionBean;
-import beans.session.AnnonceSessionBean;
 
 /**
  * Servlet implementation class AnnouncementManagementServlet
@@ -28,7 +25,6 @@ public class ExternAnnouncementManagementServlet extends HttpServlet {
 	private static final String EDIT_ANNOUNCEMENT = "Edit";
 	private HttpServletRequest request;
 	private HttpServletResponse response;
-	private HttpSession session;
 	private String action;
 	private String activiteExterneId;
 
@@ -43,22 +39,23 @@ public class ExternAnnouncementManagementServlet extends HttpServlet {
 		initialiser();
 		getAllExternAnnouncement();
 		redirectionToView(EXTERN_ANNOUNCEMENT_LIST);
-		
-		switch(this.action) {
-		case DELETE_ANNOUNCEMENT :
-			if(activiteExterneId != null || !activiteExterneId.equals("")) {
+
+		switch (this.action) {
+		case DELETE_ANNOUNCEMENT:
+			if (activiteExterneId != null || !activiteExterneId.equals("")) {
 				Integer idActiviteExterne = Integer.valueOf(activiteExterneId);
 				ActiviteExterne activityToDelete = activiteExterneSessionBean.getActiviteExterne(idActiviteExterne);
-				if(activityToDelete != null) {
+				if (activityToDelete != null) {
 					activiteExterneSessionBean.deleteActiviteExterne(idActiviteExterne);
+					setVariableToView("alert-success", "Activité externe supprimée");
 					redirectionToView(EXTERN_ANNOUNCEMENT_LIST);
 				}
 			}
 			break;
-		case EDIT_ANNOUNCEMENT :
-			if(activiteExterneId != null || !activiteExterneId.equals("")) {
+		case EDIT_ANNOUNCEMENT:
+			if (activiteExterneId != null || !activiteExterneId.equals("")) {
 				int idActiviteExterne = Integer.valueOf(activiteExterneId);
-				ActiviteExterne activityToEdit =  activiteExterneSessionBean.getActiviteExterne(idActiviteExterne);
+				ActiviteExterne activityToEdit = activiteExterneSessionBean.getActiviteExterne(idActiviteExterne);
 				request.setAttribute("externAnnouncementEdited", activityToEdit);
 				redirectionToView(EXTERN_ANNOUNCEMENT_VIEW);
 			}
@@ -72,24 +69,13 @@ public class ExternAnnouncementManagementServlet extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void initialiser() throws IOException {
-		this.session = request.getSession();
 		this.response.setContentType("text/html");
 		this.action = request.getParameter("action");
-		if(this.action == null) {
+		if (this.action == null) {
 			this.action = "";
-		}else {
+		} else {
 			this.activiteExterneId = request.getParameter("annonceId");
 		}
-	}
-
-	/**
-	 * Feed request attribute
-	 * 
-	 * @param variable
-	 * @param message
-	 */
-	private void setVariableToView(String variable, String message) {
-		request.setAttribute(variable, message);
 	}
 
 	/**
@@ -101,8 +87,18 @@ public class ExternAnnouncementManagementServlet extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void redirectionToView(String view) throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher("/"+view + ".jsp").forward(request, response);
+		this.getServletContext().getRequestDispatcher("/" + view + ".jsp").forward(request, response);
 
+	}
+	
+	/**
+	 * Feed request attribute
+	 * 
+	 * @param variable
+	 * @param message
+	 */
+	private void setVariableToView(String variable, String message) {
+		request.setAttribute(variable, message);
 	}
 	
 	/**

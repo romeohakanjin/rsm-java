@@ -1,13 +1,18 @@
 package standard;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import beans.entity.Reservation;
+import beans.session.ReservationSessionBean;
 
 /**
  * Servlet implementation class ReservationConfirmation
@@ -22,6 +27,9 @@ public class ReservationConfirmationServlet extends HttpServlet {
 	private HttpSession session;
 	private String action;
 
+	@EJB
+	ReservationSessionBean reservationSessionBean;
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		this.request = request;
@@ -35,7 +43,6 @@ public class ReservationConfirmationServlet extends HttpServlet {
 			break;
 
 		default:
-			System.out.println("non non pas confirmé");
 			redirectionToView(CONFIRMATION_RESERVATION_VIEW);
 			break;
 		}
@@ -46,11 +53,27 @@ public class ReservationConfirmationServlet extends HttpServlet {
 	 * validate the reservation and pay it
 	 */
 	private void reservationValidate() {
-		// TODO : paiement
-		System.out.println(session.getAttribute("reservationToValidate"));
-		System.out.println(session.getAttribute("reservationIdUser"));
-		System.out.println(session.getAttribute("reservationDateDebut"));
-		System.out.println(session.getAttribute("reservationDateFin"));
+		// TODO :faire appel à la méthode pour paiement
+		// paiement()
+
+		int annonceId = (int) session.getAttribute("reservationToValidate");
+		int userId = (int) session.getAttribute("reservationIdUser");
+		Timestamp timestampBegining = (Timestamp) session.getAttribute("reservationDateDebut");
+		Timestamp timestampEnd = (Timestamp) session.getAttribute("reservationDateFin");
+		long numberOfDays = (long) session.getAttribute("reservationNumberOfDays");
+		Double price = (Double) session.getAttribute("reservationPrice");
+
+		Reservation reservation = new Reservation();
+		reservation.setId_annonce(annonceId);
+		reservation.setId_utilisateur(userId);
+		reservation.setDate_debut_sejour(timestampBegining);
+		reservation.setDate_fin_sejour(timestampEnd);
+		reservation.setDuree_sejour((int) numberOfDays);
+		reservation.setPrix(price);
+		reservation.setId_etat_reservation(1);
+		reservation.setId_statut_reservation(1);
+
+		reservationSessionBean.creerReservation(reservation);
 	}
 
 	/**

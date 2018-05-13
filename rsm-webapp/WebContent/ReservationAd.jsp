@@ -13,12 +13,14 @@
 			%>
 			<form method="get" action="ReservationConfirmationServlet">
 				<h3>Confirmer votre réservation</h3>
-				<label>id user</label>
-				<p><%=session.getAttribute("reservationIdUser")%></p>
 				<label>Date début</label>
 				<p><%=session.getAttribute("reservationDateDebut")%></p>
 				<label>Date fin</label>
 				<p><%=session.getAttribute("reservationDateFin")%></p>
+				<label>Nombre de jour</label>
+				<p><%=session.getAttribute("reservationNumberOfDays")%></p>
+				<label>Prix</label>
+				<p><%=session.getAttribute("reservationPrice")%></p>
 
 				<%
 					// 					if (session.getAttribute("session-admin") == null && session.getAttribute("session-hotelier") == null) {

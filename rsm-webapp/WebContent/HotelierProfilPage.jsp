@@ -9,9 +9,6 @@
 <% Utilisateur utilisateur = (Utilisateur) request.getAttribute("userInformations"); %>
 <% Hotel hotel = (Hotel) request.getAttribute("hotelInformations");%>
 <div class="header-container">
-	<% if (request.getAttribute("erreurDelete") != null) { %>
-	<p class="error-deactivate"><%= request.getAttribute("erreurDelete") %></p>
-	<% } %>
 	<div>
 		<ul>
 			<li><a href="UpdateUserServlet?action=modifierUtilisateur" class="modifier">Modifier</a></li>

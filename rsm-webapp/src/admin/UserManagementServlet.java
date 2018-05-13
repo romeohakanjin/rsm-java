@@ -29,7 +29,8 @@ public class UserManagementServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String USER_MANAGEMENT = "AdminUserManagement";
 	private static final String USER_RECORD = "AdminUserRecord";
-	//private static final String USER_MANAGEMENT_SERVLET = "UserManagementServlet";
+	// private static final String USER_MANAGEMENT_SERVLET =
+	// "UserManagementServlet";
 	private static final String DELETE_USER = "DeleteUser";
 	private static final String DISPLAY_USER = "Display";
 	private HttpServletRequest request;
@@ -37,7 +38,7 @@ public class UserManagementServlet extends HttpServlet {
 	private HttpSession session;
 	private String action;
 	private String userId;
-	
+
 	@EJB
 	UtilisateurSessionBean utilisateurSessionBean;
 	@EJB
@@ -46,8 +47,9 @@ public class UserManagementServlet extends HttpServlet {
 	AnnonceSessionBean annonceSessionBean;
 	@EJB
 	ReservationSessionBean reservationSessionBean;
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		this.request = request;
 		this.response = response;
 
@@ -55,23 +57,24 @@ public class UserManagementServlet extends HttpServlet {
 		getAllUser();
 
 		redirectionToView(USER_MANAGEMENT);
-		switch(this.action) {
-		case DELETE_USER :
-			if(userId != null || !userId.equals("")) {
+		switch (this.action) {
+		case DELETE_USER:
+			if (userId != null || !userId.equals("")) {
 				Integer idUser = Integer.valueOf(userId);
 				Utilisateur userToDelete = utilisateurSessionBean.getUserById(idUser);
-				if(userToDelete != null) {
+				if (userToDelete != null) {
 					Boolean isDeleted = deleteUserById(idUser, userToDelete.getId_type_utilisateur());
-					if(isDeleted) {
+					if (isDeleted) {
+						setVariableToView("alert-success", "La suppression vient d'être effectué");
 						redirectionToView(USER_MANAGEMENT);
-					}else {
-						setVariableToView("erreurDelete", "La suppression n'a pas pu être effectué");
+					} else {
+						setVariableToView("alert-danger", "La suppression n'a pas pu être effectué");
 					}
 				}
 			}
 			break;
-		case DISPLAY_USER :
-			if(userId != null || !userId.equals("")) {
+		case DISPLAY_USER:
+			if (userId != null || !userId.equals("")) {
 				Integer idUser = Integer.valueOf(userId);
 				Utilisateur userToDisplay = utilisateurSessionBean.getUserById(idUser);
 				request.setAttribute("user", userToDisplay);
@@ -80,7 +83,7 @@ public class UserManagementServlet extends HttpServlet {
 			break;
 		}
 	}
-	
+
 	/**
 	 * Initialise les variables
 	 * 
@@ -92,11 +95,11 @@ public class UserManagementServlet extends HttpServlet {
 		this.action = request.getParameter("action");
 		if (this.action == null) {
 			this.action = "";
-		}else {
+		} else {
 			this.userId = request.getParameter("userId");
 		}
 	}
-	
+
 	/**
 	 * Feed request attribute
 	 * 
@@ -121,7 +124,8 @@ public class UserManagementServlet extends HttpServlet {
 	/**
 	 * Redirection to a view
 	 * 
-	 * @param String : the view name
+	 * @param String
+	 *            : the view name
 	 * @throws ServletException
 	 * @throws IOException
 	 */
@@ -129,31 +133,21 @@ public class UserManagementServlet extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(view + ".jsp");
 		dispatcher.include(request, response);
 	}
-	
-	/**
-	 * Redirection to a servlet
-	 * 
-	 * @param String : the servlet name
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void redirectionToServlet(String sevlet) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(sevlet);
-		dispatcher.include(request, response);
-	}
-	
+
 	/**
 	 * Récupère tous les utilisateurs
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * 
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	private void getAllUser() throws ServletException, IOException {
 		List<Utilisateur> userList = utilisateurSessionBean.getAllUtilisateur();
 		this.request.setAttribute("userList", userList);
 	}
-	
+
 	/**
 	 * Supprime un utilisateur à l'aide de son id
+	 * 
 	 * @param userId
 	 * @param userTypeId
 	 * @return
@@ -163,29 +157,29 @@ public class UserManagementServlet extends HttpServlet {
 		List<Annonce> annonceList = new ArrayList<Annonce>();
 		List<Reservation> reservationList = new ArrayList<Reservation>();
 		Utilisateur user = utilisateurSessionBean.getUserById(userId);
-		
-		switch(userTypeId) {
-		case 1: 
+
+		switch (userTypeId) {
+		case 1:
 			isDeleted = utilisateurSessionBean.deleteUser(user);
 			break;
 		case 2:
 			annonceList = annonceSessionBean.getAllAnnonceUtilisateur(userId);
-			if(annonceList.size() != 0) {
-				for(Annonce annonce : annonceList) {
+			if (annonceList.size() != 0) {
+				for (Annonce annonce : annonceList) {
 					reservationList = reservationSessionBean.getReservationByAnnonceId(annonce.getId_annonce());
-					if(reservationList.size() != 0) {
+					if (reservationList.size() != 0) {
 						isDeleted = false;
 					}
 				}
-			}else {
+			} else {
 				isDeleted = utilisateurSessionBean.deleteUser(user);
 			}
 			break;
 		case 3:
 			reservationList = reservationSessionBean.getReservationByUserId(userId);
-			if(reservationList.size() != 0) {
+			if (reservationList.size() != 0) {
 				isDeleted = false;
-			}else {
+			} else {
 				isDeleted = utilisateurSessionBean.deleteUser(user);
 			}
 			break;
@@ -193,4 +187,3 @@ public class UserManagementServlet extends HttpServlet {
 		return isDeleted;
 	}
 }
- 

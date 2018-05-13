@@ -24,6 +24,7 @@ public class Reservation {
 	private Integer duree_sejour;
 	private Integer id_statut_reservation;
 	private Integer id_etat_reservation;
+	private boolean etat_reservation;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -97,6 +98,14 @@ public class Reservation {
 
 	public void setId_etat_reservation(Integer id_etat_reservation) {
 		this.id_etat_reservation = id_etat_reservation;
+	}
+
+	public boolean isEtat_reservation() {
+		return etat_reservation;
+	}
+
+	public void setEtat_reservation(boolean etat_reservation) {
+		this.etat_reservation = etat_reservation;
 	}
 
 }

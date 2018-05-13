@@ -21,6 +21,7 @@ import javax.transaction.UserTransaction;
 
 import beans.entity.Annonce;
 import beans.entity.Commentaire;
+import beans.entity.Utilisateur;
 
 /**
  * @author SLI
@@ -407,5 +408,17 @@ public class AnnonceSessionBean {
 				+ "AND a.id_utilisateur = "+idUser;
 		Query query = entityManager.createQuery(queryString);
 		return query.getResultList();
+	}
+
+	/**
+	 * Get the price for one night of a ad by his id
+	 * @param annonceIdInt2
+	 * @return double: pricePerNight
+	 */
+	public double getPricePerNightAd(int annonceIdInt) {
+		String queryString = "SELECT prix_nuit FROM Annonce WHERE id_annonce = '"+annonceIdInt+"' ";
+		Query query = entityManager.createQuery(queryString);
+		Double prix =  (Double) query.getSingleResult();
+		return prix;
 	}
 }

@@ -10,13 +10,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import beans.entity.Utilisateur;
 import beans.session.UtilisateurSessionBean;
 
 /**
  * @author Massneymar
  * 
- * Servlet implementation class UpdateUserServlet
+ *         Servlet implementation class UpdateUserServlet
  */
 @WebServlet("/UpdateUserServlet")
 public class UpdateUserServlet extends HttpServlet {
@@ -59,17 +60,17 @@ public class UpdateUserServlet extends HttpServlet {
 			break;
 		}
 	}
-	
+
 	/**
 	 * @throws ServletException
 	 * @throws IOException
 	 * 
-	 * Cette fonction permet d'éditer un utilisateur si son id existe
+	 *             Cette fonction permet d'éditer un utilisateur si son id existe
 	 */
 	private void EditUserActionPerformed() throws ServletException, IOException {
-		
+
 		String identifiant = (String) this.session.getAttribute("login");
-		int id_utilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);		
+		int id_utilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);
 		try {
 			boolean isExistingUserId = utilisateurSessionBean.isExistingUserId(id_utilisateur);
 			System.out.println(isExistingUserId);
@@ -80,9 +81,9 @@ public class UpdateUserServlet extends HttpServlet {
 			} else {
 				redirectionToView(USER_EDITED_SERVLET);
 			}
-		}catch(NumberFormatException exception) {
+		} catch (NumberFormatException exception) {
 			redirectionToServlet(USER_EDITED_SERVLET);
-		}		
+		}
 	}
 
 	/**
@@ -90,15 +91,15 @@ public class UpdateUserServlet extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 * 
-	 * Cette fonction permet d'updater un utilisateur si son id existe
+	 *             Cette fonction permet d'updater un utilisateur si son id existe
 	 */
 	private void addUserEditedActionPerformed() throws ServletException, IOException {
-		
+
 		String identifiant = (String) this.session.getAttribute("login");
 		int id_utilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);
 		boolean isExistingUserId = utilisateurSessionBean.isExistingUserId(id_utilisateur);
 		if (isExistingUserId) {
-			
+
 			Utilisateur utilisateur = new Utilisateur();
 			utilisateur.setId_utilisateur(id_utilisateur);
 			utilisateur.setNom(nom);
@@ -112,7 +113,7 @@ public class UpdateUserServlet extends HttpServlet {
 		}
 		redirectionToServlet(USER_EDITED_SERVLET);
 	}
-	
+
 	/**
 	 * 
 	 * @throws IOException
@@ -145,10 +146,12 @@ public class UpdateUserServlet extends HttpServlet {
 		this.ville = request.getParameter("ville");
 		this.codePostal = request.getParameter("codePostal");
 	}
-	
+
 	/**
 	 * Redirection to a view
-	 * @param String : the view name
+	 * 
+	 * @param String
+	 *            : the view name
 	 * @throws ServletException
 	 * @throws IOException
 	 */
@@ -159,7 +162,9 @@ public class UpdateUserServlet extends HttpServlet {
 
 	/**
 	 * Redirection to a servlet
-	 * @param String : the servlet name
+	 * 
+	 * @param String
+	 *            : the servlet name
 	 * @throws ServletException
 	 * @throws IOException
 	 */

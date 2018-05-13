@@ -4,13 +4,6 @@
 <div id="main-wrapper">
 	<div class="container">
 		<div id="content">
-			<%
-				if (request.getAttribute("error-form-inscription") != null) {
-			%>
-					<p class="error-form"><%= request.getAttribute("error-form-inscription") %></p>
-			<%
-				}
-			%>
 			<h2>Inscription</h2>
 			<form method='get' action='Inscription'>
 				<select name='selectTypeUtilisateur'>

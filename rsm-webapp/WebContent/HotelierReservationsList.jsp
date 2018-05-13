@@ -9,13 +9,6 @@
 			<div class="container">
 				<div id="content">
 					<%
-					if (request.getAttribute("error-hotelier-reservations-list") != null) {
-					%>
-					<p class="error-form"><%= request.getAttribute("error-hotelier-reservations-list") %></p>
-					<%
-						}
-					%>
-					<%
 					List<Object[]> reservations = (List<Object[]>) request.getAttribute( "reservations" );
 					
 					if (reservations.size() == 0) {

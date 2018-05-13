@@ -112,8 +112,10 @@ public class HotelierAnnonceServlet extends HttpServlet {
 					annonceSessionBean.updateAnnonce(annonce);
 
 					this.request.removeAttribute("annonceEdited");
+					setVariableToView("alert-success", "Modifications prisent en compte");
 				}
 			} catch (NumberFormatException exception) {
+				setVariableToView("alert-danger", "Numéro d'annonce incorrect");
 				exception.printStackTrace();
 			}
 		}
@@ -137,13 +139,10 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			annonce.setId_utilisateur(id_utilisateur);
 			annonce.setDate_creation(new Timestamp(dateCreation.getTime()));
 			annonceSessionBean.creerAnnonce(annonce);
-
-			request.removeAttribute("error-hotelier-annonce-form");
-
+			setVariableToView("alert-success", "Annonce ajoutée");
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		} else {
-			setVariableToView("error-hotelier-annonce-form", "Informations incorrectes ou manquantes");
-
+			setVariableToView("alert-danger", "Informations incorrectes ou manquantes");
 			redirectionToView(ANNONCE_VIEW);
 		}
 	}
@@ -167,10 +166,12 @@ public class HotelierAnnonceServlet extends HttpServlet {
 				request.setAttribute("annonceEdited", annonce);
 				redirectionToView(ANNONCE_VIEW);
 			} else {
+				setVariableToView("alert-warning", "Le numéro de l'annonce ne correspond pas");
 				redirectionToServlet(ANNONCE_LISTE_SERVLET);
 			}
 
 		} catch (NumberFormatException exception) {
+			setVariableToView("alert-danger", "Numéro d'annonce incorrect");
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		}
 	}
@@ -190,9 +191,11 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			if (matchingIdUser) {
 				annonceSessionBean.deleteAnnonce(idAnnonce);
 			}
-
+			
+			setVariableToView("alert-success", "Suppression de l'annonce prise en compte");
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		} catch (NumberFormatException exception) {
+			setVariableToView("alert-danger", "Numéro d'annonce incorrect");
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		}
 	}
