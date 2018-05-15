@@ -71,7 +71,7 @@
 								<li id="standard">
 									<a href="StandardServlet">Informations personnelles</a>
 									<ul>
-										<li><a href="ReservationListServlet?action=list">Réservation en cours</a></li>
+										<li><a href="ReservationListServlet?action=list">Réservation</a></li>
 										<li><a href="UpdateUserServlet?action=modifierUtilisateur" class="modifier">Modifier informations</a></li>
 										<li><a href="DeactivateUserAccount?action=deactivateUser">Désactiver le compte</a></li>
 									</ul>

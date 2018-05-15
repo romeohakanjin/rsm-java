@@ -70,16 +70,16 @@ public class ReservationListServlet extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void cancelReservation(int idUtilisateur) throws ServletException, IOException {
-		// vérification id de l'annonce qui est bien en 1 ou 2
+		// vï¿½rification id de l'annonce qui est bien en 1 ou 2
 		boolean isOkReservation = reservationSessionBean.isReservationPending(idUtilisateur, reservationId);
 
 		if (isOkReservation) {
-			// changer état de la réservation
+			// changer ï¿½tat de la rï¿½servation
 			reservationSessionBean.deleteReservation(reservationId);
-			setVariableToView("alert-success", "Cette réservation vient d'être supprimée");
+			setVariableToView("alert-success", "Cette rï¿½servation vient d'ï¿½tre supprimï¿½e");
 			redirectionToView(HOME_PAGE);
 		} else {
-			setVariableToView("alert-warning", "Numéro d'annonce incorrect");
+			setVariableToView("alert-warning", "Numï¿½ro d'annonce incorrect");
 			redirectionToView(HOME_PAGE);
 		}
 
@@ -94,8 +94,12 @@ public class ReservationListServlet extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void reservationList(int idUtilisateur) throws ServletException, IOException {
-		List<Reservation> reservations = reservationSessionBean.getPendingReservationByUserId(idUtilisateur);
-		this.request.setAttribute("reservations", reservations);
+		List<Reservation> reservationsPending = reservationSessionBean.getPendingReservationByUserId(idUtilisateur);
+		this.request.setAttribute("reservationsPending", reservationsPending);
+		
+		List<Reservation> reservationsFinish = reservationSessionBean.getFinishedReservationByUserId(idUtilisateur);
+		this.request.setAttribute("reservationsFinish", reservationsFinish);
+		
 		redirectionToView(LIST_RESERVATION);
 
 	}
