@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core" %>
 <%@ page import="java.util.List" %>
 <%@ page import="beans.entity.Reservation" %>
@@ -11,16 +13,16 @@
 					
 					if (reservations.size() == 0) {
 					%>
-					<p>Vous n'avez pas effectué de réservation</p>
+					<p>Vous n'avez pas effectuÃ© de rÃ©servation</p>
 					<%
 					} else {
 					%>
-					<h2>Réservations</h2>
+					<h2>RÃ©servations</h2>
 					<table class="table table-striped">
 					  <thead>
 					    <tr>
-					      <th scope="col">N°</th>
-					      <th scope="col">Date début</th>
+					      <th scope="col">NÂ°</th>
+					      <th scope="col">Date dÃ©but</th>
 					      <th scope="col">Date fin</th>
 					      <th scope="col">Nombre de jour</th>
 					      <th scope="col">Prix</th>

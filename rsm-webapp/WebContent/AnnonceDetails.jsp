@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core"%>
 <%@ page import="beans.entity.Annonce"%>
 <%@ page import="java.util.List"%>
@@ -14,7 +16,7 @@
 			<form method="get" action="AnnoncesDetailsServlet">
 			<input type="hidden" name="annonceId" value="<%= annonce.getId_annonce() %>" readonly>
 			<input type="hidden" name="action" value="reserver" readonly>
-			<h3>Vue de détail</h3>
+			<h3>Vue de dÃ©tail</h3>
 			<label>Titre</label>
 			<p><%=annonce.getTitre()%></p>
 			<label>Description</label>
@@ -25,9 +27,9 @@
 			<p><%=annonce.getPrix_nuit()%></p>
 			
 			<div>
-				<p>Dates de réservation</p>
+				<p>Dates de rÃ©servation</p>
 				<p>
-					Date début: <input type="text" name="dateDebut" id="datepickerDebut"
+					Date dÃ©but: <input type="text" name="dateDebut" id="datepickerDebut"
 						required />
 				</p>
 				<p>
@@ -38,7 +40,7 @@
 				<%
 					if (session.getAttribute("session-admin") == null && session.getAttribute("session-hotelier") == null) {
 				%>
-				<a><input type="submit" name="submit" value="Réserver"></a>
+				<a><input type="submit" name="submit" value="RÃ©server"></a>
 
 			<%
 				}

@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core"%>
 <%@ page import="beans.entity.Annonce"%>
 <%@ page import="java.util.List"%>
@@ -12,8 +14,8 @@
 				// 					Annonce annonce = (Annonce) request.getAttribute("annonceDetails");
 			%>
 			<form method="get" action="ReservationConfirmationServlet">
-				<h3>Confirmer votre réservation</h3>
-				<label>Date début</label>
+				<h3>Confirmer votre rÃ©servation</h3>
+				<label>Date dÃ©but</label>
 				<p><%=session.getAttribute("reservationDateDebut")%></p>
 				<label>Date fin</label>
 				<p><%=session.getAttribute("reservationDateFin")%></p>

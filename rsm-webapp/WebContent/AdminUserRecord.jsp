@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core"%>
 <core:import url="Header.jsp" />
 <%@ page import="java.util.List"%>
@@ -23,7 +25,7 @@
 						<td><%=user.getNom()%></td>
 					</tr>
 					<tr>
-						<td><label> Prénom </label></td>
+						<td><label> PrÃ©nom </label></td>
 						<td><%=user.getPrenom()%></td>
 					</tr>
 					<tr>
@@ -31,7 +33,7 @@
 						<td><%=user.getMail()%></td>
 					</tr>
 					<tr>
-						<td><label> Téléphone </label></td>
+						<td><label> TÃ©lÃ©phone </label></td>
 						<td><%=user.getMobile()%></td>
 					</tr>
 					<tr>

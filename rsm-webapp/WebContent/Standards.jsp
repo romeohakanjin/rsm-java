@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core"%>
 <core:import url="Header.jsp" />
 <%@ page import="beans.entity.Utilisateur"%>
@@ -18,7 +20,7 @@
 				</h3>
 				<input type='text' name='nom' value="<%=utilisateur.getNom()%>" /><br />
 				<h3>
-					<label>Prenom</label>
+					<label>Prénom</label>
 				</h3>
 				<input type='text' name='prenom'
 					value="<%=utilisateur.getPrenom()%>" /><br />
@@ -27,7 +29,7 @@
 				</h3>
 				<input type='text' name='mail' value="<%=utilisateur.getMail()%>" /><br />
 				<h3>
-					<label>Telephone</label>
+					<label>Téléphone</label>
 				</h3>
 				<input type='text' name='mobile'
 					value="<%=utilisateur.getMobile()%>" /><br />

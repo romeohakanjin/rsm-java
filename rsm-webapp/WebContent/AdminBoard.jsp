@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core"%>
 <core:import url="Header.jsp" />
 <%@ page import="java.util.List" %>
@@ -47,7 +49,7 @@
 
 						if (nbAnnonce == 0) {
 						%>
-						<p>Il n'y a aucun annonce publiée</p>
+						<p>Il n'y a aucun annonce publiÃ©e</p>
 						<%
 						} else {
 						%>
@@ -68,13 +70,13 @@
 						}
 						%>
 
-						<h2>Nombre de réservation</h2>
+						<h2>Nombre de rÃ©servation</h2>
 						<%
 						List<Object[]> nbReservationList = (List<Object[]>) request.getAttribute( "nbReservationList" );
 
 						if (nbReservationList.size() == 0) {
 						%>
-						<p>Il n'y a aucune réservation</p>
+						<p>Il n'y a aucune rÃ©servation</p>
 						<%
 						} else {
 						%>
@@ -82,7 +84,7 @@
 							<thead>
 								<tr>
 									<th scope="col">Nombre</th>
-									<th scope="col">Etat de la réservation</th>
+									<th scope="col">Etat de la rÃ©servation</th>
 								</tr>
 							</thead>
 							<tbody>

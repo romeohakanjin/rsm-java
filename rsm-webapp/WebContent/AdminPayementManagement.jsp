@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core"%>
 <core:import url="Header.jsp" />
 <%@ page import="java.util.List"%>
@@ -20,7 +22,7 @@
 						<thead>
 							<tr>
 								<th scope="col">Utilisateur</th>
-								<th scope="col">N° Réservation</th>
+								<th scope="col">NÂ° RÃ©servation</th>
 								<th scope="col">Prix</th>
 								<th scope="col">Date Paiement</th>
 								<th scope="col">Commentaire</th>

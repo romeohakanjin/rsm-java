@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core" %>
 <%@ page import="java.util.List" %>
 <%@ page import="beans.entity.Annonce" %>
@@ -13,7 +15,7 @@
 					
 					if (annonces.size() == 0) {
 					%>
-					<p>Vous n'avez pas d'annonce publiée</p>
+					<p>Vous n'avez pas d'annonce publiÃ©e</p>
 					<%
 					} else {
 					%>
@@ -21,10 +23,10 @@
 					<table class="table table-striped">
 					  <thead>
 					    <tr>
-					      <th scope="col">N°</th>
+					      <th scope="col">NÂ°</th>
 					      <th scope="col">Titre</th>
 					      <th scope="col">Description</th>
-					      <th scope="col">Capacité maximum</th>
+					      <th scope="col">CapacitÃ© maximum</th>
 					      <th scope="col">Date d'ajout</th>
 					      <th scope="col">Modifier</th>
 					      <th scope="col">Supprimer</th>

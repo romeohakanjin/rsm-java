@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core"%>
 <core:import url="Header.jsp" />
 <core:import url="Search.jsp" />
@@ -19,7 +21,7 @@
 					    <tr>
 					      	<th scope="col">Titre</th>
 					      	<th scope="col">Description</th>
-						     <th scope="col">Capacité maximum</th>
+						     <th scope="col">CapacitÃ© maximum</th>
 						     <th scope="col">Prix/nuit</th>
 					    </tr>
 					  </thead>

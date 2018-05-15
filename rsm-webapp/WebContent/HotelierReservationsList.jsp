@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core" %>
 <%@ page import="java.util.List" %>
 <%@ page import="beans.entity.Annonce" %>
@@ -13,22 +15,22 @@
 					
 					if (reservations.size() == 0) {
 					%>
-					<p>Vous n'avez pas de réservation pour l'instant.</p>
+					<p>Vous n'avez pas de rÃ©servation pour l'instant.</p>
 					<%
 					} else {
 					%>
-					<h2>Réservations</h2>
+					<h2>RÃ©servations</h2>
 					<table class="table table-striped">
 					  <thead>
 					    <tr>
 					    	<th scope="col">Titre</th>
 					      <th scope="col">Prix</th>
-					      <th scope="col">Capacité maximum</th>
-					      <th scope="col">Date début séjour</th>
-					      <th scope="col">Date fin séjour</th>
-					      <th scope="col">Durée du séjour</th>
+					      <th scope="col">CapacitÃ© maximum</th>
+					      <th scope="col">Date dÃ©but sÃ©jour</th>
+					      <th scope="col">Date fin sÃ©jour</th>
+					      <th scope="col">DurÃ©e du sÃ©jour</th>
 					      <th scope="col">Prix</th>
-					      <th scope="col">Etat réservation</th>
+					      <th scope="col">Etat rÃ©servation</th>
 					      <th scope="col">Accepter</th>
 					      <th scope="col">Refuser</th>
 					    </tr>

@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core"%>
 <core:import url="Header.jsp" />
 <%@ page import="java.util.List" %>
@@ -8,13 +10,13 @@
 		<div id="main-wrapper">
 			<div class="container">
 				<div id="content">
-					<h2>Liste des avis signal�s</h2>
+					<h2>Liste des avis signalés</h2>
 					<%
 					List<Object[]> commentList = (List<Object[]>) request.getAttribute( "commentList" );
 
 					if (commentList.size() == 0) {
 					%>
-					<p>Il n'y a aucun commentaire signalé</p>
+					<p>Il n'y a aucun commentaire signalÃ©</p>
 					<%
 					} else {
 					%>
@@ -22,9 +24,9 @@
 						<thead>
 							<tr>
 								<th scope="col">Id</th>
-								<th scope="col">N° Réservation</th>
+								<th scope="col">NÂ° RÃ©servation</th>
 								<th scope="col">Auteur</th>
-								<th scope="col">Date création</th>
+								<th scope="col">Date crÃ©ation</th>
 								<th scope="col">Commentaire</th>
 								<th scope="col">Valider</th>
 								<th scope="col">Supprimer</th>

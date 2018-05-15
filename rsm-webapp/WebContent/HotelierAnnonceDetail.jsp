@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core"%>
 <%@ page import="beans.entity.Annonce" %>
 <%@ page import="java.util.List" %>
@@ -28,7 +30,7 @@
 								
 								if (comments.size() == 0) {
 								%>
-								<p>Aucun commentaire publié</p>
+								<p>Aucun commentaire publiÃ©</p>
 								<%
 								} else {
 								%>
@@ -36,7 +38,7 @@
 								<table class="table table-striped">
 								  <thead>
 								    <tr>
-								      <th scope="col">N°</th>
+								      <th scope="col">NÂ°</th>
 								      <th scope="col">Commentaire</th>
 								      <th scope="col">Signaler</th>
 								    </tr>

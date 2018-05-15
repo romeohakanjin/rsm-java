@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="core"%>
 <core:import url="Header.jsp" />
 <%@ page import="java.util.List"%>
@@ -12,19 +14,19 @@
 
 					if (activiteExternes.size() == 0) {
 				%>
-				<p>Vous n'avez pas d'activiteExterne publiée</p>
+				<p>Vous n'avez pas d'activiteExterne publiÃ©e</p>
 				<%
 					} else {
 				%>
-				<h2>Liste des activités externes</h2>
+				<h2>Liste des activitÃ©s externes</h2>
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th scope="col">N°</th>
+							<th scope="col">NÂ°</th>
 							<th scope="col">Titre</th>
 							<th scope="col">Description</th>
 							<th scope="col">Ville</th>
-							<th scope="col">Type d'activité</th>
+							<th scope="col">Type d'activitÃ©</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -37,7 +39,7 @@
 										libelle = "Restauration";
 										break;
 									case 2:
-										libelle = "Musée";
+										libelle = "MusÃ©e";
 										break;
 									case 3:
 										libelle = "Parc d'attractions";
@@ -46,7 +48,7 @@
 										libelle = "Zoo";
 										break;
 									case 5:
-										libelle = "Evénements";
+										libelle = "EvÃ©nements";
 										break;
 									}
 						%>
