@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Sam 12 Mai 2018 à 16:24
+-- Généré le :  Mer 16 Mai 2018 à 06:37
 -- Version du serveur :  10.1.16-MariaDB
 -- Version de PHP :  7.0.9
 
@@ -174,6 +174,22 @@ CREATE TABLE `proposition_modification_annonce` (
   `date_proposition` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Contenu de la table `proposition_modification_annonce`
+--
+
+INSERT INTO `proposition_modification_annonce` (`id_proposition_modif_annonce`, `id_annonce`, `id_utilisateur`, `modification`, `date_proposition`) VALUES
+(1, 1, 2, 'La clim est dispo', '2018-05-16 06:14:38'),
+(2, 1, 3, 'Il n''y pas de bureau', '2018-05-16 06:14:38'),
+(3, 2, 4, 'Pas de télévision', '2018-05-16 06:14:38'),
+(4, 2, 3, 'Il y  a un frigo', '2018-05-16 06:14:38'),
+(5, 3, 3, 'Pas d''eau chaude', '2018-05-16 06:14:38'),
+(6, 3, 1, 'Pas de douche', '2018-05-16 06:14:38'),
+(7, 4, 1, 'Pas de serviettes', '2018-05-16 06:14:38'),
+(8, 4, 2, 'Pas de couverture de lit', '2018-05-16 06:14:38'),
+(9, 4, 3, 'Un seul oreiller pour deux personnes', '2018-05-16 06:14:38'),
+(10, 4, 4, 'Pas de minibar', '2018-05-16 06:14:38');
+
 -- --------------------------------------------------------
 
 --
@@ -202,7 +218,37 @@ INSERT INTO `reservation` (`id_reservation`, `id_annonce`, `id_utilisateur`, `da
 (2, 1, 3, '2018-03-05 15:40:10', '2018-03-12 15:40:00', 7, 270, 1, 4, 4),
 (3, 2, 2, '2018-05-07 22:33:30', '2018-05-16 00:00:00', 5, 25, 1, 1, 1),
 (5, 1, 3, '2021-03-05 00:00:00', '2021-06-05 00:00:00', 3, 135, 1, 1, 1),
-(6, 1, 3, '2019-03-05 00:00:00', '2019-03-05 00:00:00', 1, 45, 1, 1, 1);
+(6, 1, 3, '2019-03-05 00:00:00', '2019-03-05 00:00:00', 1, 45, 0, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `service_chambre`
+--
+
+CREATE TABLE `service_chambre` (
+  `id_service_chambre` int(11) NOT NULL,
+  `nom` varchar(35) NOT NULL,
+  `quantite` int(20) NOT NULL,
+  `id_annonce` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `service_chambre`
+--
+
+INSERT INTO `service_chambre` (`id_service_chambre`, `nom`, `quantite`, `id_annonce`) VALUES
+(1, 'Bar', 1, 1),
+(2, 'Télé', 2, 1),
+(3, 'Bureau', 1, 2),
+(4, 'Clim', 1, 2),
+(5, 'Oreiller', 4, 3),
+(6, 'Lit', 2, 3),
+(7, 'Douche', 2, 4),
+(8, 'Serviette', 2, 4),
+(9, 'Frigo', 1, 2),
+(10, 'Cuisine', 1, 3),
+(11, 'Wifi', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -370,6 +416,13 @@ ALTER TABLE `reservation`
   ADD KEY `id_etat_reservation` (`id_etat_reservation`);
 
 --
+-- Index pour la table `service_chambre`
+--
+ALTER TABLE `service_chambre`
+  ADD PRIMARY KEY (`id_service_chambre`),
+  ADD KEY `id_annonce` (`id_annonce`);
+
+--
 -- Index pour la table `statut_reservation`
 --
 ALTER TABLE `statut_reservation`
@@ -438,12 +491,17 @@ ALTER TABLE `paiement`
 -- AUTO_INCREMENT pour la table `proposition_modification_annonce`
 --
 ALTER TABLE `proposition_modification_annonce`
-  MODIFY `id_proposition_modif_annonce` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_proposition_modif_annonce` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT pour la table `reservation`
 --
 ALTER TABLE `reservation`
   MODIFY `id_reservation` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT pour la table `service_chambre`
+--
+ALTER TABLE `service_chambre`
+  MODIFY `id_service_chambre` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT pour la table `statut_reservation`
 --
@@ -509,6 +567,12 @@ ALTER TABLE `reservation`
   ADD CONSTRAINT `reservation_ibfk_2` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`),
   ADD CONSTRAINT `reservation_ibfk_3` FOREIGN KEY (`id_statut_reservation`) REFERENCES `statut_reservation` (`id_statut_reservation`),
   ADD CONSTRAINT `reservation_ibfk_4` FOREIGN KEY (`id_etat_reservation`) REFERENCES `etat_reservation` (`id_etat_reservation`);
+
+--
+-- Contraintes pour la table `service_chambre`
+--
+ALTER TABLE `service_chambre`
+  ADD CONSTRAINT `service_chambre_ibfk_1` FOREIGN KEY (`id_annonce`) REFERENCES `annonce` (`id_annonce`);
 
 --
 -- Contraintes pour la table `utilisateur`
