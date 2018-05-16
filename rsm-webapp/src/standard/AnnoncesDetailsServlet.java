@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -18,8 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import beans.entity.Annonce;
+import beans.entity.ServiceChambre;
 import beans.session.AnnonceSessionBean;
 import beans.session.ReservationSessionBean;
+import beans.session.ServiceChambreSessionBean;
 
 /**
  * Servlet implementation class AnnoncesDetailsServlet
@@ -52,6 +55,9 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 	@EJB
 	ReservationSessionBean reservationSessionBean;
 
+	@EJB
+	ServiceChambreSessionBean serviceChambreSessionBean;
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		this.request = request;
@@ -71,6 +77,10 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 			default:
 				Annonce annonce = annonceSessionBean.getAnnonce(annonceIdInt);
 				request.setAttribute("annonceDetails", annonce);
+				
+				List<ServiceChambre> roomServices = serviceChambreSessionBean.getRoomServices(annonceIdInt);
+				request.setAttribute("roomServices", roomServices);
+				
 				redirectionToView(ANNONCE_DETAILS_VIEW);
 				break;
 			}
@@ -91,7 +101,7 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 			final boolean isOkForm = verificationFormulaire();
 
 			if (isOkForm) {
-				// Vérifier si l'id de l'utilisateur est bien celui d'un utilisateurs standard
+				// Vï¿½rifier si l'id de l'utilisateur est bien celui d'un utilisateurs standard
 				String identifiant = (String) this.session.getAttribute("login");
 				int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
 
@@ -101,7 +111,7 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 					boolean isAlreadyReservedAdForThisDate = reservationSessionBean.isOkDateForReservation(annonceIdInt,
 							timestampBegining, timestampEnd);
 					if (!isAlreadyReservedAdForThisDate) {
-						// alors send sur la page de résumer de réservation
+						// alors send sur la page de rï¿½sumer de rï¿½servation
 						session.setAttribute("reservationToValidate", annonceIdInt);
 						session.setAttribute("reservationIdUser", id_utilisateur);
 						session.setAttribute("reservationDateDebut", timestampBegining);
@@ -112,7 +122,7 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 					}
 
 				} else {
-					setVariableToView("alert-danger", "Numéro d'annonce incorrect");
+					setVariableToView("alert-danger", "Numï¿½ro d'annonce incorrect");
 					redirectionToServlet(ANNONCES_LISTE_SERVLET);
 				}
 			} else {
@@ -120,7 +130,7 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 				redirectionToServlet(ANNONCES_LISTE_SERVLET);
 			}
 		} else {
-			setVariableToView("alert-danger", "Vous devez être connecté pour accéder à cette page");
+			setVariableToView("alert-danger", "Vous devez ï¿½tre connectï¿½ pour accï¿½der ï¿½ cette page");
 			redirectionToView(CONNECTION_VIEW);
 		}
 	}
@@ -147,7 +157,7 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 			}
 
 			// verifier si les dates sont pas avant la date actuelle
-			// TODO : la date actuelle est avec une heure, tandis que quand on créer le
+			// TODO : la date actuelle est avec une heure, tandis que quand on crï¿½er le
 			// timestamp on donne pas l'heuredonc ne compare pas correctement pour les
 			// reservation le jour j
 			// TODO: FIXE THAT
@@ -169,10 +179,10 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 			timestampEnd = new java.sql.Timestamp(dateEnd.getTime());
 
 			if (!reservationForActualDate) {
-				// TODO : contrôle sur la date
-				// Vérifier si le mois est pas supérieur à 12 ou inférieur à 1
-				// Vérifier que les jours c'est pas supérieur à 31 et inférieur à 1
-				// Vérifier que en fevrier on dépasse aps 28 jours
+				// TODO : contrï¿½le sur la date
+				// Vï¿½rifier si le mois est pas supï¿½rieur ï¿½ 12 ou infï¿½rieur ï¿½ 1
+				// Vï¿½rifier que les jours c'est pas supï¿½rieur ï¿½ 31 et infï¿½rieur ï¿½ 1
+				// Vï¿½rifier que en fevrier on dï¿½passe aps 28 jours
 				try {
 					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 					Date firstDate = sdf.parse(dateDebut);

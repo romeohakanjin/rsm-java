@@ -4,6 +4,7 @@
 <%@ page import="beans.entity.Annonce"%>
 <%@ page import="java.util.List"%>
 <%@ page import="beans.entity.Commentaire"%>
+<%@ page import="beans.entity.ServiceChambre"%>
 <core:import url="Header.jsp" />
 
 <div id="main-wrapper">
@@ -46,6 +47,32 @@
 				}
 				}
 			%>
+			
+			<h2>Service</h2>
+				<%
+					List<ServiceChambre> roomServices = (List<ServiceChambre>) request.getAttribute( "roomServices" );
+					
+					if (roomServices.size() != 0) {
+						int cpt= 1;
+						%>	 
+					    <ul>
+					    <%
+			            for(ServiceChambre roomService : roomServices){
+			            	if(roomService.getQuantite() == 1){
+			            	%>	 
+						      <li><%= roomService.getNom() %></li>
+						    <%
+			            	} else{
+						    	%>	 
+							      <li><%= roomService.getNom() %> (<%= roomService.getQuantite() %>)</li>
+							    <%
+						    }
+			            }
+					    %>	 
+					    </ul>
+					    <%
+					}
+					%>
 			</form>
 		</div>
 	</div>
