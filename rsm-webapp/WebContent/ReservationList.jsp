@@ -55,7 +55,7 @@
 					
 						if (reservationsFinish.size() != 0) {
 						%>
-						<h2>Réservations en cours</h2>
+						<h2>Réservations terminées</h2>
 						<table class="table table-striped">
 						  <thead>
 						    <tr>

@@ -49,6 +49,8 @@
 										annonces d'activités externes</a></li>
 								<li id="commentManagement"><a href="CommentManagementServlet">
 								Gestion des commentaires signalés</a></li>
+								<li id="propositionModificationManagement"><a href="AnnouncementPropositionServlet?action=list">
+								Proposition de modification</a></li>
 								<li id="payementManagement"><a href="PayementManagementServlet">
 								Gestion des paiements</a></li>
 							</ul>
