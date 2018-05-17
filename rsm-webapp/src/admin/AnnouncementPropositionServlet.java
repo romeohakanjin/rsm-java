@@ -30,11 +30,12 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 	private HttpSession session;
 	private String action;
 	private String modificationPropositionId;
-	
+
 	@EJB
 	PropositionModificationSessionBean propositionModificationSessionBean;
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		this.request = request;
 		this.response = response;
 
@@ -52,9 +53,9 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 			redirectionToView(HOME_PAGE);
 			break;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Show all the modifications propositions
 	 * 
@@ -62,13 +63,14 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void propositionModificationList() throws ServletException, IOException {
-		List<PropositionModificationAnnonce> propositionsModifications = propositionModificationSessionBean.getModificationsPorpositions();
+		List<PropositionModificationAnnonce> propositionsModifications = propositionModificationSessionBean
+				.getModificationsPorpositions();
 		this.request.setAttribute("propositionsModifications", propositionsModifications);
-		
+
 		redirectionToView(LIST_RESERVATION);
 
 	}
-	
+
 	/**
 	 * ignore a modification proposition
 	 * 
@@ -78,11 +80,12 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void ignorePropositionReservation(String modificationPropositionId) throws ServletException, IOException {
-		boolean isOkReservation = propositionModificationSessionBean.isExistingModificationProposition(modificationPropositionId);
+		boolean isOkReservation = propositionModificationSessionBean
+				.isExistingModificationProposition(modificationPropositionId);
 
 		if (isOkReservation) {
 			// ignorer la proposition de modification
-			propositionModificationSessionBean.deleteModificationPrposition(modificationPropositionId);
+			propositionModificationSessionBean.deleteModificationProposition(modificationPropositionId);
 			setVariableToView("alert-success", "Cette proposition vient d'être ignorée");
 			redirectionToView(HOME_PAGE);
 		} else {
@@ -91,7 +94,7 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 		}
 
 	}
-	
+
 	/**
 	 * Initialize the values
 	 * 
