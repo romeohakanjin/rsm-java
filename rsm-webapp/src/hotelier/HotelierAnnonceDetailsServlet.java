@@ -55,11 +55,11 @@ public class HotelierAnnonceDetailsServlet extends HttpServlet {
 
 				if (isMathingId) {
 					annonceSessionBean.reportComment(commentId);
-					setVariableToView("alert-success", "Commentaire signalé");
+					setVariableToView("alert-success", "Commentaire signalÃ©");
 					redirectionToServlet(ANNONCE_LISTE_SERVLET);
 				}
 			} catch (NumberFormatException exception) {
-				setVariableToView("alert-danger", "Numéro de commentaire incorrect");
+				setVariableToView("alert-danger", "NumÃ©ro de commentaire incorrect");
 				redirectionToServlet(ANNONCE_LISTE_SERVLET);
 			}
 			break;
@@ -73,11 +73,11 @@ public class HotelierAnnonceDetailsServlet extends HttpServlet {
 
 				if (isMathingId) {
 					annonceSessionBean.ignoreComment(commentId);
-					setVariableToView("alert-success", "Commentaire ignoré");
+					setVariableToView("alert-success", "Commentaire ignorÃ©");
 					redirectionToServlet(ANNONCE_LISTE_SERVLET);
 				}
 			} catch (NumberFormatException exception) {
-				setVariableToView("alert-danger", "Numéro incorrect");
+				setVariableToView("alert-danger", "NumÃ©ro incorrect");
 				redirectionToServlet(ANNONCE_LISTE_SERVLET);
 			}
 			break;
@@ -97,12 +97,12 @@ public class HotelierAnnonceDetailsServlet extends HttpServlet {
 					
 					redirectionToView(ANNONCE_DETAILS_VIEW);
 				} else {
-					setVariableToView("alert-danger", "Numéro incorrect");
+					setVariableToView("alert-danger", "NumÃ©ro incorrect");
 					redirectionToServlet(LISTE_ANNONCES);
 				}
 
 			} catch (NumberFormatException exception) {
-				setVariableToView("alert-danger", "Numéro d'annonce incorrect");
+				setVariableToView("alert-danger", "NumÃ©ro d'annonce incorrect");
 				redirectionToServlet(LISTE_ANNONCES);
 			}
 

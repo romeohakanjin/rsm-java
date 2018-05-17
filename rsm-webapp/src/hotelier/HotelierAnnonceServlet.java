@@ -88,7 +88,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	 * 
 	 */
 	private void ajouterAnnonceModifierActionPerformed() throws ServletException, IOException {
-		// Vérifier si l'id de l'annonce (id utilisateur) match l'id de l'id annonce
+		// Vï¿½rifier si l'id de l'annonce (id utilisateur) match l'id de l'id annonce
 
 		String identifiant = (String) this.session.getAttribute("login");
 		int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
@@ -101,7 +101,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 				boolean matchingIdUser = annonceSessionBean.isMatchingIdUserAndIdUserAnnonce(id_utilisateur, idAnnonce);
 
 				if (matchingIdUser) {
-					// Récupérer l'id de l'annonce modifié et le set dans annonce
+					// Rï¿½cupï¿½rer l'id de l'annonce modifiï¿½ et le set dans annonce
 					Annonce annonce = new Annonce();
 					annonce.setId_annonce(idAnnonce);
 					annonce.setId_utilisateur(id_utilisateur);
@@ -115,7 +115,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 					setVariableToView("alert-success", "Modifications prisent en compte");
 				}
 			} catch (NumberFormatException exception) {
-				setVariableToView("alert-danger", "Numéro d'annonce incorrect");
+				setVariableToView("alert-danger", "NumÃ©ro d'annonce incorrect");
 				exception.printStackTrace();
 			}
 		}
@@ -139,7 +139,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			annonce.setId_utilisateur(id_utilisateur);
 			annonce.setDate_creation(new Timestamp(dateCreation.getTime()));
 			annonceSessionBean.creerAnnonce(annonce);
-			setVariableToView("alert-success", "Annonce ajoutée");
+			setVariableToView("alert-success", "Annonce ajoutÃ©e");
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		} else {
 			setVariableToView("alert-danger", "Informations incorrectes ou manquantes");
@@ -166,12 +166,12 @@ public class HotelierAnnonceServlet extends HttpServlet {
 				request.setAttribute("annonceEdited", annonce);
 				redirectionToView(ANNONCE_VIEW);
 			} else {
-				setVariableToView("alert-warning", "Le numéro de l'annonce ne correspond pas");
+				setVariableToView("alert-warning", "Le numÃ©ro de l'annonce ne correspond pas");
 				redirectionToServlet(ANNONCE_LISTE_SERVLET);
 			}
 
 		} catch (NumberFormatException exception) {
-			setVariableToView("alert-danger", "Numéro d'annonce incorrect");
+			setVariableToView("alert-danger", "NumÃ©ro d'annonce incorrect");
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		}
 	}
@@ -195,7 +195,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			setVariableToView("alert-success", "Suppression de l'annonce prise en compte");
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		} catch (NumberFormatException exception) {
-			setVariableToView("alert-danger", "Numéro d'annonce incorrect");
+			setVariableToView("alert-danger", "NumÃ©ro d'annonce incorrect");
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		}
 	}

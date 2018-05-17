@@ -38,7 +38,7 @@ public class AnnonceSessionBean {
 	UserTransaction userTransaction;
 
 	/**
-	 * Créer une annonce
+	 * Crï¿½er une annonce
 	 * 
 	 * @param Annonce
 	 * @return
@@ -64,7 +64,7 @@ public class AnnonceSessionBean {
 	public long getNumberOfAnnounceForHotelier(int idUser) {
 		long numberOfAnnounce = 0;
 
-		String query = "SELECT COUNT(id_annonce) FROM Annonce WHERE id_utilisateur = '" + idUser + "'";
+		String query = "SELECT COUNT(id_annonce) FROM Annonce WHERE id_utilisateur = '" + idUser + "' AND actif = true";
 		Query query2 = entityManager.createQuery(query);
 
 		List listAnnonce = query2.getResultList();
@@ -84,7 +84,8 @@ public class AnnonceSessionBean {
 	public List<Object[]> getNumberOfAnnouncePerReservationStatus(int idUser) {
 		String query = "SELECT COUNT(er.id_etat_reservation), er.libelle "
 				+ "FROM Annonce AS a, Reservation AS r, EtatReservation AS er " + "WHERE a.id_annonce = r.id_annonce "
-				+ "AND r.id_etat_reservation = er.id_etat_reservation " + "AND a.id_utilisateur = '" + idUser + "' "
+				+ "AND r.id_etat_reservation = er.id_etat_reservation " + "AND a.id_utilisateur = '" + idUser + "'"
+				+ " AND actif = true "
 				+ "GROUP BY er.libelle";
 		Query query2 = entityManager.createQuery(query);
 
@@ -94,7 +95,7 @@ public class AnnonceSessionBean {
 	}
 
 	/**
-	 * Récupère toutes les annonces
+	 * Rï¿½cupï¿½re toutes les annonces
 	 * 
 	 * @return
 	 */
@@ -106,23 +107,22 @@ public class AnnonceSessionBean {
 	}
 	
 	/**
-	 * Récupère l'annonce associé à l'id
+	 * Rï¿½cupï¿½re l'annonce associï¿½ ï¿½ l'id
 	 * @param idAnnonce
 	 * @return
 	 */
 	public Annonce getAnnonceById(Integer idAnnonce) {
-		String queryString = "FROM Annonce WHERE actif = TRUE AND id_annonce = "+idAnnonce;
+		String queryString = "FROM Annonce WHERE actif = true AND id_annonce = "+idAnnonce;
 		Query query = entityManager.createQuery(queryString);
 		return (Annonce) query.getResultList().get(0);
 	}
 	
 	/**
-	 * Récupère les annonces en fonction des champs saisis
+	 * Rï¿½cupï¿½re les annonces en fonction des champs saisis
 	 * par l'utilisateur
 	 * @param destination
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Integer> getAnnouncementSearched(String destination, String keywords, String[] keywordsList){
 		String queryString = "SELECT a.id_annonce "
 				+ "FROM Annonce as a "
@@ -141,7 +141,7 @@ public class AnnonceSessionBean {
 	}
 
 	/**
-	 * Récupère l'id de la d'un utilisateur
+	 * Rï¿½cupï¿½re l'id de la d'un utilisateur
 	 * 
 	 * @param identifiant
 	 *            : email
@@ -161,9 +161,7 @@ public class AnnonceSessionBean {
 		return idUtilisateur;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public Annonce getAnnonce(int idAnnonce) {
-		
 		Annonce annonce = new Annonce();
 		String query = "FROM Annonce AS a " + "WHERE a.id_annonce = '" + idAnnonce + "'";
 		Query query2 = entityManager.createQuery(query);
@@ -176,12 +174,12 @@ public class AnnonceSessionBean {
 	}
 	
 	/**
-	 * Récupère les annonces actives postées pas un utilisateur
+	 * Rï¿½cupï¿½re les annonces actives postï¿½es pas un utilisateur
 	 * @param idUser
 	 * @return
 	 */
 	public List<Annonce> getAllAnnonceUtilisateur(int idUser) {	
-		String query = "FROM Annonce AS a " + "WHERE a.id_annonce = '" + idUser + "' AND actif = true";
+		String query = "FROM Annonce " + "WHERE id_utilisateur = '"+ idUser + "' AND actif = true";
 		Query query2 = entityManager.createQuery(query);
 		List<Annonce> listAnnonce = query2.getResultList();
 		return listAnnonce;
@@ -197,8 +195,8 @@ public class AnnonceSessionBean {
 	public boolean isMatchingIdUserAndIdUserAnnonce(int idUser, int idAnnonce) {
 		boolean isMatchingId = false;
 
-		String query = "SELECT a.id_annonce FROM Annonce AS a WHERE a.id_utilisateur = '" + idUser
-				+ "' AND a.id_annonce = '" + idAnnonce + "' ";
+		String query = "SELECT id_annonce FROM Annonce WHERE id_utilisateur = '" + idUser
+				+ "' AND id_annonce = '" + idAnnonce + "' AND actif = true ";
 		Query query2 = entityManager.createQuery(query);
 
 		List annonces = query2.getResultList();
@@ -260,7 +258,7 @@ public class AnnonceSessionBean {
 	}
 	
 	/**
-	 * Récupère le nombre d'annonce
+	 * Rï¿½cupï¿½re le nombre d'annonce
 	 * @return
 	 */
 	public List<Object> getNbAnnounce() {
@@ -391,9 +389,9 @@ public class AnnonceSessionBean {
 	}
 	
 	/**
-	 * Récupère les annonces actives d'un utilisateur
-	 * pour lesquels il existe des réservations
-	 * à l'état Validé et au statut autre que Terminé
+	 * Rï¿½cupï¿½re les annonces actives d'un utilisateur
+	 * pour lesquels il existe des rï¿½servations
+	 * ï¿½ l'ï¿½tat Validï¿½ et au statut autre que Terminï¿½
 	 * @param idUser
 	 * @return
 	 */
