@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -15,7 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import beans.entity.Annonce;
+import beans.entity.ServiceChambre;
 import beans.session.AnnonceSessionBean;
+import beans.session.ServiceChambreSessionBean;
 
 /**
  * Servlet implementation class HotelierAnnonceServlet
@@ -27,6 +30,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	private static final String PARAMETER_ACTION_EDIT = "ModifierAnnonce";
 	private static final String PARAMETER_ACTION_DELETE = "SupprimerAnnonce";
 	private static final String PARAMETER_ACTION_ADD = "Ajouter";
+	private static final String PARAMETER_ACTION_DELETE_SERVICE = "deleteService";
 	private static final String ANNONCE_VIEW = "HotelierAnnonce";
 	private static final String ANNONCE_LISTE_SERVLET = "HotelierAnnonceListServlet";
 	private HttpServletRequest request;
@@ -41,10 +45,14 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	private Date dateCreation;
 	private String parametre;
 	private String annonceId;
+	private String serviceId;
 	// private String parametreAnnonce;
 
 	@EJB
 	AnnonceSessionBean annonceSessionBean;
+
+	@EJB
+	ServiceChambreSessionBean serviceChambreSessionBean;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -74,6 +82,9 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		case PARAMETER_ACTION_DELETE:
 			deleteAnnonceActionPerformed();
 			break;
+		case PARAMETER_ACTION_DELETE_SERVICE:
+			deleteServiceActionPerformed();
+			break;
 
 		default:
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
@@ -83,12 +94,40 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	}
 
 	/**
+	 * Delete a service from an announcement
+	 * 
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void deleteServiceActionPerformed() throws ServletException, IOException {
+		// Looking if the ad id matches the id of the ad id from the service
+		try {
+			int idService = Integer.valueOf(serviceId);
+			int idAnnonce = Integer.valueOf(annonceId);
+			boolean matchingIdUser = serviceChambreSessionBean.isMatchingIdAdAndIdAdService(idAnnonce, idService);
+			
+			if (matchingIdUser) {
+				serviceChambreSessionBean.deleteService(idService);
+				
+				//Reload and redirection
+				setVariableToView("alert-success", "Suppression du service prise en compte");
+				modifierAnnonceActionPerformed();
+			}
+		} catch (NumberFormatException exception) {
+			redirectionToServlet(ANNONCE_LISTE_SERVLET);
+			setVariableToView("alert-danger", "Numéro du service ou de l'annonce incorrect");
+			exception.printStackTrace();
+		}
+			
+	}
+
+	/**
 	 * @throws IOException
 	 * @throws ServletException
 	 * 
 	 */
 	private void ajouterAnnonceModifierActionPerformed() throws ServletException, IOException {
-		// V�rifier si l'id de l'annonce (id utilisateur) match l'id de l'id annonce
+		// looking if the anouncement id (id_user) matches the id of the announcement
 
 		String identifiant = (String) this.session.getAttribute("login");
 		int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
@@ -101,7 +140,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 				boolean matchingIdUser = annonceSessionBean.isMatchingIdUserAndIdUserAnnonce(id_utilisateur, idAnnonce);
 
 				if (matchingIdUser) {
-					// R�cup�rer l'id de l'annonce modifi� et le set dans annonce
+					// get the id of the announcement and update the set in the announcement
 					Annonce annonce = new Annonce();
 					annonce.setId_annonce(idAnnonce);
 					annonce.setId_utilisateur(id_utilisateur);
@@ -148,7 +187,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	}
 
 	/**
-	 * Edit a annonce action
+	 * Edit a announcement action
 	 * 
 	 * @throws ServletException
 	 * @throws IOException
@@ -162,8 +201,10 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			boolean isMathingId = annonceSessionBean.isMatchingIdUserAndIdUserAnnonce(id_utilisateur, idAnnonce);
 			if (isMathingId) {
 				Annonce annonce = annonceSessionBean.getAnnonce(idAnnonce);
-
 				request.setAttribute("annonceEdited", annonce);
+
+				List<ServiceChambre> roomServices = serviceChambreSessionBean.getRoomServices(idAnnonce);
+				request.setAttribute("roomServices", roomServices);
 				redirectionToView(ANNONCE_VIEW);
 			} else {
 				setVariableToView("alert-warning", "Le numéro de l'annonce ne correspond pas");
@@ -191,7 +232,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			if (matchingIdUser) {
 				annonceSessionBean.deleteAnnonce(idAnnonce);
 			}
-			
+
 			setVariableToView("alert-success", "Suppression de l'annonce prise en compte");
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		} catch (NumberFormatException exception) {
@@ -271,6 +312,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		this.capaciteMax = request.getParameter("capaciteMax");
 		this.prixNuit = request.getParameter("prixNuit");
 		this.annonceId = request.getParameter("annonceId");
+		this.serviceId = request.getParameter("serviceId");
 	}
 
 	/**
