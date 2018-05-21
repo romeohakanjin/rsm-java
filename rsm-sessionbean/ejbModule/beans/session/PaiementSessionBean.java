@@ -34,11 +34,11 @@ public class PaiementSessionBean {
     UserTransaction userTransaction;
     
     /**
-     * Créer un paiement
+     * Crï¿½er un paiement
      * @param paiement
      * @return
      */
-    public Boolean creerPaeiment(Paiement paiement) {
+    public Boolean creerPaiement(Paiement paiement) {
     	try {
     		userTransaction.begin();
     		entityManager.persist(paiement);
