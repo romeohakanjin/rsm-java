@@ -28,7 +28,7 @@
 			<p><%=annonce.getPrix_nuit()%></p>
 			
 			<div>
-				<p>Dates de réservation</p>
+				<label>Date de réservation</label>
 				<p>
 					Date début: <input type="text" name="dateDebut" id="datepickerDebut"
 						required />

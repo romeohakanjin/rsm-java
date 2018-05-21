@@ -19,7 +19,7 @@
 				<p><%=session.getAttribute("reservationDateDebut")%></p>
 				<label>Date fin</label>
 				<p><%=session.getAttribute("reservationDateFin")%></p>
-				<label>Nombre de jour</label>
+				<label>Nombre de jours</label>
 				<p><%=session.getAttribute("reservationNumberOfDays")%></p>
 				<label>Prix</label>
 				<p><%=session.getAttribute("reservationPrice")%></p>
