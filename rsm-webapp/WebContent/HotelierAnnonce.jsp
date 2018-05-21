@@ -8,7 +8,7 @@
 <div id="main-wrapper">
 	<div class="container">
 		<div id="content">
-			<h2>Annnonce hotelier</h2>
+			<h2>Annonce hotelier</h2>
 			<%
 				if (request.getAttribute("annonceEdited") != null) {
 					Annonce annonce = (Annonce) request.getAttribute("annonceEdited");
@@ -25,8 +25,21 @@
 						<label>Prix par nuit</label>
 						<input type='text' name='prixNuit' value="<%= annonce.getPrix_nuit() %>" required />
 						<br />
-						<h3>Service</h3>
-						<p>Cliquez sur un service pour le supprimer</p>
+						<input type='submit' name='submitButtonHotelierForm' value="Modifier">
+					</form>
+					<br/><br/>
+					<form>
+					<h3>Service</h3>
+						<label>Nom</label>
+						<input type='text' name='serviceName' required />
+						<label>Quantité</label>
+						<input type='text' name='serviceQuantity' required />
+						<input type="hidden" name="idAnnonce" value="<%= annonce.getId_annonce() %>">
+
+						<input type='submit' name='submitServiceButtonHotelierForm' value="Ajouter Service">
+						
+						<br />
+						<h4>Liste des services : (Cliquez sur un service pour le supprimer)</h4>
 							<%
 							List<ServiceChambre> roomServices = (List<ServiceChambre>) request.getAttribute( "roomServices" );
 							
@@ -55,9 +68,8 @@
 								<%
 							}
 							%>
-						
-						<input type='submit' name='submitButtonHotelierForm' value="Modifier">
 					</form>
+		
 					<%
 						} else {
 					%>	<!-- if the user dosn't modify a ad -->
@@ -77,7 +89,6 @@
 					<%
 						}
 					%>
-		
 		</div>
 	</div>
 </div>

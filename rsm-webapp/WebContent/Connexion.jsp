@@ -9,7 +9,7 @@
 			<h2>Connexion</h2>
 			<form method="get" action="Connection">
 				<label>Identifiant</label> <input type='text' name='identifiant' />
-				<label>Mot de passe</label> <input type='text' name='motDePasse' />
+				<label>Mot de passe</label> <input type='password' name='motDePasse' />
 				<input type='submit' name='submit' value="submit">
 			</form>
 		</div>

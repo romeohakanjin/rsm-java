@@ -30,6 +30,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	private static final String PARAMETER_ACTION_EDIT = "ModifierAnnonce";
 	private static final String PARAMETER_ACTION_DELETE = "SupprimerAnnonce";
 	private static final String PARAMETER_ACTION_ADD = "Ajouter";
+	private static final String PARAMETER_ACTION_ADD_SERVICE = "Ajouter Service";
 	private static final String PARAMETER_ACTION_DELETE_SERVICE = "deleteService";
 	private static final String ANNONCE_VIEW = "HotelierAnnonce";
 	private static final String ANNONCE_LISTE_SERVLET = "HotelierAnnonceListServlet";
@@ -46,7 +47,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	private String parametre;
 	private String annonceId;
 	private String serviceId;
-	// private String parametreAnnonce;
+	private String service;
 
 	@EJB
 	AnnonceSessionBean annonceSessionBean;
@@ -60,18 +61,13 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		this.response = response;
 
 		initialiser();
-		// Ajouter ou modifier une annonce
-		/*
-		 * if (this.parametreAnnonce.equals(PARAMETER_ACTION_EDIT_ANNONCE)) {
-		 * ajouterAnnonceModifierActionPerformed();
-		 * 
-		 * } else if (this.parametreAnnonce.equals(PARAMETER_ACTION_ADD)) {
-		 * ajouterAnnonceActionPerformed(); }
-		 */
-		// Afficher ou supprimer une annonce
+		// Afficher, ajouter, modifier ou supprimer une annonce
 		switch (this.parametre) {
 		case PARAMETER_ACTION_ADD:
 			ajouterAnnonceActionPerformed();
+			break;
+		case PARAMETER_ACTION_ADD_SERVICE:
+			addServiceActionPerformed();
 			break;
 		case PARAMETER_ACTION_EDIT_ANNONCE:
 			ajouterAnnonceModifierActionPerformed();
@@ -94,6 +90,51 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	}
 
 	/**
+	 * Add a service
+	 * 
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void addServiceActionPerformed() throws ServletException, IOException {
+		String name = request.getParameter("serviceName");
+		String quantity = request.getParameter("serviceQuantity");
+		String idAnnonce = request.getParameter("idAnnonce");
+		String identifiant = (String) this.session.getAttribute("login");
+		int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+		int idAnnonceInt = Integer.valueOf(idAnnonce);
+		boolean matchingIdUser = annonceSessionBean.isMatchingIdUserAndIdUserAnnonce(id_utilisateur, idAnnonceInt);
+
+		if ((name != null || !"".equals(name)) || (quantity != null || !"".equals(quantity))) {
+			if (matchingIdUser) {
+				try {
+					int quantityInt = Integer.valueOf(quantity);
+					ServiceChambre serviceChambre = new ServiceChambre();
+					serviceChambre.setNom(name);
+					serviceChambre.setQuantite(quantityInt);
+					serviceChambre.setId_annonce(idAnnonceInt);
+					serviceChambreSessionBean.creerServiceChambre(serviceChambre);
+					
+					// Reload and redirection
+					setVariableToView("alert-success", "Nouveau service pris en compte");
+					redirectionToServlet(ANNONCE_LISTE_SERVLET);
+				} catch (NumberFormatException exception) {
+					setVariableToView("alert-danger", "Quantité du service incorrect");
+					redirectionToServlet(ANNONCE_LISTE_SERVLET);
+					exception.printStackTrace();
+				}
+			} else {
+				setVariableToView("alert-danger", "Numéro incorrect");
+				redirectionToServlet(ANNONCE_LISTE_SERVLET);
+			}
+		} else
+
+		{
+			setVariableToView("alert-danger", "Fomulaire d'ajout d'un service incorrect");
+			redirectionToServlet(ANNONCE_LISTE_SERVLET);
+		}
+	}
+
+	/**
 	 * Delete a service from an announcement
 	 * 
 	 * @throws IOException
@@ -105,11 +146,11 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			int idService = Integer.valueOf(serviceId);
 			int idAnnonce = Integer.valueOf(annonceId);
 			boolean matchingIdUser = serviceChambreSessionBean.isMatchingIdAdAndIdAdService(idAnnonce, idService);
-			
+
 			if (matchingIdUser) {
 				serviceChambreSessionBean.deleteService(idService);
-				
-				//Reload and redirection
+
+				// Reload and redirection
 				setVariableToView("alert-success", "Suppression du service prise en compte");
 				modifierAnnonceActionPerformed();
 			}
@@ -118,7 +159,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			setVariableToView("alert-danger", "Numéro du service ou de l'annonce incorrect");
 			exception.printStackTrace();
 		}
-			
+
 	}
 
 	/**
@@ -307,12 +348,18 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			this.parametre = request.getParameter("action");
 		}
 
+		this.parametre = request.getParameter("submitServiceButtonHotelierForm");
+		if (this.parametre == null) {
+			this.parametre = request.getParameter("action");
+		}
+
 		this.titre = request.getParameter("titre");
 		this.description = request.getParameter("description");
 		this.capaciteMax = request.getParameter("capaciteMax");
 		this.prixNuit = request.getParameter("prixNuit");
 		this.annonceId = request.getParameter("annonceId");
 		this.serviceId = request.getParameter("serviceId");
+		this.service = request.getParameter("service");
 	}
 
 	/**
