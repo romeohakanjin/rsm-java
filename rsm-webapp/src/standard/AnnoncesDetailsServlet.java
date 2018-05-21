@@ -40,6 +40,7 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 	private HttpSession session;
 	private String annonceId;
 	private int annonceIdInt;
+	private int reservationId;
 	private String action;
 	private String dateDebut;
 	private String dateFin;

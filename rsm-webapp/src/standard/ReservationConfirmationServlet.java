@@ -2,6 +2,8 @@ package standard;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -11,7 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import beans.entity.Paiement;
 import beans.entity.Reservation;
+import beans.session.PaiementSessionBean;
 import beans.session.ReservationSessionBean;
 
 /**
@@ -21,6 +25,7 @@ import beans.session.ReservationSessionBean;
 public class ReservationConfirmationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String CONFIRMATION_RESERVATION_VIEW = "ReservationAd";
+	private static final String CONFIRMATION_PAIEMENT_VIEW = "ConfirmationPaiement";
 	private static final String CONFIRMATION_RESERVATION = "Confirmer";
 	private HttpServletRequest request;
 	private HttpServletResponse response;
@@ -29,6 +34,9 @@ public class ReservationConfirmationServlet extends HttpServlet {
 
 	@EJB
 	ReservationSessionBean reservationSessionBean;
+	
+	@EJB
+	PaiementSessionBean paiementSessionBean;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -41,7 +49,6 @@ public class ReservationConfirmationServlet extends HttpServlet {
 		case CONFIRMATION_RESERVATION:
 			reservationValidate();
 			break;
-
 		default:
 			redirectionToView(CONFIRMATION_RESERVATION_VIEW);
 			break;
@@ -51,11 +58,12 @@ public class ReservationConfirmationServlet extends HttpServlet {
 
 	/**
 	 * validate the reservation and pay it
+	 * 
+	 * @throws IOException
+	 * @throws ServletException 
 	 */
-	private void reservationValidate() {
-		// TODO :faire appel à la méthode pour paiement
-		// paiement()
-
+	private void reservationValidate() throws ServletException, IOException {
+		
 		int annonceId = (int) session.getAttribute("reservationToValidate");
 		int userId = (int) session.getAttribute("reservationIdUser");
 		Timestamp timestampBegining = (Timestamp) session.getAttribute("reservationDateDebut");
@@ -72,8 +80,30 @@ public class ReservationConfirmationServlet extends HttpServlet {
 		reservation.setPrix(price);
 		reservation.setId_etat_reservation(1);
 		reservation.setId_statut_reservation(1);
-
+		
 		reservationSessionBean.creerReservation(reservation);
+		paiement();
+		
+		redirectionToView(CONFIRMATION_PAIEMENT_VIEW);
+	}
+	
+	/*
+	 * create the paiement
+	 */
+	public void paiement() {
+		
+		int annonceId = (int) session.getAttribute("reservationToValidate");
+		int reservationId = reservationSessionBean.getReservationId(annonceId);
+		
+		Calendar calendar = Calendar.getInstance();
+		Date now = calendar.getTime();
+		Timestamp date_paiement = new Timestamp(now.getTime());
+		
+		Paiement paiement = new Paiement();
+		paiement.setId_reservation(reservationId);
+		paiement.setDate_paiement(date_paiement);
+		
+		paiementSessionBean.creerPaiement(paiement);
 	}
 
 	/**
