@@ -17,7 +17,7 @@
 			<form method="get" action="AnnoncesDetailsServlet">
 			<input type="hidden" name="annonceId" value="<%= annonce.getId_annonce() %>" readonly>
 			<input type="hidden" name="action" value="reserver" readonly>
-			<h3>Vue de détail</h3>
+			<h3>Vue de détails</h3>
 			<label>Titre</label>
 			<p><%=annonce.getTitre()%></p>
 			<label>Description</label>

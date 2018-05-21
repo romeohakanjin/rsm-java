@@ -36,7 +36,7 @@ public class ReservationSessionBean {
 	UserTransaction userTransaction;
 
 	/**
-	 * Créer une réservation
+	 * Crï¿½er une rï¿½servation
 	 * 
 	 * @param reservation
 	 * @return
@@ -53,9 +53,27 @@ public class ReservationSessionBean {
 			return false;
 		}
 	}
+	
+	/**
+	 * rÃ©cupÃ¨re l'id de rÃ©servation en fonction de l'annonce
+	 * 
+	 * @param annonceId
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public int getReservationId(Integer annonceId) {
+		
+		int reservationId = 0;
+		String queryString = "Select id_reservation FROM Reservation WHERE id_annonce = '" + annonceId + "' "
+				+ "AND etat_reservation = true";
+		Query query = entityManager.createQuery(queryString);
+		List listReservation = query.getResultList();
+		reservationId = (int) listReservation.get(0);
+		return reservationId;
+	}
 
 	/**
-	 * Récupère toutes les réservations
+	 * Rï¿½cupï¿½re toutes les rï¿½servations
 	 * 
 	 * @return
 	 */
@@ -67,7 +85,7 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * Récupère le nombre de réservation regroupé par état de réservation
+	 * Rï¿½cupï¿½re le nombre de rï¿½servation regroupï¿½ par ï¿½tat de rï¿½servation
 	 * 
 	 * @return
 	 */
@@ -82,7 +100,7 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * Récupère les réservations ayant pour statut A venir ou En cours liées à une
+	 * Rï¿½cupï¿½re les rï¿½servations ayant pour statut A venir ou En cours liï¿½es ï¿½ une
 	 * annonce
 	 * 
 	 * @return
@@ -95,7 +113,7 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * Récupère les réservations faites par un utilisateur ayant pour statut En
+	 * Rï¿½cupï¿½re les rï¿½servations faites par un utilisateur ayant pour statut En
 	 * attente, A venir ou En cours
 	 * 
 	 * @param userId
@@ -111,7 +129,7 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * Récupère les réservations faites par un utilisateur ayant pour état Terminée
+	 * Rï¿½cupï¿½re les rï¿½servations faites par un utilisateur ayant pour ï¿½tat Terminï¿½e
 	 * 
 	 * @param userId
 	 * @return
@@ -188,9 +206,9 @@ public class ReservationSessionBean {
 	 * 
 	 * @return int : state (id) of the reservation
 	 */
-	// TODO : Déplacer cette méthode dans EtatReservationSessionBean
+	// TODO : Dï¿½placer cette mï¿½thode dans EtatReservationSessionBean
 	// TODO : Enlever le traitement et le faire dans la servlet appelant cette
-	// méthode
+	// mï¿½thode
 	public int getReservationStateId(int reservationId) {
 		int idStateReservation = 0;
 
@@ -216,7 +234,7 @@ public class ReservationSessionBean {
 	 * @param reservationStateValidationHotelier
 	 *            : id of the validation state
 	 */
-	// TODO : Paramètre incomingReservationStatusId pas utilisé dans la méthode donc
+	// TODO : Paramï¿½tre incomingReservationStatusId pas utilisï¿½ dans la mï¿½thode donc
 	// pourquoi le mettre en param
 	public void validationReservationHotelier(int idReservation, int reservationStateValidationHotelier,
 			int incomingReservationStatusId) {
@@ -295,7 +313,7 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * Récupère les réservations qui ne sont pas encore passés d'un utilisateur
+	 * Rï¿½cupï¿½re les rï¿½servations qui ne sont pas encore passï¿½s d'un utilisateur
 	 * 
 	 * @param userId
 	 * @return
