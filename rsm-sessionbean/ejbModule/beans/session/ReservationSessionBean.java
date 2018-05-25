@@ -1,4 +1,4 @@
-package beans.session;
+	package beans.session;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -18,7 +18,6 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import beans.entity.Annonce;
 import beans.entity.Reservation;
 
 /**
@@ -36,7 +35,7 @@ public class ReservationSessionBean {
 	UserTransaction userTransaction;
 
 	/**
-	 * Créer une réservation
+	 * Crï¿½er une rï¿½servation
 	 * 
 	 * @param reservation
 	 * @return
@@ -55,7 +54,7 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * Récupère toutes les réservations
+	 * Rï¿½cupï¿½re toutes les rï¿½servations
 	 * 
 	 * @return
 	 */
@@ -67,7 +66,7 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * Récupère le nombre de réservation regroupé par état de réservation
+	 * Rï¿½cupï¿½re le nombre de rï¿½servation regroupï¿½ par ï¿½tat de rï¿½servation
 	 * 
 	 * @return
 	 */
@@ -82,7 +81,7 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * Récupère les réservations ayant pour statut A venir ou En cours liées à une
+	 * Rï¿½cupï¿½re les rï¿½servations ayant pour statut A venir ou En cours liï¿½es ï¿½ une
 	 * annonce
 	 * 
 	 * @return
@@ -95,7 +94,7 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * Récupère les réservations faites par un utilisateur ayant pour statut En
+	 * Rï¿½cupï¿½re les rï¿½servations faites par un utilisateur ayant pour statut En
 	 * attente, A venir ou En cours
 	 * 
 	 * @param userId
@@ -111,7 +110,7 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * Récupère les réservations faites par un utilisateur ayant pour état Terminée
+	 * Rï¿½cupï¿½re les rï¿½servations faites par un utilisateur ayant pour ï¿½tat Terminï¿½e
 	 * 
 	 * @param userId
 	 * @return
@@ -188,9 +187,9 @@ public class ReservationSessionBean {
 	 * 
 	 * @return int : state (id) of the reservation
 	 */
-	// TODO : Déplacer cette méthode dans EtatReservationSessionBean
+	// TODO : Dï¿½placer cette mï¿½thode dans EtatReservationSessionBean
 	// TODO : Enlever le traitement et le faire dans la servlet appelant cette
-	// méthode
+	// mï¿½thode
 	public int getReservationStateId(int reservationId) {
 		int idStateReservation = 0;
 
@@ -216,7 +215,7 @@ public class ReservationSessionBean {
 	 * @param reservationStateValidationHotelier
 	 *            : id of the validation state
 	 */
-	// TODO : Paramètre incomingReservationStatusId pas utilisé dans la méthode donc
+	// TODO : Paramï¿½tre incomingReservationStatusId pas utilisï¿½ dans la mï¿½thode donc
 	// pourquoi le mettre en param
 	public void validationReservationHotelier(int idReservation, int reservationStateValidationHotelier,
 			int incomingReservationStatusId) {
@@ -295,7 +294,7 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * Récupère les réservations qui ne sont pas encore passés d'un utilisateur
+	 * Rï¿½cupï¿½re les rï¿½servations qui ne sont pas encore passï¿½s d'un utilisateur
 	 * 
 	 * @param userId
 	 * @return
@@ -349,5 +348,32 @@ public class ReservationSessionBean {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * check if the id user correspond to the id user on the reservation and the state s finished
+	 * 
+	 * @param id_utilisateur
+	 *            : id of the current user
+	 * @param idAnnouncement
+	 *            : id of the announcement
+	 * @return boolean : true if the id correspond or false
+	 */
+	public boolean isMatchingIdUserReservationAndIdAnnouncement(int idUser, int idAnnouncement) {
+		boolean isMatchingId = false;
+
+		String query = "FROM Reservation"
+				+ " WHERE id_utilisateur = '"+idUser+"'"
+				+ " AND id_annonce = '"+idAnnouncement+"'"
+				+ " AND id_statut_reservation = 4";
+		Query query2 = entityManager.createQuery(query);
+
+		List reservation = query2.getResultList();
+
+		if (reservation.size() != 0) {
+			isMatchingId = true;
+		}
+
+		return isMatchingId;
 	}
 }

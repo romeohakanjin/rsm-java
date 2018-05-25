@@ -339,19 +339,6 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		this.parametre = "";
 
 		this.parametre = request.getParameter("action");
-		if (this.parametre == null) {
-			this.parametre = request.getParameter("submitButtonHotelierForm");
-		}
-
-		this.parametre = request.getParameter("submitButtonHotelierForm");
-		if (this.parametre == null) {
-			this.parametre = request.getParameter("action");
-		}
-
-		this.parametre = request.getParameter("submitServiceButtonHotelierForm");
-		if (this.parametre == null) {
-			this.parametre = request.getParameter("action");
-		}
 
 		this.titre = request.getParameter("titre");
 		this.description = request.getParameter("description");

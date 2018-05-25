@@ -104,7 +104,7 @@ public class PropositionModificationSessionBean {
 		String queryString = "FROM PropositionModificationAnnonce WHERE id_utilisateur = '"+userId+"' ";
 		Query query = entityManager.createQuery(queryString);
 
-		return (List<PropositionModificationAnnonce>) query.getResultList().get(0);
+		return (List<PropositionModificationAnnonce>) query.getResultList();
 	}
 
 	/**
@@ -142,5 +142,27 @@ public class PropositionModificationSessionBean {
 			isOkModificationProposition =  true;
 		}
 		return isOkModificationProposition;
+	}
+	
+	/**
+	 * check if the id of the announcement and the proposition id match for a announcement
+	 * @param annonceId : id of the announcement
+	 * @param idModificationProposition
+	 * @return
+	 */
+	public boolean isMatchinIdAnnoucementAndIdProposition(int annonceId, int idModificationProposition) {
+		boolean isMatchingId = false;
+		String query = "FROM PropositionModificationAnnonce "
+				+ "WHERE id_annonce = '"+annonceId+"' "
+				+ "AND id_proposition_modif_annonce =  '"+idModificationProposition+"' ";
+		Query query2 = entityManager.createQuery(query);
+
+		List annonces = query2.getResultList();
+
+		if (annonces.size() != 0) {
+			isMatchingId = true;
+		}
+
+		return isMatchingId;
 	}
 }

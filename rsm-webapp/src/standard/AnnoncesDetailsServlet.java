@@ -31,7 +31,9 @@ import beans.session.ServiceChambreSessionBean;
 public class AnnoncesDetailsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String CONNECTION_VIEW = "Connexion";
+	private static final String ANNONCE_ADD_SERVICE_VIEW = "ModificationProposition";
 	private static final String ANNONCE_DETAILS_VIEW = "AnnonceDetails";
+	private static final String ANNONCE_DETAILS_PROP_MODIFICATION_ACTION = "Ajouter";
 	private static final String ANNONCES_LISTE_SERVLET = "AnnoncesServlet";
 	private static final String RESERVATION_ACTION = "reserver";
 	private static final String RESERVATION_VALIDATE_SERVLET = "ReservationConfirmationServlet";
@@ -48,6 +50,8 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 	private long numberOfDays;
 	private Timestamp timestampBegining;
 	private Timestamp timestampEnd;
+	private String nameService;
+	private String quantityService;
 
 	@EJB
 	AnnonceSessionBean annonceSessionBean;
@@ -74,13 +78,16 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 			case RESERVATION_ACTION:
 				reservationActionPerformed();
 				break;
+			case ANNONCE_DETAILS_PROP_MODIFICATION_ACTION:
+				propositionModificationActionPerformed();
+				break;
 			default:
 				Annonce annonce = annonceSessionBean.getAnnonce(annonceIdInt);
 				request.setAttribute("annonceDetails", annonce);
-				
+
 				List<ServiceChambre> roomServices = serviceChambreSessionBean.getRoomServices(annonceIdInt);
 				request.setAttribute("roomServices", roomServices);
-				
+
 				redirectionToView(ANNONCE_DETAILS_VIEW);
 				break;
 			}
@@ -88,6 +95,44 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 			redirectionToServlet(ANNONCES_LISTE_SERVLET);
 		}
 
+	}
+
+	/**
+	 * Action for a proposition of modification
+	 * 
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void propositionModificationActionPerformed() throws ServletException, IOException {
+		System.out.println(annonceId);
+		System.out.println(nameService);
+		System.out.println(quantityService);
+		try {
+			annonceIdInt = Integer.valueOf(annonceId);
+			int quantity = Integer.valueOf(quantityService);
+			String identifiant = (String) this.session.getAttribute("login");
+			int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+			boolean isMatchingId = reservationSessionBean.isMatchingIdUserReservationAndIdAnnouncement(id_utilisateur, annonceIdInt);
+			
+			if (isMatchingId) {
+				ServiceChambre serviceChambre = new ServiceChambre();
+				serviceChambre.setId_annonce(annonceIdInt);
+				serviceChambre.setNom(nameService);
+				serviceChambre.setQuantite(quantity);
+				
+				serviceChambreSessionBean.creerServiceChambre(serviceChambre);
+				
+				setVariableToView("alert-success", "Votre proposition vient d'être prise en compte");
+				redirectionToServlet(ANNONCES_LISTE_SERVLET);
+			} else {
+				setVariableToView("alert-danger", "Cette réservation n'est pas encore passer");
+				redirectionToServlet(ANNONCES_LISTE_SERVLET);
+			}
+		
+		} catch (NumberFormatException exception) {
+			setVariableToView("alert-danger", "Numéro d'annonce ou quantité du service incorrect");
+			redirectionToServlet(ANNONCES_LISTE_SERVLET);
+		}
 	}
 
 	/**
@@ -223,6 +268,8 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 		this.dateDebut = request.getParameter("dateDebut");
 		this.dateFin = request.getParameter("dateFin");
 		this.annonceId = request.getParameter("annonceId");
+		this.nameService = request.getParameter("nom");
+		this.quantityService = request.getParameter("quantite");
 		this.action = request.getParameter("action");
 		if (this.action == null) {
 			this.action = "";

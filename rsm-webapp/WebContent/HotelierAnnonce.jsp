@@ -25,7 +25,7 @@
 						<label>Prix par nuit</label>
 						<input type='text' name='prixNuit' value="<%= annonce.getPrix_nuit() %>" required />
 						<br />
-						<input type='submit' name='submitButtonHotelierForm' value="Modifier">
+						<input type='submit' name='action' value="Modifier">
 					</form>
 					<br/><br/>
 					<form>
@@ -36,7 +36,7 @@
 						<input type='text' name='serviceQuantity' required />
 						<input type="hidden" name="idAnnonce" value="<%= annonce.getId_annonce() %>">
 
-						<input type='submit' name='submitServiceButtonHotelierForm' value="Ajouter Service">
+						<input type='submit' name='action' value="Ajouter Service">
 						
 						<br />
 						<h4>Liste des services : (Cliquez sur un service pour le supprimer)</h4>
@@ -84,7 +84,7 @@
 						<label>Prix par nuit</label>
 						<input type='text' name='prixNuit' required />
 						
-						<input type='submit' name='submitButtonHotelierForm' value="Ajouter">
+						<input type='submit' name='action' value="Ajouter">
 					</form>
 					<%
 						}

@@ -65,6 +65,8 @@
 									href="HotelierAnnonceListServlet">Annonces</a></li>
 								<li id="hotelierListServlet"><a
 									href="HotelierReservationListServlet">Réservations</a></li>
+								<li id="propositionModificationManagement"><a href="AnnouncementPropositionServlet?action=hotelierList">
+								Proposition de modification</a></li>
 							</ul>
 						</li>
 						<li id="updateUser"><a href="HotelierProfilServlet">Informations Hotelier</a></li>
