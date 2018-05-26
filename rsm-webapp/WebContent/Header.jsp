@@ -26,12 +26,7 @@
 				</div>
 				<nav id="nav">
 					<ul>
-						<li id="home" class="current"><a href="Home.jsp">Accueil</a></li>
-						<li id="standard"><a href="AnnoncesServlet">Annonces</a>
-							<ul>
-								<li id="standard"><a href="AnnoncesServlet">Liste Annonces</a></li>
-							</ul>
-						</li>
+						<li id="home"><a href="Home.jsp">Accueil</a></li>
 						<%
 							if (session.getAttribute("session-admin") != null) {
 						%>
@@ -72,6 +67,11 @@
 						<li id="updateUser"><a href="HotelierProfilServlet">Informations Hotelier</a></li>
 						<%
 							} else if (session.getAttribute("session-standard") != null){ %>
+								<li id="standard"><a href="AnnoncesServlet">Annonces</a>
+									<ul>
+										<li id="standard"><a href="AnnoncesServlet">Liste Annonces</a></li>
+									</ul>
+								</li>
 								<li id="standard">
 									<a href="StandardServlet">Informations personnelles</a>
 									<ul>

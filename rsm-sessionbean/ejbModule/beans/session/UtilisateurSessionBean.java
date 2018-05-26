@@ -36,7 +36,7 @@ public class UtilisateurSessionBean {
 	UserTransaction userTransaction;
 
 	/**
-	 * Créer un utilisateur
+	 * Crï¿½er un utilisateur
 	 * 
 	 * @param libelle
 	 * @return
@@ -55,7 +55,7 @@ public class UtilisateurSessionBean {
 	}
 	
 	/**
-	 * Désactive un utilisateur
+	 * Dï¿½sactive un utilisateur
 	 * @param user
 	 * @return
 	 */
@@ -77,7 +77,7 @@ public class UtilisateurSessionBean {
 	}
 
 	/**
-	 * Récupère tous les utilisateurs
+	 * Rï¿½cupï¿½re tous les utilisateurs
 	 * 
 	 * @return
 	 */
@@ -89,7 +89,7 @@ public class UtilisateurSessionBean {
 	}
 	
 	/**
-	 * Récupère tous les utilisateurs avec leurs types d'utilisateurs
+	 * Rï¿½cupï¿½re tous les utilisateurs avec leurs types d'utilisateurs
 	 * 
 	 * @return
 	 */
@@ -103,7 +103,7 @@ public class UtilisateurSessionBean {
 	}
 
 	/**
-	 * Vérifie les identifiants de la connexion d'un utilisateur
+	 * Vï¿½rifie les identifiants de la connexion d'un utilisateur
 	 * 
 	 * @param mail
 	 *            :
@@ -128,7 +128,7 @@ public class UtilisateurSessionBean {
 	}
 
 	/**
-	 * Vérifie l'email d'un utilisateur
+	 * Vï¿½rifie l'email d'un utilisateur
 	 * 
 	 * @param mail
 	 * @return boolean :
@@ -172,7 +172,7 @@ public class UtilisateurSessionBean {
 	}
 	
 	/**
-	 * Récupere l'id d'un hotel grâce à son nom
+	 * Rï¿½cupere l'id d'un hotel grï¿½ce ï¿½ son nom
 	 * @param nomHotel
 	 * @return
 	 */
@@ -192,7 +192,7 @@ public class UtilisateurSessionBean {
 	}
 
 	/**
-	 * Créé un hotel
+	 * Crï¿½ï¿½ un hotel
 	 * @param nomHotel
 	 * @return
 	 */
@@ -294,7 +294,7 @@ public class UtilisateurSessionBean {
 	}
 	
 	/**
-	 * Récupère l'id de l'utilisateur
+	 * Rï¿½cupï¿½re l'id de l'utilisateur
 	 * 
 	@SuppressWarnings("unchecked")
 	//TODO : REVOIR => PAS CORRECTE ON NE RENVOIE PAS UNE LISTE SI ON RECUPERE QU'UN OBJET
@@ -306,7 +306,7 @@ public class UtilisateurSessionBean {
 	}
 	
 	/**
-	 * Récupère un utilisateur grâce à son id
+	 * Rï¿½cupï¿½re un utilisateur grï¿½ce ï¿½ son id
 	 * @param idUtilisateur
 	 * @return
 	 */
@@ -331,7 +331,7 @@ public class UtilisateurSessionBean {
 	}
 	
 	/**
-	 * Récupère  l'id d'un utilisateur grâce à son adresse mail
+	 * Rï¿½cupï¿½re  l'id d'un utilisateur grï¿½ce ï¿½ son adresse mail
 	 * @param identifiant
 	 * @return
 	 */
@@ -399,8 +399,8 @@ public class UtilisateurSessionBean {
 	}
 	
 	/**
-	 * Récupère le nombre d'utilisateur
-	 * regroupé par type d'utilisateur
+	 * Rï¿½cupï¿½re le nombre d'utilisateur
+	 * regroupï¿½ par type d'utilisateur
 	 * @return
 	 */
 	public List<Object[]> getNbUserGroupByUserType() {
@@ -413,7 +413,7 @@ public class UtilisateurSessionBean {
 	}
 	
 	/**
-	 * Récupère un utilisateur avec son id
+	 * Rï¿½cupï¿½re un utilisateur avec son id
 	 * @param userId
 	 * @return
 	 */
@@ -425,5 +425,24 @@ public class UtilisateurSessionBean {
 			user = (Utilisateur) query.getResultList().get(i);
 		}
 		return user;
+	}
+	
+	/**
+	 * add point for a standard user
+	 * @param idUser : id of the user
+	 */
+	public void addPointForAUser(Integer idUser) {
+		try {
+			userTransaction.begin();
+			String query = "UPDATE Utilisateur AS u " +
+							"SET point_bonus = point_bonus + 10 " + 
+							"WHERE u.id_utilisateur = '" + idUser + "' ";
+			Query query1 = entityManager.createQuery(query);
+			query1.executeUpdate();
+			userTransaction.commit();
+		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException exception) {
+			exception.printStackTrace();
+		}
 	}
 }

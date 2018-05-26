@@ -19,8 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import beans.entity.Annonce;
+import beans.entity.PropositionModificationAnnonce;
 import beans.entity.ServiceChambre;
 import beans.session.AnnonceSessionBean;
+import beans.session.PropositionModificationSessionBean;
 import beans.session.ReservationSessionBean;
 import beans.session.ServiceChambreSessionBean;
 
@@ -61,6 +63,9 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 
 	@EJB
 	ServiceChambreSessionBean serviceChambreSessionBean;
+	
+	@EJB
+	PropositionModificationSessionBean propositionModificationSessionBean;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -115,12 +120,14 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 			boolean isMatchingId = reservationSessionBean.isMatchingIdUserReservationAndIdAnnouncement(id_utilisateur, annonceIdInt);
 			
 			if (isMatchingId) {
-				ServiceChambre serviceChambre = new ServiceChambre();
-				serviceChambre.setId_annonce(annonceIdInt);
-				serviceChambre.setNom(nameService);
-				serviceChambre.setQuantite(quantity);
+				PropositionModificationAnnonce proposition = new PropositionModificationAnnonce();
+				proposition.setId_annonce(annonceIdInt);
+				proposition.setId_utilisateur(id_utilisateur);
+				proposition.setNom(nameService);
+				proposition.setQuantite(quantity);
+				proposition.setDate_proposition(new Timestamp(System.currentTimeMillis()));
 				
-				serviceChambreSessionBean.creerServiceChambre(serviceChambre);
+				propositionModificationSessionBean.createModificationProposition(proposition);
 				
 				setVariableToView("alert-success", "Votre proposition vient d'être prise en compte");
 				redirectionToServlet(ANNONCES_LISTE_SERVLET);

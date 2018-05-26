@@ -100,11 +100,15 @@ public class PropositionModificationSessionBean {
 	 * @param userId
 	 * @return List<PropositionModificationAnnonce>
 	 */
-	public List<PropositionModificationAnnonce> getModificationsPropositionByUserId(int userId) {
-		String queryString = "FROM PropositionModificationAnnonce WHERE id_utilisateur = '"+userId+"' ";
+	public List<Object[]> getModificationsPropositionByUserId(int userId) {
+		String queryString = "SELECT p.id_proposition_modif_annonce, p.id_annonce, p.id_utilisateur, p.nom, p.quantite, p.date_proposition "
+				+ "FROM PropositionModificationAnnonce as p, Annonce as a "
+				+ "WHERE p.id_annonce = a.id_annonce "
+				+ "AND a.id_utilisateur = '"+userId+"' "
+				+ "AND a.actif = true";
 		Query query = entityManager.createQuery(queryString);
 
-		return (List<PropositionModificationAnnonce>) query.getResultList();
+		return (List<Object[]>) query.getResultList();
 	}
 
 	/**

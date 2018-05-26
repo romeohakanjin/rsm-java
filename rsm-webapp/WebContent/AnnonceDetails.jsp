@@ -62,7 +62,7 @@
 					    <ul>
 					    <%
 			            for(ServiceChambre roomService : roomServices){
-			            	if(roomService.getQuantite() == 1){
+			            	if(roomService.getQuantite() == 1 || roomService.getQuantite() == 0){
 			            	%>	 
 						      <li><%= roomService.getNom() %></li>
 						    <%

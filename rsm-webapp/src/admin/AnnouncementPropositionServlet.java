@@ -1,6 +1,8 @@
 package admin;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -17,6 +19,7 @@ import beans.entity.ServiceChambre;
 import beans.session.AnnonceSessionBean;
 import beans.session.PropositionModificationSessionBean;
 import beans.session.ServiceChambreSessionBean;
+import beans.session.UtilisateurSessionBean;
 
 /**
  * @author RHA
@@ -46,6 +49,9 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 
 	@EJB
 	AnnonceSessionBean annonceSessionBean;
+
+	@EJB
+	UtilisateurSessionBean utilisateurSessionBean;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -112,6 +118,8 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 
 						serviceChambreSessionBean.creerServiceChambre(serviceChambre);
 					}
+					// add point for the user
+					utilisateurSessionBean.addPointForAUser(propositionModificationAnnonce.getId_utilisateur());
 
 					// After adding the proposition the list of service we delete it from the
 					// Modification Proposition table
@@ -143,9 +151,23 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 		String identifiant = (String) this.session.getAttribute("login");
 		int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
 
-		List<PropositionModificationAnnonce> propositionsModifications = propositionModificationSessionBean
+		List<Object[]> propositionsModifications = propositionModificationSessionBean
 				.getModificationsPropositionByUserId(id_utilisateur);
-		this.request.setAttribute("propositionsModifications", propositionsModifications);
+		List<PropositionModificationAnnonce> propositionsModificationsList = new ArrayList<PropositionModificationAnnonce>();
+		
+		for (int i = 0; i < propositionsModifications.size(); i++) {
+			PropositionModificationAnnonce propositionModificationAnnonce = new PropositionModificationAnnonce();
+			propositionModificationAnnonce.setId_proposition_modif_annonce((Integer) propositionsModifications.get(i)[0]);
+			propositionModificationAnnonce.setId_annonce((Integer) propositionsModifications.get(i)[1]);
+			propositionModificationAnnonce.setId_utilisateur((Integer) propositionsModifications.get(i)[2]);
+			propositionModificationAnnonce.setNom((String) propositionsModifications.get(i)[3]);
+			propositionModificationAnnonce.setQuantite((Integer) propositionsModifications.get(i)[4]);
+			propositionModificationAnnonce.setDate_proposition((Timestamp) propositionsModifications.get(i)[5]);
+			
+			propositionsModificationsList.add(propositionModificationAnnonce);
+		}
+		
+		this.request.setAttribute("propositionsModifications", propositionsModificationsList);
 
 		redirectionToView(LIST_RESERVATION);
 	}

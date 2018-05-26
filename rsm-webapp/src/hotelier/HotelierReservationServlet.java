@@ -92,19 +92,19 @@ public class HotelierReservationServlet extends HttpServlet {
 				int reservationStateId = reservationSessionBean.getReservationStateId(idReservation);
 
 				if (reservationStateId == RESERVATION_STATE_HOTELIER) {
-					setVariableToView("alert-success", "Cette annonce vient d'être refusée");
+					setVariableToView("alert-success", "Cette annonce vient d'ï¿½tre refusï¿½e");
 					reservationSessionBean.validationReservationHotelier(idReservation,
 							RESERVATION_STATE_VALIDATION_HOTELIER, INCOMING_RESERVATION_STATUS_ID);
 				} else {
 					setVariableToView("alert-warning", "Cette annonce n'est pas en attente d'une confirmation");
 				}
 			} else {
-				setVariableToView("alert-danger", "Numéro d'annonce incorrect");
+				setVariableToView("alert-danger", "Numï¿½ro d'annonce incorrect");
 			}
 
 			redirectionToServlet(LIST_RESERVATIONS_SERVLET);
 		} catch (NumberFormatException exception) {
-			setVariableToView("alert-danger", "Numéro d'annonce incorrect");
+			setVariableToView("alert-danger", "Numï¿½ro d'annonce incorrect");
 			redirectionToServlet(LIST_RESERVATIONS_SERVLET);
 		}
 	}
@@ -127,19 +127,19 @@ public class HotelierReservationServlet extends HttpServlet {
 				int reservationStateId = reservationSessionBean.getReservationStateId(idReservation);
 
 				if (reservationStateId == RESERVATION_STATE_HOTELIER) {
-					setVariableToView("alert-success", "Cette annonce vient d'être validée");
+					setVariableToView("alert-success", "Cette annonce vient d'Ãªtre validÃ©e");
 					reservationSessionBean.resufingReservationHotelier(idReservation,
 							RESERVATION_STATE_REFUSING_HOTELIER, FINISHED_RESERVATION_STATUS_ID);
 				} else {
 					setVariableToView("alert-warning", "Cette annonce n'est pas en attente d'une confirmation");
 				}
 			} else {
-				setVariableToView("alert-warning", "Numéro d'annonce incorrect");
+				setVariableToView("alert-warning", "NumÃ©ro d'annonce incorrect");
 			}
 
 			redirectionToServlet(LIST_RESERVATIONS_SERVLET);
 		} catch (NumberFormatException exception) {
-			setVariableToView("alert-warning", "Numéro d'annonce incorrect");
+			setVariableToView("alert-warning", "NumÃ©ro d'annonce incorrect");
 			redirectionToServlet(LIST_RESERVATIONS_SERVLET);
 		}
 	}
