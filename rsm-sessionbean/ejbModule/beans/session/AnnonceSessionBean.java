@@ -1,5 +1,9 @@
 package beans.session;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +16,7 @@ import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.sql.DataSource;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -21,7 +26,6 @@ import javax.transaction.UserTransaction;
 
 import beans.entity.Annonce;
 import beans.entity.Commentaire;
-import beans.entity.Utilisateur;
 
 /**
  * @author SLI
@@ -30,7 +34,10 @@ import beans.entity.Utilisateur;
 @LocalBean
 @TransactionManagement(TransactionManagementType.BEAN)
 public class AnnonceSessionBean {
-
+	
+	@Resource(lookup="java:jboss/datasources/rsmProject")
+    DataSource dataSource;
+	
 	@PersistenceContext(unitName = "RsmProjectService")
 	EntityManager entityManager;
 
@@ -213,23 +220,31 @@ public class AnnonceSessionBean {
 	 * 
 	 * @param annonce
 	 *            : The object Annonce representing a annonce to edit
+	 * @throws SQLException 
 	 */
-	public void updateAnnonce(Annonce annonce) {
+	public void updateAnnonce(Annonce annonce){
 		int id_annonce = annonce.getId_annonce();
 		String titre = annonce.getTitre();
 		String description = annonce.getDescription();
 		int capacite_max = annonce.getCapacite_max();
 		try {
-			userTransaction.begin();
-
-			String query = "UPDATE Annonce AS a " + "SET titre = '" + titre + "', " + "description = '" + description
-					+ "', " + "capacite_max = '" + capacite_max + "' " + "WHERE a.id_annonce = '" + id_annonce + "' ";
-
-			Query query1 = entityManager.createQuery(query);
-			query1.executeUpdate();
-			userTransaction.commit();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException exception) {
+			Connection connection = dataSource.getConnection();
+			String sql = "UPDATE Annonce AS a SET titre = ?, description = ?, capacite_max = ?, WHERE a.id_annonce = ?"; 
+			PreparedStatement statement = connection.prepareStatement(sql); 
+			//en spécifiant bien les types SQL cibles 
+			statement.setString(1, titre); 
+			statement.setString(2, description); 
+			statement.setInt(3, capacite_max); 
+			statement.setInt(3, id_annonce);
+			statement.executeUpdate(); 
+//			
+//			String query = "UPDATE Annonce AS a " + "SET titre = '" + titre + "', " + "description = '" + description
+//					+ "', " + "capacite_max = '" + capacite_max + "' " + "WHERE a.id_annonce = '" + id_annonce + "' ";
+//
+//			Query query1 = entityManager.createQuery(query);
+//			query1.executeUpdate();
+			connection.commit();
+		} catch (SecurityException | IllegalStateException | SQLException exception) {
 
 			exception.printStackTrace();
 		}

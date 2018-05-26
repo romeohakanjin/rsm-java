@@ -19,7 +19,8 @@ public class PropositionModificationAnnonce {
 	private Integer id_proposition_modif_annonce;
 	private Integer id_annonce;
 	private Integer id_utilisateur;
-	private String modification;
+	private String nom;
+	private int quantite;
 	private Timestamp date_proposition;
 	
 	@Id
@@ -27,40 +28,49 @@ public class PropositionModificationAnnonce {
 	public Integer getId_proposition_modif_annonce() {
 		return id_proposition_modif_annonce;
 	}
-	
+
 	public void setId_proposition_modif_annonce(Integer id_proposition_modif_annonce) {
 		this.id_proposition_modif_annonce = id_proposition_modif_annonce;
 	}
-	
+
 	public Integer getId_annonce() {
 		return id_annonce;
 	}
-	
+
 	public void setId_annonce(Integer id_annonce) {
 		this.id_annonce = id_annonce;
 	}
-	
+
 	public Integer getId_utilisateur() {
 		return id_utilisateur;
 	}
-	
+
 	public void setId_utilisateur(Integer id_utilisateur) {
 		this.id_utilisateur = id_utilisateur;
 	}
-	
-	public String getModification() {
-		return modification;
+
+	public String getNom() {
+		return nom;
 	}
-	
-	public void setModification(String modification) {
-		this.modification = modification;
+
+	public void setNom(String nom) {
+		this.nom = nom;
 	}
-	
+
+	public int getQuantite() {
+		return quantite;
+	}
+
+	public void setQuantite(int quantite) {
+		this.quantite = quantite;
+	}
+
 	public Timestamp getDate_proposition() {
 		return date_proposition;
 	}
-	
+
 	public void setDate_proposition(Timestamp date_proposition) {
 		this.date_proposition = date_proposition;
-	}	
+	}
+
 }

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Mer 16 Mai 2018 à 06:37
+-- Généré le :  Jeu 24 Mai 2018 à 19:33
 -- Version du serveur :  10.1.16-MariaDB
 -- Version de PHP :  7.0.9
 
@@ -72,7 +72,12 @@ INSERT INTO `annonce` (`id_annonce`, `id_utilisateur`, `titre`, `description`, `
 (1, 2, 'Chambre dtel', 'La chambre del est spacieuse. Elle donne vue sur les cocotiers. ', 4, '2018-03-05 15:38:48', NULL, 45, 1),
 (2, 3, 'Suite royale', 'Située au dernier étage de l''hôtel, notre suite Royale Mandarin offre de superbes vues panoramiques sur la ville. La décoration de cette suite duplex rappelle l''opulence des années 1930, avec sa palette de tons or, blanc, beige et prune d''une grande élégance. Chaque meuble et objet d''art a été spécialement commandé, tout comme l''escalier en métal guilloché. La tête de lit brodée reproduit une œuvre de Man Ray, un artiste de légende, pour un effet des plus saisissants. La suite est dotée d''une spacieuse salle de séjour, d''une salle à manger, d''une cuisine, d''un bar, d''un bureau et d''une salle de gym privée, ainsi que d''une chambre principale aux dimensions généreuses. L''élégante salle de bains attenante, ornée de cabochons dorés au sol, comprend un hammam et une gigantesque baignoire offrant une magnifique vue sur la ville, dont vous pouvez profiter également depuis la terrasse. De plus, si vous souhaitez bénéficier d''une deuxième chambre, vous pouvez réserver la Suite Panoramique adjacente, qui offre un splendide intérieur Art déco et comprend un espace salon-salle à manger, une chambre, une salle de bain et une terrasse extérieure privée.', 2, '2018-03-05 15:44:30', NULL, 200, 1),
 (3, 2, 'll', 'szzs', 3, '2018-03-13 21:05:40', NULL, 33.12, 1),
-(4, 2, 'Hey', 'Chambre', 4, '2018-03-13 21:18:09', NULL, 34.56, 0);
+(4, 2, 'Hey', 'Chambre', 4, '2018-03-13 21:18:09', NULL, 34.56, 0),
+(5, 2, 'testos', 'rapidos', 666, '2018-05-17 06:21:04', NULL, 66, 1),
+(6, 2, 'testos', 'rapidos', 666, '2018-05-17 06:21:10', NULL, 66, 0),
+(7, 2, 'testos', 'rapidos', 666, '2018-05-17 06:21:12', NULL, 66, 1),
+(8, 2, '1', '1', 1, '2018-05-17 06:22:10', NULL, 1, 1),
+(9, 2, 'testos', 'rapidas', 555, '2018-05-17 06:22:44', NULL, 111, 1);
 
 -- --------------------------------------------------------
 
@@ -170,7 +175,8 @@ CREATE TABLE `proposition_modification_annonce` (
   `id_proposition_modif_annonce` int(10) NOT NULL,
   `id_annonce` int(10) NOT NULL,
   `id_utilisateur` int(10) NOT NULL,
-  `modification` varchar(1000) NOT NULL,
+  `nom` varchar(100) NOT NULL,
+  `quantite` int(11) NOT NULL,
   `date_proposition` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -178,17 +184,15 @@ CREATE TABLE `proposition_modification_annonce` (
 -- Contenu de la table `proposition_modification_annonce`
 --
 
-INSERT INTO `proposition_modification_annonce` (`id_proposition_modif_annonce`, `id_annonce`, `id_utilisateur`, `modification`, `date_proposition`) VALUES
-(1, 1, 2, 'La clim est dispo', '2018-05-16 06:14:38'),
-(2, 1, 3, 'Il n''y pas de bureau', '2018-05-16 06:14:38'),
-(3, 2, 4, 'Pas de télévision', '2018-05-16 06:14:38'),
-(4, 2, 3, 'Il y  a un frigo', '2018-05-16 06:14:38'),
-(5, 3, 3, 'Pas d''eau chaude', '2018-05-16 06:14:38'),
-(6, 3, 1, 'Pas de douche', '2018-05-16 06:14:38'),
-(7, 4, 1, 'Pas de serviettes', '2018-05-16 06:14:38'),
-(8, 4, 2, 'Pas de couverture de lit', '2018-05-16 06:14:38'),
-(9, 4, 3, 'Un seul oreiller pour deux personnes', '2018-05-16 06:14:38'),
-(10, 4, 4, 'Pas de minibar', '2018-05-16 06:14:38');
+INSERT INTO `proposition_modification_annonce` (`id_proposition_modif_annonce`, `id_annonce`, `id_utilisateur`, `nom`, `quantite`, `date_proposition`) VALUES
+(2, 1, 3, 'Bureau', 0, '2018-05-16 06:14:38'),
+(3, 2, 4, 'Télévision', 0, '2018-05-16 06:14:38'),
+(4, 2, 3, 'Frigo', 1, '2018-05-16 06:14:38'),
+(6, 3, 1, 'Douche', 0, '2018-05-16 06:14:38'),
+(7, 4, 1, 'Serviettes', 0, '2018-05-16 06:14:38'),
+(8, 4, 2, 'Couverture de lit', 0, '2018-05-16 06:14:38'),
+(9, 4, 2, 'Oreiller', 1, '2018-05-16 06:14:38'),
+(10, 4, 4, 'Minibar', 0, '2018-05-16 06:14:38');
 
 -- --------------------------------------------------------
 
@@ -238,8 +242,6 @@ CREATE TABLE `service_chambre` (
 --
 
 INSERT INTO `service_chambre` (`id_service_chambre`, `nom`, `quantite`, `id_annonce`) VALUES
-(1, 'Bar', 1, 1),
-(2, 'Télé', 2, 1),
 (3, 'Bureau', 1, 2),
 (4, 'Clim', 1, 2),
 (5, 'Oreiller', 4, 3),
@@ -248,7 +250,10 @@ INSERT INTO `service_chambre` (`id_service_chambre`, `nom`, `quantite`, `id_anno
 (8, 'Serviette', 2, 4),
 (9, 'Frigo', 1, 2),
 (10, 'Cuisine', 1, 3),
-(11, 'Wifi', 1, 1);
+(11, 'Wifi', 1, 1),
+(12, 'Bar', 1, 1),
+(13, 'Sushi Bar', 32, 1),
+(14, 'Couscousiere', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -461,7 +466,7 @@ ALTER TABLE `activite_externe`
 -- AUTO_INCREMENT pour la table `annonce`
 --
 ALTER TABLE `annonce`
-  MODIFY `id_annonce` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_annonce` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT pour la table `commentaire`
 --
@@ -501,7 +506,7 @@ ALTER TABLE `reservation`
 -- AUTO_INCREMENT pour la table `service_chambre`
 --
 ALTER TABLE `service_chambre`
-  MODIFY `id_service_chambre` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_service_chambre` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT pour la table `statut_reservation`
 --

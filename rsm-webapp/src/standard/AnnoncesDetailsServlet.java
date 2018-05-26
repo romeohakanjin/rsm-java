@@ -19,8 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import beans.entity.Annonce;
+import beans.entity.PropositionModificationAnnonce;
 import beans.entity.ServiceChambre;
 import beans.session.AnnonceSessionBean;
+import beans.session.PropositionModificationSessionBean;
 import beans.session.ReservationSessionBean;
 import beans.session.ServiceChambreSessionBean;
 
@@ -31,7 +33,9 @@ import beans.session.ServiceChambreSessionBean;
 public class AnnoncesDetailsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String CONNECTION_VIEW = "Connexion";
+	private static final String ANNONCE_ADD_SERVICE_VIEW = "ModificationProposition";
 	private static final String ANNONCE_DETAILS_VIEW = "AnnonceDetails";
+	private static final String ANNONCE_DETAILS_PROP_MODIFICATION_ACTION = "Ajouter";
 	private static final String ANNONCES_LISTE_SERVLET = "AnnoncesServlet";
 	private static final String RESERVATION_ACTION = "reserver";
 	private static final String RESERVATION_VALIDATE_SERVLET = "ReservationConfirmationServlet";
@@ -49,6 +53,8 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 	private long numberOfDays;
 	private Timestamp timestampBegining;
 	private Timestamp timestampEnd;
+	private String nameService;
+	private String quantityService;
 
 	@EJB
 	AnnonceSessionBean annonceSessionBean;
@@ -58,6 +64,9 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 
 	@EJB
 	ServiceChambreSessionBean serviceChambreSessionBean;
+	
+	@EJB
+	PropositionModificationSessionBean propositionModificationSessionBean;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -75,13 +84,16 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 			case RESERVATION_ACTION:
 				reservationActionPerformed();
 				break;
+			case ANNONCE_DETAILS_PROP_MODIFICATION_ACTION:
+				propositionModificationActionPerformed();
+				break;
 			default:
 				Annonce annonce = annonceSessionBean.getAnnonce(annonceIdInt);
 				request.setAttribute("annonceDetails", annonce);
-				
+
 				List<ServiceChambre> roomServices = serviceChambreSessionBean.getRoomServices(annonceIdInt);
 				request.setAttribute("roomServices", roomServices);
-				
+
 				redirectionToView(ANNONCE_DETAILS_VIEW);
 				break;
 			}
@@ -89,6 +101,46 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 			redirectionToServlet(ANNONCES_LISTE_SERVLET);
 		}
 
+	}
+
+	/**
+	 * Action for a proposition of modification
+	 * 
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void propositionModificationActionPerformed() throws ServletException, IOException {
+		System.out.println(annonceId);
+		System.out.println(nameService);
+		System.out.println(quantityService);
+		try {
+			annonceIdInt = Integer.valueOf(annonceId);
+			int quantity = Integer.valueOf(quantityService);
+			String identifiant = (String) this.session.getAttribute("login");
+			int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+			boolean isMatchingId = reservationSessionBean.isMatchingIdUserReservationAndIdAnnouncement(id_utilisateur, annonceIdInt);
+			
+			if (isMatchingId) {
+				PropositionModificationAnnonce proposition = new PropositionModificationAnnonce();
+				proposition.setId_annonce(annonceIdInt);
+				proposition.setId_utilisateur(id_utilisateur);
+				proposition.setNom(nameService);
+				proposition.setQuantite(quantity);
+				proposition.setDate_proposition(new Timestamp(System.currentTimeMillis()));
+				
+				propositionModificationSessionBean.createModificationProposition(proposition);
+				
+				setVariableToView("alert-success", "Votre proposition vient d'être prise en compte");
+				redirectionToServlet(ANNONCES_LISTE_SERVLET);
+			} else {
+				setVariableToView("alert-danger", "Cette réservation n'est pas encore passer");
+				redirectionToServlet(ANNONCES_LISTE_SERVLET);
+			}
+		
+		} catch (NumberFormatException exception) {
+			setVariableToView("alert-danger", "Numéro d'annonce ou quantité du service incorrect");
+			redirectionToServlet(ANNONCES_LISTE_SERVLET);
+		}
 	}
 
 	/**
@@ -224,6 +276,8 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 		this.dateDebut = request.getParameter("dateDebut");
 		this.dateFin = request.getParameter("dateFin");
 		this.annonceId = request.getParameter("annonceId");
+		this.nameService = request.getParameter("nom");
+		this.quantityService = request.getParameter("quantite");
 		this.action = request.getParameter("action");
 		if (this.action == null) {
 			this.action = "";

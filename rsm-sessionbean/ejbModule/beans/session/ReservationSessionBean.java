@@ -1,4 +1,4 @@
-package beans.session;
+	package beans.session;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -18,7 +18,6 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import beans.entity.Annonce;
 import beans.entity.Reservation;
 
 /**
@@ -367,5 +366,32 @@ public class ReservationSessionBean {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * check if the id user correspond to the id user on the reservation and the state s finished
+	 * 
+	 * @param id_utilisateur
+	 *            : id of the current user
+	 * @param idAnnouncement
+	 *            : id of the announcement
+	 * @return boolean : true if the id correspond or false
+	 */
+	public boolean isMatchingIdUserReservationAndIdAnnouncement(int idUser, int idAnnouncement) {
+		boolean isMatchingId = false;
+
+		String query = "FROM Reservation"
+				+ " WHERE id_utilisateur = '"+idUser+"'"
+				+ " AND id_annonce = '"+idAnnouncement+"'"
+				+ " AND id_statut_reservation = 4";
+		Query query2 = entityManager.createQuery(query);
+
+		List reservation = query2.getResultList();
+
+		if (reservation.size() != 0) {
+			isMatchingId = true;
+		}
+
+		return isMatchingId;
 	}
 }

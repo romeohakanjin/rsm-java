@@ -17,8 +17,7 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import beans.entity.Annonce;
-import beans.entity.Commentaire;
+import beans.entity.PropositionModificationAnnonce;
 import beans.entity.ServiceChambre;
 
 /**
@@ -124,6 +123,50 @@ public class ServiceChambreSessionBean {
 		} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException
 				| HeuristicMixedException | HeuristicRollbackException e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * check if the service is existing by is name for a annonce
+	 * @param name : service name 
+	 * @param announcementId : announcementId
+	 * @return True if it exist or False if he dosn't
+	 */
+	public boolean isExistingService(String name, int announcementId) {
+		boolean isExistingId = false;
+		String queryString = "FROM ServiceChambre WHERE nom LIKE '%"+name+"%' "
+				+ "AND id_annonce = '"+announcementId+"' ";
+		Query query = entityManager.createQuery(queryString);
+		List<ServiceChambre> serviceChambre = query.getResultList();
+
+		if (serviceChambre.size() != 0) {
+			isExistingId = true;
+		}
+
+		return isExistingId;
+	}
+
+	/**
+	 * Update a existing service with the proposition modification that has been validate
+	 * @param propositionModificationAnnonce
+	 */
+	public void updateRoomService(PropositionModificationAnnonce propositionModificationAnnonce) {
+		try {
+			userTransaction.begin();
+			int adId = propositionModificationAnnonce.getId_annonce();
+			String serviceName = propositionModificationAnnonce.getNom();
+			int quantity = propositionModificationAnnonce.getQuantite();
+			
+			String query = "UPDATE ServiceChambre SET nom = '"+serviceName+"',  quantite = '"+quantity+"' "
+					+ "WHERE id_annonce = '" + adId + "' ";
+
+			Query query1 = entityManager.createQuery(query);
+			query1.executeUpdate();
+			userTransaction.commit();
+		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException exception) {
+
+			exception.printStackTrace();
 		}
 	}
 }
