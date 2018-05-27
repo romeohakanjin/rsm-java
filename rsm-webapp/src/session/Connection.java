@@ -25,24 +25,24 @@ public class Connection extends HttpServlet {
 	private static final int ID_TYPE_UTILISATEUR_STANDARD = 3;
 	private static final int ID_TYPE_UTILISATEUR_HOTELIER = 2;
 	private static final int ID_TYPE_UTILISATEUR_ADMIN = 1;
-	private String identifiant;
-	private String motDePasse;
+	private String id;
+	private String password;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
 
 	@EJB
-	UtilisateurSessionBean utilisateurSessionBean;
+	UtilisateurSessionBean userSessionBean;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		initialiser(request, response);
+		initialize(request, response);
 		boolean isOkForm = verificationFormulaire();
 
 		if (isOkForm) {
-			boolean existingUser = utilisateurSessionBean.isIdentificationValid(identifiant, motDePasse);
+			boolean existingUser = userSessionBean.isIdentificationValid(id, password);
 			if (existingUser) {
-				int id_type_utilisateur = utilisateurSessionBean.getIdTypeUtilisateur(identifiant, motDePasse);
+				int id_type_utilisateur = userSessionBean.getIdTypeUtilisateur(id, password);
 
 				switch (id_type_utilisateur) {
 				case ID_TYPE_UTILISATEUR_ADMIN:
@@ -58,7 +58,7 @@ public class Connection extends HttpServlet {
 					break;
 				}
 
-				httpSession(identifiant, motDePasse);
+				httpSession(id, password);
 				if(id_type_utilisateur == ID_TYPE_UTILISATEUR_ADMIN) {
 					redirectionToServlet(ADMIN_HOME_PAGE);
 				}else {
@@ -74,15 +74,19 @@ public class Connection extends HttpServlet {
 		}
 
 	}
-
+	
+	/**
+	 * Check the form values
+	 * @return true  false : if the form values are OK
+	 */
 	private boolean verificationFormulaire() {
 		boolean isOkForm = true;
 
-		if (identifiant == null || "".equals(identifiant)) {
+		if (id == null || "".equals(id)) {
 			isOkForm = false;
 		}
 
-		if (motDePasse == null || "".equals(motDePasse)) {
+		if (password == null || "".equals(password)) {
 			isOkForm = false;
 		}
 
@@ -90,19 +94,19 @@ public class Connection extends HttpServlet {
 	}
 
 	/**
-	 * Initialiser
+	 * Initialize the values
 	 * 
 	 * @param request
 	 * @param response
 	 * @throws IOException
 	 */
-	public void initialiser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void initialize(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		this.request = request;
 		this.response = response;
 		this.session = request.getSession();
 
-		identifiant = request.getParameter("identifiant");
-		motDePasse = request.getParameter("motDePasse");
+		id = request.getParameter("identifiant");
+		password = request.getParameter("motDePasse");
 		response.setContentType("text/html");
 	}
 

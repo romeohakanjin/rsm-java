@@ -37,15 +37,15 @@ public class TypeActiviteExterneSessionBean {
 	UserTransaction userTransaction;
 	
 	/**
-	 * Créer un type d'activité externe
-	 * @param libelle
-	 * @return
+	 * Create a external activity type
+	 * @param name
+	 * @return true/false : if the request has been executed
 	 */
-	public Boolean creerTypeActiviteExterne(String libelle) {
+	public Boolean createExternalActivityState(String name) {
 		try {
 			userTransaction.begin();
 			TypeActiviteExterne typeActivite = new TypeActiviteExterne();
-			typeActivite.setLibelle(libelle);
+			typeActivite.setLibelle(name);
 			entityManager.persist(typeActivite);
 			userTransaction.commit();
 			return true;
@@ -57,8 +57,8 @@ public class TypeActiviteExterneSessionBean {
 	}
 	
 	/**
-	 * Récupère les types d'activitées externes
-	 * @return
+	 * get all the external activities states
+	 * @return List<TypeUtilisateur>
 	 */
 	@SuppressWarnings("unchecked")
 	public List<TypeUtilisateur> getTypeActiviteesExterne(){

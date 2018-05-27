@@ -15,9 +15,7 @@ import beans.entity.Utilisateur;
 import beans.session.UtilisateurSessionBean;
 
 /**
- * @author Massneymar
- * 
- *         Servlet implementation class UpdateUserServlet
+ * @author MDI
  */
 @WebServlet("/UpdateUserServlet")
 public class UpdateUserServlet extends HttpServlet {
@@ -30,25 +28,25 @@ public class UpdateUserServlet extends HttpServlet {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
-	private String nom;
-	private String prenom;
+	private String lastName;
+	private String firstName;
 	private String mail;
 	private String mobile;
-	private String adresse;
-	private String ville;
-	private String codePostal;
-	private String parametre;
+	private String address;
+	private String town;
+	private String postalCode;
+	private String parameter;
 
 	@EJB
-	UtilisateurSessionBean utilisateurSessionBean;
+	UtilisateurSessionBean userSessionBean;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		this.request = request;
 		this.response = response;
 
-		initialiser();
-		switch (this.parametre) {
+		initialize();
+		switch (this.parameter) {
 		case PARAMETER_ACTION_EDIT_USER:
 			EditUserActionPerformed();
 			break;
@@ -65,17 +63,17 @@ public class UpdateUserServlet extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 * 
-	 *             Cette fonction permet d'éditer un utilisateur si son id existe
+	 *             Cette fonction permet d'ï¿½diter un utilisateur si son id existe
 	 */
 	private void EditUserActionPerformed() throws ServletException, IOException {
 
 		String identifiant = (String) this.session.getAttribute("login");
-		int id_utilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);
+		int id_utilisateur = userSessionBean.getIdUtilisateur(identifiant);
 		try {
-			boolean isExistingUserId = utilisateurSessionBean.isExistingUserId(id_utilisateur);
+			boolean isExistingUserId = userSessionBean.isExistingUserId(id_utilisateur);
 			System.out.println(isExistingUserId);
 			if (isExistingUserId) {
-				Utilisateur utilisateur = utilisateurSessionBean.getUtilisateur(id_utilisateur);
+				Utilisateur utilisateur = userSessionBean.getActiveUsers(id_utilisateur);
 				request.setAttribute("userInformations", utilisateur);
 				redirectionToView(EDIT_USER_INFORMATION_VIEW);
 			} else {
@@ -87,64 +85,62 @@ public class UpdateUserServlet extends HttpServlet {
 	}
 
 	/**
-	 * 
+	 * update a user if is id exists
 	 * @throws ServletException
 	 * @throws IOException
-	 * 
-	 *             Cette fonction permet d'updater un utilisateur si son id existe
 	 */
 	private void addUserEditedActionPerformed() throws ServletException, IOException {
 
 		String identifiant = (String) this.session.getAttribute("login");
-		int id_utilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);
-		boolean isExistingUserId = utilisateurSessionBean.isExistingUserId(id_utilisateur);
+		int id_utilisateur = userSessionBean.getIdUtilisateur(identifiant);
+		boolean isExistingUserId = userSessionBean.isExistingUserId(id_utilisateur);
 		if (isExistingUserId) {
 
 			Utilisateur utilisateur = new Utilisateur();
 			utilisateur.setId_utilisateur(id_utilisateur);
-			utilisateur.setNom(nom);
-			utilisateur.setPrenom(prenom);
+			utilisateur.setNom(lastName);
+			utilisateur.setPrenom(firstName);
 			utilisateur.setMail(mail);
 			utilisateur.setMobile(mobile);
-			utilisateur.setAdresse(adresse);
-			utilisateur.setVille(ville);
-			utilisateur.setCode_postal(codePostal);
-			utilisateurSessionBean.updateUtilisateur(utilisateur);
+			utilisateur.setAdresse(address);
+			utilisateur.setVille(town);
+			utilisateur.setCode_postal(postalCode);
+			userSessionBean.updateUser(utilisateur);
 		}
 		redirectionToServlet(USER_EDITED_SERVLET);
 	}
 
 	/**
-	 * 
+	 * Initialize the values
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
 
-		this.nom = "";
-		this.prenom = "";
-		this.adresse = "";
-		this.ville = "";
-		this.codePostal = "";
+		this.lastName = "";
+		this.firstName = "";
+		this.address = "";
+		this.town = "";
+		this.postalCode = "";
 		this.mail = "";
 		this.mobile = "";
-		this.parametre = "";
-		this.parametre = request.getParameter("action");
-		if (this.parametre == null) {
-			this.parametre = request.getParameter("submitButtonUtilisateurForm");
+		this.parameter = "";
+		this.parameter = request.getParameter("action");
+		if (this.parameter == null) {
+			this.parameter = request.getParameter("submitButtonUtilisateurForm");
 		}
-		this.parametre = request.getParameter("submitButtonUtilisateurForm");
-		if (this.parametre == null) {
-			this.parametre = request.getParameter("action");
+		this.parameter = request.getParameter("submitButtonUtilisateurForm");
+		if (this.parameter == null) {
+			this.parameter = request.getParameter("action");
 		}
-		this.nom = request.getParameter("nom");
-		this.prenom = request.getParameter("prenom");
+		this.lastName = request.getParameter("nom");
+		this.firstName = request.getParameter("prenom");
 		this.mobile = request.getParameter("mobile");
 		this.mail = request.getParameter("mail");
-		this.adresse = request.getParameter("adresse");
-		this.ville = request.getParameter("ville");
-		this.codePostal = request.getParameter("codePostal");
+		this.address = request.getParameter("adresse");
+		this.town = request.getParameter("ville");
+		this.postalCode = request.getParameter("codePostal");
 	}
 
 	/**

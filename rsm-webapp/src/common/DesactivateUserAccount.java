@@ -24,8 +24,8 @@ import beans.session.UtilisateurSessionBean;
 /**
  * @author SLI
  */
-@WebServlet("/DeactivateUserAccount")
-public class DeactivateUserAccount extends HttpServlet {
+@WebServlet("/DesactivateUserAccount")
+public class DesactivateUserAccount extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String DEACTIVATE_USER = "deactivateUser";
 	private static final String PROFIL_PAGE_HOTELIER = "HotelierProfilServlet";
@@ -55,13 +55,13 @@ public class DeactivateUserAccount extends HttpServlet {
 		switch (this.action) {
 		case DEACTIVATE_USER:
 			String identifiant = (String) this.session.getAttribute("login");
-			int idUser = annonceSessionBean.getIdUtilisateur(identifiant);
+			int idUser = annonceSessionBean.getUserId(identifiant);
 			Utilisateur userToDelete = utilisateurSessionBean.getUserById(idUser);
 			if (userToDelete != null) {
 				Boolean isDeleted = this.deleteUserById(userToDelete);
 				if (!isDeleted) {
 					request.setAttribute("alert-danger",
-							"Le compte n\'a pas pu être supprimé car vous avez des réservations en cours");
+							"Le compte n\'a pas pu ï¿½tre supprimï¿½ car vous avez des rï¿½servations en cours");
 					switch (userToDelete.getId_type_utilisateur()) {
 					case 2:
 						redirectionToServlet(PROFIL_PAGE_HOTELIER);
@@ -80,7 +80,7 @@ public class DeactivateUserAccount extends HttpServlet {
 	}
 
 	/**
-	 * Initialise les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
@@ -94,11 +94,11 @@ public class DeactivateUserAccount extends HttpServlet {
 	}
 
 	/**
-	 * Supprime un utilisateur à l'aide de son id et son type
+	 * delete a user with is id et user type
 	 * 
 	 * @param userId
 	 * @param userTypeId
-	 * @return
+	 * @return true / false : if the user has been delete
 	 */
 	private boolean deleteUserById(Utilisateur userToDelete) {
 		Boolean isDeleted = false;
@@ -107,7 +107,7 @@ public class DeactivateUserAccount extends HttpServlet {
 
 		switch (userToDelete.getId_type_utilisateur()) {
 		case 2:
-			annonceList = annonceSessionBean.getAnnonceByUserWithReservationValide(userToDelete.getId_utilisateur());
+			annonceList = annonceSessionBean.getAnnouncementByUserIdAndValidatedReservation(userToDelete.getId_utilisateur());
 			if (annonceList.size() == 0) {
 				isDeleted = utilisateurSessionBean.deleteUser(userToDelete);
 			} else {

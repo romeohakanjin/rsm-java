@@ -34,11 +34,11 @@ public class PaiementSessionBean {
     UserTransaction userTransaction;
     
     /**
-     * Créer un paiement
-     * @param paiement
-     * @return
+     * Create a paiement
+     * @param paiement : instance of Paiement
+     * @return true/false : if the request has been executed
      */
-    public Boolean creerPaeiment(Paiement paiement) {
+    public Boolean createPaiement(Paiement paiement) {
     	try {
     		userTransaction.begin();
     		entityManager.persist(paiement);
@@ -52,7 +52,7 @@ public class PaiementSessionBean {
     }
     
     @SuppressWarnings("unchecked")
-	public List<Object[]> getHistoriquePaiement(){
+	public List<Object[]> getPaiementHistorical(){
     	String queryString = "SELECT u.nom, u.prenom, p.id_reservation, r.prix, p.date_paiement "
     			+ "FROM Paiement as p "
     			+ "JOIN Reservation as r ON r.id_reservation = p.id_reservation "

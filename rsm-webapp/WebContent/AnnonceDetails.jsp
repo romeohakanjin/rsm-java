@@ -14,9 +14,15 @@
 				if (request.getAttribute("annonceDetails") != null) {
 					Annonce annonce = (Annonce) request.getAttribute("annonceDetails");
 			%>
-			<a href="ModificationProposition.jsp?action=propModif&annonceId=<%= annonce.getId_annonce()%>">
-				Proposition de modification
-			</a>
+			<%
+				if (session.getAttribute("session-standard") != null) {
+			%>
+				<a href="ModificationProposition.jsp?action=propModif&annonceId=<%= annonce.getId_annonce()%>">
+					Proposition de modification
+				</a>
+			<%
+				}
+			%>
 			
 			<form method="get" action="AnnoncesDetailsServlet">
 			<input type="hidden" name="annonceId" value="<%= annonce.getId_annonce() %>" readonly>

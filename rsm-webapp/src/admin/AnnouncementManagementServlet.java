@@ -28,10 +28,10 @@ public class AnnouncementManagementServlet extends HttpServlet {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private String action;
-	private String annonceId;
+	private String annoncementId;
 
 	@EJB
-	AnnonceSessionBean annonceSessionBean;
+	AnnonceSessionBean annoncementSessionBean;
 	@EJB
 	ReservationSessionBean reservationSessionBean;
 
@@ -40,24 +40,24 @@ public class AnnouncementManagementServlet extends HttpServlet {
 		this.request = request;
 		this.response = response;
 
-		initialiser();
+		initialize();
 
 		switch (this.action) {
 		case DELETE_ANNOUNCEMENT:
-			if (annonceId != null || !annonceId.equals("")) {
-				Integer idAnnonce = Integer.valueOf(annonceId);
+			if (annoncementId != null || !annoncementId.equals("")) {
+				Integer idAnnonce = Integer.valueOf(annoncementId);
 				Boolean isDeleted = deleteAnnouncementById(idAnnonce);
 				System.out.println(isDeleted);
 				getAllAnnouncement();
-				setVariableToView("alert-success", "Annonce suprimée");
+				setVariableToView("alert-success", "Annonce suprimÃ©e");
 				redirectionToView(ANNOUNCEMENT_LIST);
 			}
 			break;
 		case EDIT_ANNOUNCEMENT:
-			if (annonceId != null || !annonceId.equals("")) {
-				int idAnnonce = Integer.valueOf(annonceId);
-				Annonce annonce = annonceSessionBean.getAnnonce(idAnnonce);
-				request.setAttribute("annonceEdited", annonce);
+			if (annoncementId != null || !annoncementId.equals("")) {
+				int idAnnonce = Integer.valueOf(annoncementId);
+				Annonce announcement = annoncementSessionBean.getAnnouncement(idAnnonce);
+				request.setAttribute("annonceEdited", announcement);
 				redirectionToView(ANNONCE_VIEW);
 			}
 			break;
@@ -69,17 +69,17 @@ public class AnnouncementManagementServlet extends HttpServlet {
 	}
 
 	/**
-	 * Itinaliser les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.response.setContentType("text/html");
 		this.action = request.getParameter("action");
 		if (this.action == null) {
 			this.action = "";
 		} else {
-			this.annonceId = request.getParameter("annonceId");
+			this.annoncementId = request.getParameter("annonceId");
 		}
 	}
 
@@ -107,25 +107,25 @@ public class AnnouncementManagementServlet extends HttpServlet {
 	}
 
 	/**
-	 * Récupère toutes les annonces
+	 * get all the announcement
 	 */
 	private void getAllAnnouncement() {
-		List<Annonce> annonces = annonceSessionBean.getAllAnnonce();
+		List<Annonce> annonces = annoncementSessionBean.getAllAnnouncement();
 		this.request.setAttribute("annonces", annonces);
 	}
 
 	/**
-	 * Supprime l'annonce passée en paramètre
+	 * delete the announcement in parameter
 	 */
 	private Boolean deleteAnnouncementById(Integer idAnnonce) {
 		Boolean isDeleted = false;
-		Annonce annonceToDelete = annonceSessionBean.getAnnonce(idAnnonce);
+		Annonce annonceToDelete = annoncementSessionBean.getAnnouncement(idAnnonce);
 		List<Reservation> reservationList = reservationSessionBean
 				.getReservationByAnnonceId(annonceToDelete.getId_annonce());
 		if (reservationList.size() != 0) {
 			isDeleted = false;
 		} else {
-			annonceSessionBean.deleteAnnonce(idAnnonce);
+			annoncementSessionBean.deleteAnnouncement(idAnnonce);
 			isDeleted = true;
 		}
 		return isDeleted;

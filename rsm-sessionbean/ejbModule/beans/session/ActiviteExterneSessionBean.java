@@ -37,15 +37,15 @@ public class ActiviteExterneSessionBean {
 	UserTransaction userTransaction;
 
 	/**
-	 * Créer une activité externe
+	 * Create a external activity
 	 * 
-	 * @param libelle
-	 * @return
+	 * @param activity : instance of ActiviteExterne
+	 * @return true/false : if the request has been executed
 	 */
-	public Boolean creerActiviteExterne(ActiviteExterne activite) {
+	public Boolean createExternalActivity(ActiviteExterne activity) {
 		try {
 			userTransaction.begin();
-			entityManager.persist(activite);
+			entityManager.persist(activity);
 			userTransaction.commit();
 			return true;
 		} catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
@@ -56,39 +56,39 @@ public class ActiviteExterneSessionBean {
 	}
 
 	/**
-	 * Récupère toutes les activitées externes
-	 * @return
+	 * get all the external activities
+	 * @return List<ActiviteExterne>  : list of external activities
 	 */
-	@SuppressWarnings("unchecked")
 	public List<ActiviteExterne> getAllActiviteesExterne() {
 		String queryString = "FROM ActiviteExterne";
 		Query query = entityManager.createQuery(queryString);
-		return (List<ActiviteExterne>) query.getResultList();
+		List<ActiviteExterne> listExternalActivities = (List<ActiviteExterne>) query.getResultList();
+		
+		return listExternalActivities;
 	}
 	
 	/**
-	 * Récupère une activité externe
-	 * @param idAnnonce
-	 * @return
+	 * get a external activity
+	 * @param idExternalActivity
+	 * @return ActiviteExterne : the external activity
 	 */
-	public ActiviteExterne getActiviteExterne(int idActiviteExterne) {
-		Annonce annonce = new Annonce();
-
-		String queryString = "FROM ActiviteExterne AS a " + "WHERE a.id_activite_externe = '" + idActiviteExterne + "'";
+	public ActiviteExterne getActiviteExterne(int idExternalActivity) {
+		String queryString = "FROM ActiviteExterne AS a " + "WHERE a.id_activite_externe = '" + idExternalActivity + "'";
 		Query query = entityManager.createQuery(queryString);
-
-		return (ActiviteExterne) query.getResultList().get(0);
+		ActiviteExterne announcement = (ActiviteExterne) query.getResultList().get(0);
+		
+		return announcement;
 	}
 	
 	/**
-	 * Supprime une activité externe
-	 * @param idAnnonce
+	 * delete a external activity
+	 * @param idExternalActivity
 	 */
-	public void deleteActiviteExterne(int idActiviteExterne) {
+	public void deleteActiviteExterne(int idExternalActivity) {
 		try {
 			userTransaction.begin();
 			String query =	"DELETE FROM ActiviteExterne "
-					+ "WHERE id_activite_externe = '" + idActiviteExterne + "' ";
+					+ "WHERE id_activite_externe = '" + idExternalActivity + "' ";
 			Query result = entityManager.createQuery(query);
 			result.executeUpdate();
 			userTransaction.commit();

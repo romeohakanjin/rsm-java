@@ -41,17 +41,17 @@ public class ReservationListServlet extends HttpServlet {
 		this.request = request;
 		this.response = response;
 
-		initialiser();
+		initialize();
 
 		String identifiant = (String) this.session.getAttribute("login");
-		int idUtilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+		int idUtilisateur = annonceSessionBean.getUserId(identifiant);
 
 		switch (action) {
 		case RESERVATION_LIST_ACTION:
 			reservationList(idUtilisateur);
 			break;
 		case RESERVATION_CANCEL_ACTION:
-			// cancel si id statut etc est en attente de confirmation
+			// cancel if the state id is 'waiting for approval'
 			cancelReservation(idUtilisateur);
 			break;
 		default:
@@ -65,7 +65,7 @@ public class ReservationListServlet extends HttpServlet {
 	 * Cancel a reservation that is waiting for the approval of a hotelier
 	 * 
 	 * @param idUtilisateur
-	 *            : idd of the current user
+	 *            : id of the current user
 	 * @throws IOException
 	 * @throws ServletException
 	 */
@@ -109,7 +109,7 @@ public class ReservationListServlet extends HttpServlet {
 	 * 
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
 		this.action = request.getParameter("action");

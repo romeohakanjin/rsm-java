@@ -26,7 +26,7 @@ public class ExternAnnouncementManagementServlet extends HttpServlet {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private String action;
-	private String activiteExterneId;
+	private String externalActivityId;
 
 	@EJB
 	ActiviteExterneSessionBean activiteExterneSessionBean;
@@ -36,25 +36,25 @@ public class ExternAnnouncementManagementServlet extends HttpServlet {
 		this.request = request;
 		this.response = response;
 
-		initialiser();
+		initialize();
 		getAllExternAnnouncement();
 		redirectionToView(EXTERN_ANNOUNCEMENT_LIST);
 
 		switch (this.action) {
 		case DELETE_ANNOUNCEMENT:
-			if (activiteExterneId != null || !activiteExterneId.equals("")) {
-				Integer idActiviteExterne = Integer.valueOf(activiteExterneId);
+			if (externalActivityId != null || !externalActivityId.equals("")) {
+				Integer idActiviteExterne = Integer.valueOf(externalActivityId);
 				ActiviteExterne activityToDelete = activiteExterneSessionBean.getActiviteExterne(idActiviteExterne);
 				if (activityToDelete != null) {
 					activiteExterneSessionBean.deleteActiviteExterne(idActiviteExterne);
-					setVariableToView("alert-success", "Activité externe supprimée");
+					setVariableToView("alert-success", "Activitï¿½ externe supprimï¿½e");
 					redirectionToView(EXTERN_ANNOUNCEMENT_LIST);
 				}
 			}
 			break;
 		case EDIT_ANNOUNCEMENT:
-			if (activiteExterneId != null || !activiteExterneId.equals("")) {
-				int idActiviteExterne = Integer.valueOf(activiteExterneId);
+			if (externalActivityId != null || !externalActivityId.equals("")) {
+				int idActiviteExterne = Integer.valueOf(externalActivityId);
 				ActiviteExterne activityToEdit = activiteExterneSessionBean.getActiviteExterne(idActiviteExterne);
 				request.setAttribute("externAnnouncementEdited", activityToEdit);
 				redirectionToView(EXTERN_ANNOUNCEMENT_VIEW);
@@ -64,17 +64,17 @@ public class ExternAnnouncementManagementServlet extends HttpServlet {
 	}
 
 	/**
-	 * Itinaliser les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.response.setContentType("text/html");
 		this.action = request.getParameter("action");
 		if (this.action == null) {
 			this.action = "";
 		} else {
-			this.activiteExterneId = request.getParameter("annonceId");
+			this.externalActivityId = request.getParameter("annonceId");
 		}
 	}
 
@@ -102,7 +102,7 @@ public class ExternAnnouncementManagementServlet extends HttpServlet {
 	}
 	
 	/**
-	 * Récupère toutes les annonces
+	 * get all the external activities
 	 */
 	private void getAllExternAnnouncement() {
 		List<ActiviteExterne> activiteExternes = activiteExterneSessionBean.getAllActiviteesExterne();

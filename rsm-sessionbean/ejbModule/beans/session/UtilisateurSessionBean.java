@@ -36,15 +36,15 @@ public class UtilisateurSessionBean {
 	UserTransaction userTransaction;
 
 	/**
-	 * Cr�er un utilisateur
+	 * Create user
 	 * 
-	 * @param libelle
-	 * @return
+	 * @param user : instance of Utilisateur
+	 * @return true/false : if the request has been executed
 	 */
-	public Boolean creerUtilisateur(Utilisateur utilisateur) {
+	public Boolean createUser(Utilisateur user) {
 		try {
 			userTransaction.begin();
-			entityManager.persist(utilisateur);
+			entityManager.persist(user);
 			userTransaction.commit();
 			return true;
 		} catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
@@ -55,9 +55,9 @@ public class UtilisateurSessionBean {
 	}
 	
 	/**
-	 * D�sactive un utilisateur
-	 * @param user
-	 * @return
+	 * delete a user
+	 * @param user : instance of Utilisateur
+	 * @return true/false : if the request has been executed
 	 */
 	public Boolean deleteUser(Utilisateur user) {
 		try {
@@ -77,24 +77,24 @@ public class UtilisateurSessionBean {
 	}
 
 	/**
-	 * R�cup�re tous les utilisateurs
+	 * get all users
 	 * 
-	 * @return
+	 * @return List<Utilisateur> 
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Utilisateur> getAllUtilisateur() {
+	public List<Utilisateur> getUsers() {
 		String queryString = "FROM Utilisateur WHERE actif = TRUE";
 		Query query = entityManager.createQuery(queryString);
 		return (List<Utilisateur>) query.getResultList();
 	}
 	
 	/**
-	 * R�cup�re tous les utilisateurs avec leurs types d'utilisateurs
+	 * get users and users types
 	 * 
-	 * @return
+	 * @return List<Object>
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Object> getAllUtilisateurWithUserType() {
+	public List<Object> getUsersAndUsersTypes() {
 		String queryString = "FROM Utilisateur AS u "
 				+ "JOIN TypeUtilisateur AS tu ON u.id_type_utilisateur = tu.id_type_utilisateur "
 				+ "WHERE u.actif = TRUE";
@@ -103,7 +103,7 @@ public class UtilisateurSessionBean {
 	}
 
 	/**
-	 * V�rifie les identifiants de la connexion d'un utilisateur
+	 * check if the connection  id for a user
 	 * 
 	 * @param mail
 	 *            :
@@ -112,10 +112,10 @@ public class UtilisateurSessionBean {
 	 * 
 	 * @return boolean :
 	 */
-	public boolean isIdentificationValid(String mail, String motDePasse) {
+	public boolean isIdentificationValid(String mail, String password) {
 		
 		boolean isIdentificationValid = false;
-		String query = "SELECT u.mail FROM Utilisateur u WHERE mail = '" + mail + "' AND mot_de_passe='" + motDePasse
+		String query = "SELECT u.mail FROM Utilisateur u WHERE mail = '" + mail + "' AND mot_de_passe='" + password
 				+ "' AND actif = true";
 		Query query2 = entityManager.createQuery(query);
 		@SuppressWarnings("rawtypes")
@@ -128,10 +128,10 @@ public class UtilisateurSessionBean {
 	}
 
 	/**
-	 * V�rifie l'email d'un utilisateur
+	 * check the mail of a user
 	 * 
 	 * @param mail
-	 * @return boolean :
+	 * @return true/false : if the mail exist
 	 */
 	public boolean isExistingUser(String mail) {
 		
@@ -154,7 +154,6 @@ public class UtilisateurSessionBean {
 	 * 
 	 * @param nomHotel
 	 */
-	//TODO : deplacer dans hotelSessionBean
 	public boolean checkExistingHotel(String nomHotel) {
 		boolean isExistingHotel = false;
 
@@ -172,14 +171,14 @@ public class UtilisateurSessionBean {
 	}
 	
 	/**
-	 * R�cupere l'id d'un hotel gr�ce � son nom
-	 * @param nomHotel
-	 * @return
+	 * get id hotel by is name
+	 * @param hotelName
+	 * @return int : id of the hotel
 	 */
 	//TODO : deplacer dans hotelSessionBean
-	public int getIdHotel(String nomHotel) {
+	public int getIdHotel(String hotelName) {
 		int idHotel = 0;
-		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom_hotel = '" + nomHotel + "'";
+		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom_hotel = '" + hotelName + "'";
 		Query query2 = entityManager.createQuery(query);
 
 		@SuppressWarnings("rawtypes")
@@ -192,16 +191,14 @@ public class UtilisateurSessionBean {
 	}
 
 	/**
-	 * Cr�� un hotel
-	 * @param nomHotel
-	 * @return
+	 * Create a hotel and return is id
+	 * @param hotelName
+	 * @return int : id of the hotel created
 	 */
-	//TODO : deplacer dans hotelSessionBean
-	public int createHotel(String nomHotel) {
-
+	public int createHotel(String hotelName) {
 		int idHotel = 0;
 		Hotel hotel = new Hotel();
-		hotel.setNom_hotel(nomHotel);
+		hotel.setNom_hotel(hotelName);
 
 		try {
 			userTransaction.begin();
@@ -212,7 +209,7 @@ public class UtilisateurSessionBean {
 			e.printStackTrace();
 		}
 
-		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom_hotel = '" + nomHotel + "'";
+		String query = "SELECT h.id_hotel FROM Hotel AS h WHERE id_hotel= h.id_hotel AND h.nom_hotel = '" + hotelName + "'";
 		Query query2 = entityManager.createQuery(query);
 
 		@SuppressWarnings("rawtypes")
@@ -226,15 +223,15 @@ public class UtilisateurSessionBean {
 	
 	/**
 	 * Get the id_type_utilisateur from a user
-	 * @param identifiant
-	 * @param motDePasse
+	 * @param id
+	 * @param password
 	 * @return
 	 */
 	//TODO : deplacer dans typeUtilisateurSessionBean
-	public int getIdTypeUtilisateur(String identifiant, String motDePasse) {
+	public int getIdTypeUtilisateur(String id, String password) {
 		
 		int idTypeUtilisateur = 3;
-		String query = "SELECT u.id_type_utilisateur FROM Utilisateur u WHERE mail = '" + identifiant + "' AND mot_de_passe='" + motDePasse
+		String query = "SELECT u.id_type_utilisateur FROM Utilisateur u WHERE mail = '" + id + "' AND mot_de_passe='" + password
 				+ "'";
 		Query query2 = entityManager.createQuery(query);
 
@@ -247,14 +244,14 @@ public class UtilisateurSessionBean {
 		return idTypeUtilisateur;
 	}
 	/**
-	 * 
-	 * @param idUser
-	 * @return
+	 * check if the user id exist
+	 * @param userId
+	 * @return true / fale : if the id exist
 	 */
-	public boolean isExistingUserId(int id_utilisateur) {
+	public boolean isExistingUserId(int userId) {
 		
 		boolean isExistingUserId = false;
-		String query = "SELECT id_utilisateur FROM Utilisateur WHERE id_utilisateur = '" + id_utilisateur + "'";
+		String query = "SELECT id_utilisateur FROM Utilisateur WHERE id_utilisateur = '" + userId + "'";
 		Query query2 = entityManager.createQuery(query);
 		
 		List utilisateurs = query2.getResultList();
@@ -282,11 +279,11 @@ public class UtilisateurSessionBean {
  	}
 	
 	/**
-	 * 
+	 * get a user
 	 * @param idUtilisateur
-	 * @return
+	 * @return Utilisateur
 	 */
-	public Utilisateur getUserInformation(int idUtilisateur){
+	public Utilisateur getUser(int idUtilisateur){
 		String queryString = "FROM Utilisateur AS a " + "WHERE a.id_utilisateur = '"+idUtilisateur+"' ";
 		Query query = entityManager.createQuery(queryString);
 		Utilisateur utilisateur = (Utilisateur) query.getSingleResult();
@@ -294,100 +291,61 @@ public class UtilisateurSessionBean {
 	}
 	
 	/**
-	 * R�cup�re l'id de l'utilisateur
-	 * 
-	@SuppressWarnings("unchecked")
-	//TODO : REVOIR => PAS CORRECTE ON NE RENVOIE PAS UNE LISTE SI ON RECUPERE QU'UN OBJET
-	public List<Utilisateur> getUserInformation(int idUtilisateur){
-		String queryString = "FROM Utilisateur AS a " + "WHERE a.id_utilisateur = '"+idUtilisateur+"' ";
-		Query query = entityManager.createQuery(queryString);
-		List<Utilisateur> listUser = (List<Utilisateur>) query.getResultList();
-		return listUser; 
-	}
-	
-	/**
-	 * R�cup�re un utilisateur gr�ce � son id
-	 * @param idUtilisateur
-	 * @return
+	 * get user id by is mail
+	 * @param id
+	 * @return int : user id
 	 */
-	public Utilisateur getUserInformationById(int idUtilisateur){
-		String queryString = "FROM Utilisateur AS a " + "WHERE a.id_utilisateur = '"+idUtilisateur+"' ";
-		Query query = entityManager.createQuery(queryString);
-		return (Utilisateur) query.getResultList().get(0);
-	}
-
-	/**
-	 * 
-	 * @param idUtilisateur
-	 * @return
-	 */
-	//TODO : changer le nom, ajouter le commentaire et deplacer dans annonceSessionBean
-	public List<Annonce> getAllAnnonceUtilisateur() {
-		String query = "FROM Annonce";
-		Query query2 = entityManager.createQuery(query);
-		@SuppressWarnings("rawtypes")
-		List listAnnonce = query2.getResultList();
-		return listAnnonce;
-	}
-	
-	/**
-	 * R�cup�re  l'id d'un utilisateur gr�ce � son adresse mail
-	 * @param identifiant
-	 * @return
-	 */
-	public int getIdUtilisateur(String identifiant) {
+	public int getIdUtilisateur(String id) {
 		int idUtilisateur = 0;
-		String query = "SELECT u.id_utilisateur FROM Utilisateur AS u " + "WHERE u.mail = '" + identifiant + "' AND actif = TRUE";
+		String query = "SELECT u.id_utilisateur FROM Utilisateur AS u " + "WHERE u.mail = '" + id + "' AND actif = TRUE";
 		Query query2 = entityManager.createQuery(query);
-		List listUser = query2.getResultList();
-		idUtilisateur = (int) listUser.get(0);
+		List userList = query2.getResultList();
+		idUtilisateur = (int) userList.get(0);
 		return idUtilisateur;
 	}
 	
 	/**
-	 * Fait un select * sur la table Utilisateur
+	 * get users
 	 * 
-	 * @param identifiant
-	 * @return
+	 * @param userId
+	 * @return Utilisateur
 	 */
-
-	public Utilisateur getUtilisateur(int idUser) {
+	public Utilisateur getActiveUsers(int userId) {
 		
-		Utilisateur utilisateur = new Utilisateur();
-		String query = "FROM Utilisateur AS u WHERE u.id_utilisateur = '" + idUser + "' AND actif = TRUE";
+		Utilisateur user = new Utilisateur();
+		String query = "FROM Utilisateur AS u WHERE u.id_utilisateur = '" + userId + "' AND actif = TRUE";
 		Query query2 = entityManager.createQuery(query);
 
-		utilisateur = (Utilisateur) query2.getSingleResult();
+		user = (Utilisateur) query2.getSingleResult();
 
-		return utilisateur;
+		return user;
 	}
 	
 	/**
-	 * Update un utilisateur
-	 * 
-	 * @param utilisateur
+	 * Update a user
+	 * @param userId
 	 */
-	public void updateUtilisateur(Utilisateur utilisateur) {
+	public void updateUser(Utilisateur user) {
 		
-		int id_utilisateur = utilisateur.getId_utilisateur();
-		String nom = utilisateur.getNom();
-		String prenom = utilisateur.getPrenom();
-		String mail = utilisateur.getMail();
-		String mobile = utilisateur.getMobile();
-		String adresse = utilisateur.getAdresse();
-		String ville = utilisateur.getVille();
-		String codePostal = utilisateur.getCode_postal();
+		int userId = user.getId_utilisateur();
+		String lastName = user.getNom();
+		String firstName = user.getPrenom();
+		String mail = user.getMail();
+		String mobile = user.getMobile();
+		String address = user.getAdresse();
+		String town = user.getVille();
+		String postalCode = user.getCode_postal();
 		try {
 			userTransaction.begin();
-			String query = "UPDATE Utilisateur AS u " +
-													"SET nom = '" + nom + "', " + 
-													"prenom = '" + prenom + "', " +
-													"mail = '" + mail + "', " +
-													"mobile = '" + mobile + "', " + 
-													"adresse = '" + adresse + "', " +
-													"ville = '" + ville + "', " + 
-													"code_postal = '" + codePostal + "' " +
-													"WHERE u.id_utilisateur = '" + id_utilisateur + "' ";
+			String query = 	"UPDATE Utilisateur AS u " +
+							"SET nom = '" + lastName + "', " + 
+							"prenom = '" + firstName + "', " +
+							"mail = '" + mail + "', " +
+							"mobile = '" + mobile + "', " + 
+							"adresse = '" + address + "', " +
+							"ville = '" + town + "', " + 
+							"code_postal = '" + postalCode + "' " +
+							"WHERE u.id_utilisateur = '" + userId + "' ";
 
 			Query query1 = entityManager.createQuery(query);
 			query1.executeUpdate();
@@ -399,11 +357,10 @@ public class UtilisateurSessionBean {
 	}
 	
 	/**
-	 * R�cup�re le nombre d'utilisateur
-	 * regroup� par type d'utilisateur
-	 * @return
+	 * get the number of user group by user types
+	 * @return List<Object[]>
 	 */
-	public List<Object[]> getNbUserGroupByUserType() {
+	public List<Object[]> getUserNumberGroupByUserType() {
 		String queryString = "SELECT COUNT(*), tu.libelle "
 				+ "FROM Utilisateur AS u "
 				+ "JOIN TypeUtilisateur AS tu ON u.id_type_utilisateur = tu.id_type_utilisateur "
@@ -413,9 +370,9 @@ public class UtilisateurSessionBean {
 	}
 	
 	/**
-	 * R�cup�re un utilisateur avec son id
+	 * get user by is id
 	 * @param userId
-	 * @return
+	 * @return Utilisateur
 	 */
 	public Utilisateur getUserById(Integer userId) {
 		String queryString = "FROM Utilisateur AS a " + "WHERE a.id_utilisateur = '" + userId + "'";
@@ -429,14 +386,14 @@ public class UtilisateurSessionBean {
 	
 	/**
 	 * add point for a standard user
-	 * @param idUser : id of the user
+	 * @param userId : id of the user
 	 */
-	public void addPointForAUser(Integer idUser) {
+	public void addPointForAUser(Integer userId) {
 		try {
 			userTransaction.begin();
 			String query = "UPDATE Utilisateur AS u " +
 							"SET point_bonus = point_bonus + 10 " + 
-							"WHERE u.id_utilisateur = '" + idUser + "' ";
+							"WHERE u.id_utilisateur = '" + userId + "' ";
 			Query query1 = entityManager.createQuery(query);
 			query1.executeUpdate();
 			userTransaction.commit();

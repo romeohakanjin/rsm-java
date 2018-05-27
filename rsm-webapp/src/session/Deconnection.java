@@ -19,18 +19,28 @@ public class Deconnection extends HttpServlet {
     private static final String HOME_PAGE = "Home";
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		initialiser(request, response);
-		deconnexion();
+		initialize(request, response);
+		deconnection();
 	}
 	
-	private void initialiser(HttpServletRequest request, HttpServletResponse response) {
+	/**
+	 * Initialize the values
+	 * @param request : HttpServletRequest
+	 * @param response : HttpServletResponse
+	 */
+	private void initialize(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
 		session = request.getSession();
 	}
 	
-	private void deconnexion() throws ServletException, IOException {
-		//enelever http session
+	/**
+	 * delete all param in http session from the user
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void deconnection() throws ServletException, IOException {
+		//delete params in http session
 		session.invalidate();
 		//redirection home
 		redirectionToView(HOME_PAGE);

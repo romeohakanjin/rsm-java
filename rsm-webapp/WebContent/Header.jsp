@@ -80,7 +80,15 @@
 										<li><a href="DeactivateUserAccount?action=deactivateUser">Désactiver le compte</a></li>
 									</ul>
 								</li>							
-							<% }
+							<% } else{
+								%>
+									<li id="standard"><a href="AnnoncesServlet">Annonces</a>
+										<ul>
+											<li id="standard"><a href="AnnoncesServlet">Liste Annonces</a></li>
+										</ul>
+									</li>
+								<%
+							}
 						%>
 						<%
 							if (session.getAttribute("login") != null) {

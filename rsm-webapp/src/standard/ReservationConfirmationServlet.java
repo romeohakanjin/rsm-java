@@ -35,7 +35,7 @@ public class ReservationConfirmationServlet extends HttpServlet {
 		this.request = request;
 		this.response = response;
 
-		initialiser();
+		initialize();
 
 		switch (this.action) {
 		case CONFIRMATION_RESERVATION:
@@ -53,7 +53,7 @@ public class ReservationConfirmationServlet extends HttpServlet {
 	 * validate the reservation and pay it
 	 */
 	private void reservationValidate() {
-		// TODO :faire appel à la méthode pour paiement
+		// TODO :faire appel ï¿½ la mï¿½thode pour paiement
 		// paiement()
 
 		int annonceId = (int) session.getAttribute("reservationToValidate");
@@ -73,15 +73,15 @@ public class ReservationConfirmationServlet extends HttpServlet {
 		reservation.setId_etat_reservation(1);
 		reservation.setId_statut_reservation(1);
 
-		reservationSessionBean.creerReservation(reservation);
+		reservationSessionBean.createReservation(reservation);
 	}
 
 	/**
-	 * Itinaliser les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
 		this.action = request.getParameter("submitButtonReservationValidation");
