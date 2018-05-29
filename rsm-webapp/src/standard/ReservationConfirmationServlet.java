@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import beans.entity.Reservation;
+import beans.session.AnnonceSessionBean;
 import beans.session.ReservationSessionBean;
+import beans.session.UtilisateurSessionBean;
 
 /**
  * Servlet implementation class ReservationConfirmation
@@ -21,7 +23,8 @@ import beans.session.ReservationSessionBean;
 public class ReservationConfirmationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String CONFIRMATION_RESERVATION_VIEW = "ReservationAd";
-	private static final String CONFIRMATION_RESERVATION = "Confirmer";
+	private static final String CONFIRMATION_RESERVATION_ACTION = "Confirmer";
+	private static final String POINT_PAYMENT_RESERVATION_ACTION = "pointPaiement";
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
@@ -29,6 +32,12 @@ public class ReservationConfirmationServlet extends HttpServlet {
 
 	@EJB
 	ReservationSessionBean reservationSessionBean;
+	
+	@EJB
+	AnnonceSessionBean announcementSessionBean;
+	
+	@EJB
+	UtilisateurSessionBean utilisateurSessionBean;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -38,15 +47,27 @@ public class ReservationConfirmationServlet extends HttpServlet {
 		initialize();
 
 		switch (this.action) {
-		case CONFIRMATION_RESERVATION:
+		case CONFIRMATION_RESERVATION_ACTION:
 			reservationValidate();
 			break;
-
+		case POINT_PAYMENT_RESERVATION_ACTION:
+			paymentReservationWithPoints();
+			break;
 		default:
 			redirectionToView(CONFIRMATION_RESERVATION_VIEW);
 			break;
 		}
-
+	}
+	
+	/**
+	 * pay a reservation with point
+	 */
+	private void paymentReservationWithPoints() {
+		String identifiant = (String) this.session.getAttribute("login");
+		int id_utilisateur = announcementSessionBean.getUserId(identifiant);
+		int userPoints = utilisateurSessionBean.getUserPoints(id_utilisateur);
+		System.out.println("ici : "+userPoints);
+		
 	}
 
 	/**
@@ -84,9 +105,12 @@ public class ReservationConfirmationServlet extends HttpServlet {
 	private void initialize() throws IOException {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
-		this.action = request.getParameter("submitButtonReservationValidation");
+		this.action = request.getParameter("action");
 		if (this.action == null) {
-			this.action = "";
+			this.action = request.getParameter("submitButtonReservationValidation");
+			if(this.action == null) {
+				this.action = "";
+			}
 		}
 	}
 

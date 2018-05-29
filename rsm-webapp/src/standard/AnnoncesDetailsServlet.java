@@ -25,6 +25,7 @@ import beans.session.AnnonceSessionBean;
 import beans.session.PropositionModificationSessionBean;
 import beans.session.ReservationSessionBean;
 import beans.session.ServiceChambreSessionBean;
+import beans.session.UtilisateurSessionBean;
 
 /**
  * Servlet implementation class AnnoncesDetailsServlet
@@ -54,7 +55,10 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 	private Timestamp timestampEnd;
 	private String nameService;
 	private String quantityService;
-
+	
+	@EJB
+	UtilisateurSessionBean utilisateurSessionBean;
+	
 	@EJB
 	AnnonceSessionBean announcementSessionBean;
 
@@ -161,12 +165,16 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 							timestampBegining, timestampEnd);
 					if (!isAlreadyReservedAdForThisDate) {
 						// then redirect of reservation resume page
+						int userPoints = utilisateurSessionBean.getUserPoints(id_utilisateur);
+						request.setAttribute("userPoints", userPoints);
+						
 						session.setAttribute("reservationToValidate", annoncementeIdValue);
 						session.setAttribute("reservationIdUser", id_utilisateur);
 						session.setAttribute("reservationDateDebut", timestampBegining);
 						session.setAttribute("reservationDateFin", timestampEnd);
 						session.setAttribute("reservationNumberOfDays", numberOfDays);
 						session.setAttribute("reservationPrice", price);
+						
 						redirectionToServlet(RESERVATION_VALIDATE_SERVLET);
 					}
 

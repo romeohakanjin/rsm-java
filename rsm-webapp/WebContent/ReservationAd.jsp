@@ -13,6 +13,16 @@
 				// 				if (request.getAttribute("annonceDetails") != null) {
 				// 					Annonce annonce = (Annonce) request.getAttribute("annonceDetails");
 			%>
+			
+			<% 
+			if(((int) request.getAttribute("userPoints")) >= 100 && ((int) session.getAttribute("reservationPrice")) <= 80 ){
+				%>
+				<a href="ReservationConfirmationServlet?action=pointPaiement">Vous bénéficiez de <%= request.getAttribute("userPoints") %>, cliquez-ici pour payer cette annonce avec vos points</a>
+				<br />
+				<%
+			}
+			%>
+			
 			<form method="get" action="ReservationConfirmationServlet">
 				<h3>Confirmer votre réservation</h3>
 				<label>Date début</label>
@@ -25,7 +35,7 @@
 				<p><%=session.getAttribute("reservationPrice")%></p>
 
 				<%
-					// 					if (session.getAttribute("session-admin") == null && session.getAttribute("session-hotelier") == null) {
+					// if (session.getAttribute("session-admin") == null && session.getAttribute("session-hotelier") == null) {
 				%>
 				<input type="submit" name="submitButtonReservationValidation"
 					value="Confirmer" />

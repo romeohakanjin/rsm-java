@@ -402,4 +402,21 @@ public class UtilisateurSessionBean {
 			exception.printStackTrace();
 		}
 	}
+	
+	/**
+	 * get user points
+	 * @param idUser
+	 * @return int : number of points
+	 */
+	public int getUserPoints(int idUser) {
+		int numberOfPoints = 0;
+		
+		String queryString = "SELECT point_bonus "
+				+ "FROM Utilisateur "
+				+ "WHERE id_utilisateur = '"+idUser+"' ";
+		Query query = entityManager.createQuery(queryString);
+		numberOfPoints = (int) query.getSingleResult();
+		
+		return numberOfPoints;
+	}
 }
