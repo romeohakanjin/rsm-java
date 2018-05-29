@@ -38,13 +38,13 @@
 			<p><%=annonce.getPrix_nuit()%></p>
 			
 			<div>
-				<p>Dates de réservation</p>
+				<p>Dates de réservation (mm/jj/aaaa)</p>
 				<p>
-					Date début: <input type="text" name="dateDebut" id="datepickerDebut"
+					Date début: <input type="text" name="dateDebut" id="datepickerDebut" placeholder="(mm/jj/aaaa)"
 						required />
 				</p>
 				<p>
-					Date fin: <input type="text" name="dateFin" id="datepickerFin"
+					Date fin: <input type="text" name="dateFin" id="datepickerFin" placeholder="(mm/jj/aaaa)"
 						required />
 				</p>
 			</div>
