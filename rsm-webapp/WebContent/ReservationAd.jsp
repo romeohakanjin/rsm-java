@@ -15,9 +15,9 @@
 			%>
 			
 			<% 
-			if(((int) request.getAttribute("userPoints")) >= 100 && ((int) session.getAttribute("reservationPrice")) <= 80 ){
+			if(((int) request.getAttribute("userPoints")) >= 100 && ((double) session.getAttribute("reservationPrice")) <= 80.0 ){
 				%>
-				<a href="ReservationConfirmationServlet?action=pointPaiement">Vous bénéficiez de <%= request.getAttribute("userPoints") %>, cliquez-ici pour payer cette annonce avec vos points</a>
+				<a href="ReservationConfirmationServlet?action=pointPaiement">Vous bénéficiez de <%= request.getAttribute("userPoints") %> points bonus, cliquez-ici pour payer cette annonce avec vos points !</a>
 				<br />
 				<%
 			}

@@ -125,7 +125,7 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 					// Modification Proposition table
 					propositionModificationSessionBean.deleteModificationProposition(modificationPropositionId);
 
-					setVariableToView("alert-success", "Cette proposition vient d'être ignorée");
+					setVariableToView("alert-success", "Cette proposition vient d'être prise en compte");
 					redirectionToServlet(ANNONCES_LISTE_SERVLET);
 				} else {
 					setVariableToView("alert-warning", "Numéro de proposition incorrect");

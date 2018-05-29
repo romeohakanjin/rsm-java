@@ -419,4 +419,23 @@ public class UtilisateurSessionBean {
 		
 		return numberOfPoints;
 	}
+	
+	/**
+	 * Take back 100 points of a user to pay for a reservation
+	 * @param idUser 
+	 */
+	public void payReservationWithPoints(int idUser) {
+		try {
+			userTransaction.begin();
+			String query = "UPDATE Utilisateur AS u " +
+							"SET point_bonus = point_bonus - 100 " + 
+							"WHERE u.id_utilisateur = '" + idUser + "' ";
+			Query query1 = entityManager.createQuery(query);
+			query1.executeUpdate();
+			userTransaction.commit();
+		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException exception) {
+			exception.printStackTrace();
+		}
+	}
 }

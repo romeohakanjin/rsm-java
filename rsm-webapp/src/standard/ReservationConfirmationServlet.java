@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 
 import javax.ejb.EJB;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,6 +23,7 @@ import beans.session.UtilisateurSessionBean;
 @WebServlet("/ReservationConfirmationServlet")
 public class ReservationConfirmationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final String ANNONCES_LISTE_SERVLET = "AnnoncesServlet";
 	private static final String CONFIRMATION_RESERVATION_VIEW = "ReservationAd";
 	private static final String CONFIRMATION_RESERVATION_ACTION = "Confirmer";
 	private static final String POINT_PAYMENT_RESERVATION_ACTION = "pointPaiement";
@@ -32,10 +34,10 @@ public class ReservationConfirmationServlet extends HttpServlet {
 
 	@EJB
 	ReservationSessionBean reservationSessionBean;
-	
+
 	@EJB
 	AnnonceSessionBean announcementSessionBean;
-	
+
 	@EJB
 	UtilisateurSessionBean utilisateurSessionBean;
 
@@ -58,43 +60,89 @@ public class ReservationConfirmationServlet extends HttpServlet {
 			break;
 		}
 	}
-	
+
 	/**
 	 * pay a reservation with point
+	 * @throws IOException 
+	 * @throws ServletException 
 	 */
-	private void paymentReservationWithPoints() {
-		String identifiant = (String) this.session.getAttribute("login");
-		int id_utilisateur = announcementSessionBean.getUserId(identifiant);
-		int userPoints = utilisateurSessionBean.getUserPoints(id_utilisateur);
-		System.out.println("ici : "+userPoints);
-		
+	private void paymentReservationWithPoints() throws ServletException, IOException {
+		try {
+			String identifiant = (String) this.session.getAttribute("login");
+			int id_utilisateur = announcementSessionBean.getUserId(identifiant);
+			int userPoints = utilisateurSessionBean.getUserPoints(id_utilisateur);
+			
+			if (userPoints >= 100) {
+				utilisateurSessionBean.payReservationWithPoints(id_utilisateur);
+				
+				int annonceId = (int) session.getAttribute("reservationToValidate");
+				int userId = (int) session.getAttribute("reservationIdUser");
+				Timestamp timestampBegining = (Timestamp) session.getAttribute("reservationDateDebut");
+				Timestamp timestampEnd = (Timestamp) session.getAttribute("reservationDateFin");
+				long numberOfDays = (long) session.getAttribute("reservationNumberOfDays");
+				Double price = (Double) session.getAttribute("reservationPrice");
+
+				Reservation reservation = new Reservation();
+				reservation.setId_annonce(annonceId);
+				reservation.setId_utilisateur(userId);
+				reservation.setDate_debut_sejour(timestampBegining);
+				reservation.setDate_fin_sejour(timestampEnd);
+				reservation.setDuree_sejour((int) numberOfDays);
+				reservation.setPrix(price);
+				reservation.setId_etat_reservation(1);
+				reservation.setId_statut_reservation(1);
+
+				reservationSessionBean.createReservation(reservation);
+
+				setVariableToView("alert-success", "Réservation prise en compte");
+				redirectionToServlet(ANNONCES_LISTE_SERVLET);
+			} else {
+				setVariableToView("alert-danger", "Points insuffisant");
+				redirectionToServlet(ANNONCES_LISTE_SERVLET);
+			}
+		} catch (Exception exception) {
+			setVariableToView("alert-danger", "Réservation non prise en compte");
+			redirectionToServlet(ANNONCES_LISTE_SERVLET);
+		}
+
 	}
 
 	/**
 	 * validate the reservation and pay it
+	 * 
+	 * @throws IOException
+	 * @throws ServletException
 	 */
-	private void reservationValidate() {
-		// TODO :faire appel � la m�thode pour paiement
-		// paiement()
+	private void reservationValidate() throws ServletException, IOException {
+		try {
+			// TODO :faire appel � la m�thode pour paiement
+			// paiement()
 
-		int annonceId = (int) session.getAttribute("reservationToValidate");
-		int userId = (int) session.getAttribute("reservationIdUser");
-		Timestamp timestampBegining = (Timestamp) session.getAttribute("reservationDateDebut");
-		Timestamp timestampEnd = (Timestamp) session.getAttribute("reservationDateFin");
-		long numberOfDays = (long) session.getAttribute("reservationNumberOfDays");
-		Double price = (Double) session.getAttribute("reservationPrice");
+			int annonceId = (int) session.getAttribute("reservationToValidate");
+			int userId = (int) session.getAttribute("reservationIdUser");
+			Timestamp timestampBegining = (Timestamp) session.getAttribute("reservationDateDebut");
+			Timestamp timestampEnd = (Timestamp) session.getAttribute("reservationDateFin");
+			long numberOfDays = (long) session.getAttribute("reservationNumberOfDays");
+			Double price = (Double) session.getAttribute("reservationPrice");
 
-		Reservation reservation = new Reservation();
-		reservation.setId_annonce(annonceId);
-		reservation.setId_utilisateur(userId);
-		reservation.setDate_debut_sejour(timestampBegining);
-		reservation.setDate_fin_sejour(timestampEnd);
-		reservation.setDuree_sejour((int) numberOfDays);
-		reservation.setPrix(price);
-		reservation.setId_etat_reservation(1);
-		reservation.setId_statut_reservation(1);
+			Reservation reservation = new Reservation();
+			reservation.setId_annonce(annonceId);
+			reservation.setId_utilisateur(userId);
+			reservation.setDate_debut_sejour(timestampBegining);
+			reservation.setDate_fin_sejour(timestampEnd);
+			reservation.setDuree_sejour((int) numberOfDays);
+			reservation.setPrix(price);
+			reservation.setId_etat_reservation(1);
+			reservation.setId_statut_reservation(1);
 
-		reservationSessionBean.createReservation(reservation);
+			reservationSessionBean.createReservation(reservation);
+
+			setVariableToView("alert-success", "Réservation prise en compte");
+			redirectionToServlet(ANNONCES_LISTE_SERVLET);
+		} catch (Exception exception) {
+			setVariableToView("alert-danger", "Réservation non prise en compte");
+			redirectionToServlet(ANNONCES_LISTE_SERVLET);
+		}
 	}
 
 	/**
@@ -108,10 +156,20 @@ public class ReservationConfirmationServlet extends HttpServlet {
 		this.action = request.getParameter("action");
 		if (this.action == null) {
 			this.action = request.getParameter("submitButtonReservationValidation");
-			if(this.action == null) {
+			if (this.action == null) {
 				this.action = "";
 			}
 		}
+	}
+
+	/**
+	 * Feed request attribute
+	 * 
+	 * @param variable
+	 * @param message
+	 */
+	private void setVariableToView(String variable, String message) {
+		request.setAttribute(variable, message);
 	}
 
 	/**
@@ -124,5 +182,18 @@ public class ReservationConfirmationServlet extends HttpServlet {
 	 */
 	private void redirectionToView(String view) throws ServletException, IOException {
 		this.getServletContext().getRequestDispatcher("/" + view + ".jsp").forward(request, response);
+	}
+
+	/**
+	 * Redirection to a servlet
+	 * 
+	 * @param String
+	 *            : the servlet name
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void redirectionToServlet(String sevlet) throws ServletException, IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher(sevlet);
+		dispatcher.include(request, response);
 	}
 }

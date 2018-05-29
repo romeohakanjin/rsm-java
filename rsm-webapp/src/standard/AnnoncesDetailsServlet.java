@@ -241,7 +241,7 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 				// V�rifier que les jours c'est pas sup�rieur � 31 et inf�rieur � 1
 				// V�rifier que en fevrier on d�passe aps 28 jours
 				try {
-					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+					SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
 					Date firstDate = sdf.parse(beginingDate);
 					Date secondDate = sdf.parse(endDate);
 
