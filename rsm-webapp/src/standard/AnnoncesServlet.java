@@ -47,14 +47,14 @@ public class AnnoncesServlet extends HttpServlet {
 			}
 			List<Integer> annonceObj = annonceSessionBean.getAnnouncementSearched(destinationParameter, keywordParameter, keywords);
 			for(int i=0; i<annonceObj.size(); i++) {
-				Annonce annonce = annonceSessionBean.getAnnonceById(annonceObj.get(i));
+				Annonce annonce = annonceSessionBean.getAnnouncementById(annonceObj.get(i));
 				if(annonce != null) {
 					annonces.add(annonce);
 				}
 			}
 			break;
 		default: 
-			annonces = annonceSessionBean.getAllAnnonce();
+			annonces = annonceSessionBean.getAllAnnouncement();
 			break;
 		}
 		
@@ -63,7 +63,7 @@ public class AnnoncesServlet extends HttpServlet {
 	}
 
 	/**
-	 * Initialise les paramètres
+	 * Initialize the values
 	 */
 	private void initialize() {
 		this.response.setContentType("text/html");

@@ -14,7 +14,9 @@ import javax.servlet.http.HttpSession;
 
 import beans.entity.Annonce;
 import beans.entity.Commentaire;
+import beans.entity.ServiceChambre;
 import beans.session.AnnonceSessionBean;
+import beans.session.ServiceChambreSessionBean;
 
 /**
  * Servlet implementation class HotelierAnnonceDetailsServlet
@@ -30,28 +32,31 @@ public class HotelierAnnonceDetailsServlet extends HttpServlet {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
-	private String annonceId;
+	private String announcementId;
 	private String action;
 	private String commentId;
 
 	@EJB
 	AnnonceSessionBean annonceSessionBean;
+	
+	@EJB
+	ServiceChambreSessionBean serviceChambreSessionBean;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		this.request = request;
 		this.response = response;
 
-		initialiser();
+		initialize();
 
 		switch (action) {
 		case SIGNALER_COMMENT:
 			try {
 				int commentId = Integer.valueOf(this.commentId);
 				String identifiant = (String) this.session.getAttribute("login");
-				int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+				int id_utilisateur = annonceSessionBean.getUserId(identifiant);
 
-				boolean isMathingId = annonceSessionBean.isMatchingIdUserAndIdComment(id_utilisateur, commentId);
+				boolean isMathingId = annonceSessionBean.isMatchingUserIdAndCommentId(id_utilisateur, commentId);
 
 				if (isMathingId) {
 					annonceSessionBean.reportComment(commentId);
@@ -67,9 +72,9 @@ public class HotelierAnnonceDetailsServlet extends HttpServlet {
 			try {
 				int commentId = Integer.valueOf(this.commentId);
 				String identifiant = (String) this.session.getAttribute("login");
-				int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+				int id_utilisateur = annonceSessionBean.getUserId(identifiant);
 
-				boolean isMathingId = annonceSessionBean.isMatchingIdUserAndIdComment(id_utilisateur, commentId);
+				boolean isMathingId = annonceSessionBean.isMatchingUserIdAndCommentId(id_utilisateur, commentId);
 
 				if (isMathingId) {
 					annonceSessionBean.ignoreComment(commentId);
@@ -83,15 +88,17 @@ public class HotelierAnnonceDetailsServlet extends HttpServlet {
 			break;
 		default:
 			try {
-				int idAnnonce = Integer.valueOf(annonceId);
+				int idAnnonce = Integer.valueOf(announcementId);
 				String identifiant = (String) this.session.getAttribute("login");
-				int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
-				boolean isMathingId = annonceSessionBean.isMatchingIdUserAndIdUserAnnonce(id_utilisateur, idAnnonce);
+				int id_utilisateur = annonceSessionBean.getUserId(identifiant);
+				boolean isMathingId = annonceSessionBean.isMatchingUserIdAndAnnouncementId(id_utilisateur, idAnnonce);
 
 				if (isMathingId) {
-					Annonce annonce = annonceSessionBean.getAnnonce(idAnnonce);
-					List<Commentaire> commentaires = annonceSessionBean.getCommentsFromAnnonce(idAnnonce);
-
+					Annonce annonce = annonceSessionBean.getAnnouncement(idAnnonce);
+					List<Commentaire> commentaires = annonceSessionBean.getAnnouncementComments(idAnnonce);
+					List<ServiceChambre> roomServices = serviceChambreSessionBean.getRoomServices(idAnnonce);
+					request.setAttribute("roomServices", roomServices);
+					
 					request.setAttribute("annonceDetails", annonce);
 					request.setAttribute("commentsList", commentaires);
 					
@@ -112,14 +119,14 @@ public class HotelierAnnonceDetailsServlet extends HttpServlet {
 	}
 
 	/**
-	 * Itinaliser les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
-		this.annonceId = request.getParameter("annonceId");
+		this.announcementId = request.getParameter("annonceId");
 		this.action = request.getParameter("action");
 		if (this.action == null) {
 			this.action = "";

@@ -7,7 +7,7 @@
 	<div class="container">
 		<div id="content">
 			<h2>Connexion</h2>
-			<form method="get" action="Connection">
+			<form method="post" action="Connection">
 				<label>Identifiant</label> <input type='text' name='identifiant' />
 				<label>Mot de passe</label> <input type='password' name='motDePasse' />
 				<input type='submit' name='submit' value="submit">

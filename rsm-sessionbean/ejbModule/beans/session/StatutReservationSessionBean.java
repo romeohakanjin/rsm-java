@@ -34,15 +34,15 @@ public class StatutReservationSessionBean {
 	UserTransaction userTransaction;
 
 	/**
-	 * Créer un statut de réservation
-	 * @param libelle
-	 * @return
+	 * Create a state reservation
+	 * @param name
+	 * @return true/false : if the request has been executed
 	 */
-	public Boolean creerStatutReservation(String libelle) {
+	public Boolean createStatutReservation(String name) {
 		try {
 			userTransaction.begin();
 			StatutReservation statut = new StatutReservation();
-			statut.setLibelle(libelle);
+			statut.setLibelle(name);
 			entityManager.persist(statut);
 			userTransaction.commit();
 			return true;
@@ -54,8 +54,8 @@ public class StatutReservationSessionBean {
 	}
 	
 	/**
-	 * Récupère tous les status de réservation
-	 * @return
+	 * get all the state reservation
+	 * @return List<StatutReservation>
 	 */
 	@SuppressWarnings("unchecked")
 	public List<StatutReservation> getAllStatutReservation(){

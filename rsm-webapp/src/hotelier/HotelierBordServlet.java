@@ -32,14 +32,14 @@ public class HotelierBordServlet extends HttpServlet {
 		this.request = request;
 		this.response = response;
 
-		initialiser();
+		initialize();
 
 		String identifiant = (String) this.session.getAttribute("login");
-		int idUtilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+		int idUtilisateur = annonceSessionBean.getUserId(identifiant);
 
-		long numberOfAnnounceForHotelier = annonceSessionBean.getNumberOfAnnounceForHotelier(idUtilisateur);
+		long numberOfAnnounceForHotelier = annonceSessionBean.getNumberOfAnnouncementForHotelier(idUtilisateur);
 		List<Object[]> numberOfAnnouncePerState = annonceSessionBean
-				.getNumberOfAnnouncePerReservationStatus(idUtilisateur);
+				.getNumberOfAnnouncementPerReservationStatus(idUtilisateur);
 
 		this.request.setAttribute("numberOfAnnouncePerState", numberOfAnnouncePerState);
 		this.request.setAttribute("numberOfAnnounceForHotelier", numberOfAnnounceForHotelier);
@@ -47,11 +47,11 @@ public class HotelierBordServlet extends HttpServlet {
 	}
 
 	/**
-	 * Itinaliser les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
 

@@ -30,81 +30,81 @@ public class Inscription extends HttpServlet {
 	private HttpSession session;
 	private Utils utils;
 
-	private String typeUtilisateur;
-	private String identifiant;
-	private String motDePasse;
-	private String nom;
-	private String prenom;
-	private String telephone;
-	private String adresse;
-	private String codePostal;
-	private String ville;
-	private String nomHotel;
+	private String userType;
+	private String id;
+	private String password;
+	private String lastName;
+	private String firstName;
+	private String phoneNumber;
+	private String address;
+	private String postalCode;
+	private String town;
+	private String hotelName;
 	private boolean isHotelier;
 
 	@EJB
-	UtilisateurSessionBean utilisateurSessionBean;
+	UtilisateurSessionBean userSessionBean;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		this.request = request;
 		this.response = response;
 
-		initialiser();
+		initialize();
 
-		boolean isOkForm = verificationFormulaire();
+		boolean isOkForm = verificationForm();
 
 		if (isOkForm) {
-			boolean existingUser = utilisateurSessionBean.isExistingUser(identifiant);
+			boolean existingUser = userSessionBean.isExistingUser(id);
 			if (!existingUser) {
 				Utilisateur utilisateur = new Utilisateur();
-				utilisateur.setMail(identifiant);
-				utilisateur.setMot_de_passe(motDePasse);
-				utilisateur.setNom(nom);
-				utilisateur.setPrenom(prenom);
-				utilisateur.setMobile(telephone);
-				utilisateur.setAdresse(adresse);
-				utilisateur.setCode_postal(codePostal);
-				utilisateur.setVille(ville);
+				utilisateur.setMail(id);
+				utilisateur.setMot_de_passe(password);
+				utilisateur.setNom(lastName);
+				utilisateur.setPrenom(firstName);
+				utilisateur.setMobile(phoneNumber);
+				utilisateur.setAdresse(address);
+				utilisateur.setCode_postal(postalCode);
+				utilisateur.setVille(town);
 				utilisateur.setActif(true);
 
 				if (this.isHotelier) {
 					utilisateur.setId_type_utilisateur(2);
-					boolean existingHotel = utilisateurSessionBean.checkExistingHotel(nomHotel);
+					boolean existingHotel = userSessionBean.checkExistingHotel(hotelName);
 					if (existingHotel) {
 						// Hotel already registred
-						int idHotel = utilisateurSessionBean.getIdHotel(nomHotel);
+						int idHotel = userSessionBean.getIdHotel(hotelName);
 						utilisateur.setId_hotel(idHotel);
 
-						utilisateurSessionBean.creerUtilisateur(utilisateur);
-						httpSession(identifiant, motDePasse);
+						userSessionBean.createUser(utilisateur);
+						httpSession(id, password);
 						setSession(utilisateur.getId_type_utilisateur());
-						setVariableToView("alert-sucess", "Création de compte prise en compte");
+						setVariableToView("alert-sucess", "Crï¿½ation de compte prise en compte");
 						redirectionToView(HOME_PAGE);
 					} else if (!existingHotel) {
 						// No hotel registred
-						int idHotel = utilisateurSessionBean.createHotel(nomHotel);
+						int idHotel = userSessionBean.createHotel(hotelName);
 						utilisateur.setId_hotel(idHotel);
 
-						utilisateurSessionBean.creerUtilisateur(utilisateur);
-						httpSession(identifiant, motDePasse);
+						userSessionBean.createUser(utilisateur);
+						httpSession(id, password);
 						setSession(utilisateur.getId_type_utilisateur());
-						setVariableToView("alert-sucess", "Création de compte prise en compte");
+						setVariableToView("alert-sucess", "Crï¿½ation de compte prise en compte");
 						redirectionToView(HOME_PAGE);
 					} else {
-						setVariableToView("alert-danger", "Hôtel inexistant");
+						setVariableToView("alert-danger", "Hï¿½tel inexistant");
 						redirectionToView(INSCRIPTION_PAGE);
 					}
 				} else {
 					utilisateur.setId_type_utilisateur(3);
 					this.setSession(utilisateur.getId_type_utilisateur());
-					utilisateurSessionBean.creerUtilisateur(utilisateur);
-					httpSession(identifiant, motDePasse);
-					setVariableToView("alert-sucess", "Création de compte prise en compte");
+					userSessionBean.createUser(utilisateur);
+					httpSession(id, password);
+					setVariableToView("alert-sucess", "Crï¿½ation de compte prise en compte");
 					redirectionToView(HOME_PAGE);
 				}
 			} else {
-				setVariableToView("alert-danger", "Cette adresse e-mail est déjà utilisée");
+				setVariableToView("alert-danger", "Cette adresse e-mail est dï¿½jï¿½ utilisï¿½e");
 				redirectionToView(INSCRIPTION_PAGE);
 			}
 		} else {
@@ -115,53 +115,53 @@ public class Inscription extends HttpServlet {
 	}
 
 	/**
-	 * Vérification des paramètres saisis dans le formulaire d'inscription
+	 * Verification of the parameters from the inscription form
 	 * 
-	 * @return boolean : true si le formulaire est OK false si le formulaire est NOK
+	 * @return true / false : true if the form is ok OK
 	 */
-	private boolean verificationFormulaire() {
+	private boolean verificationForm() {
 		boolean isOkForm = true;
-		if (typeUtilisateur != null) {
-			if (identifiant == null || "".equals(identifiant)) {
+		if (userType != null) {
+			if (id == null || "".equals(id)) {
 				isOkForm = false;
 			}
 
-			if (motDePasse == null || "".equals(motDePasse)) {
+			if (password == null || "".equals(password)) {
 				isOkForm = false;
 			}
 
-			if (typeUtilisateur.equals("hotelier")) {
+			if (userType.equals("hotelier")) {
 				this.isHotelier = true;
 
-				if (nomHotel == null || "".equals(nomHotel)) {
+				if (hotelName == null || "".equals(hotelName)) {
 					isOkForm = false;
 				}
 			}
 
-			if (typeUtilisateur.equals("utilisateur")) {
+			if (userType.equals("utilisateur")) {
 				this.isHotelier = false;
 
-				if (nom == null || "".equals(nom)) {
+				if (lastName == null || "".equals(lastName)) {
 					isOkForm = false;
 				}
 
-				if (prenom == null || "".equals(prenom)) {
+				if (firstName == null || "".equals(firstName)) {
 					isOkForm = false;
 				}
 
-				if (telephone == null || "".equals(telephone)) {
+				if (phoneNumber == null || "".equals(phoneNumber)) {
 					isOkForm = false;
 				}
 
-				if (adresse == null || "".equals(adresse)) {
+				if (address == null || "".equals(address)) {
 					isOkForm = false;
 				}
 
-				if (codePostal == null || "".equals(codePostal)) {
+				if (postalCode == null || "".equals(postalCode)) {
 					isOkForm = false;
 				}
 
-				if (ville == null || "".equals(ville)) {
+				if (town == null || "".equals(town)) {
 					isOkForm = false;
 				}
 			}
@@ -170,27 +170,27 @@ public class Inscription extends HttpServlet {
 	}
 
 	/**
-	 * Itinaliser les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.session = request.getSession();
 		this.isHotelier = false;
 		this.response.setContentType("text/html");
 		this.request.removeAttribute("error-form-inscription");
 
-		this.typeUtilisateur = request.getParameter("selectTypeUtilisateur");
-		this.identifiant = request.getParameter("identifiant");
-		this.motDePasse = request.getParameter("motDePasse");
-		this.nom = request.getParameter("nom");
-		this.prenom = request.getParameter("prenom");
-		this.telephone = request.getParameter("telephone");
-		this.adresse = request.getParameter("adresse");
-		this.codePostal = request.getParameter("codePostal");
-		this.ville = request.getParameter("ville");
+		this.userType = request.getParameter("selectTypeUtilisateur");
+		this.id = request.getParameter("identifiant");
+		this.password = request.getParameter("motDePasse");
+		this.lastName = request.getParameter("nom");
+		this.firstName = request.getParameter("prenom");
+		this.phoneNumber = request.getParameter("telephone");
+		this.address = request.getParameter("adresse");
+		this.postalCode = request.getParameter("codePostal");
+		this.town = request.getParameter("ville");
 
-		this.nomHotel = request.getParameter("nomHotel");
+		this.hotelName = request.getParameter("nomHotel");
 	}
 
 	/**

@@ -37,10 +37,10 @@ public class ServiceChambreSessionBean {
 	/**
 	 * Create a service
 	 * 
-	 * @param commentaire
-	 * @return
+	 * @param serviceChambre : instance of ServiceChambre
+	 * @return true/false : if the request has been executed
 	 */
-	public Boolean creerServiceChambre(ServiceChambre serviceChambre) {
+	public Boolean createServiceChambre(ServiceChambre serviceChambre) {
 		try {
 			userTransaction.begin();
 			entityManager.persist(serviceChambre);
@@ -127,7 +127,7 @@ public class ServiceChambreSessionBean {
 	}
 
 	/**
-	 * check if the service is existing by is name for a annonce
+	 * check if the service is existing by is name for a announcement
 	 * @param name : service name 
 	 * @param announcementId : announcementId
 	 * @return True if it exist or False if he dosn't

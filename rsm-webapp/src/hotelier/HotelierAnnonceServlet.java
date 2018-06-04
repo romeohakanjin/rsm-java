@@ -37,15 +37,15 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
-	private String titre;
+	private String title;
 	private String description;
-	private String capaciteMax;
-	private int capaciteMaxValue;
-	private String prixNuit;
-	private Double prixParNuit;
-	private Date dateCreation;
-	private String parametre;
-	private String annonceId;
+	private String maxCapacity;
+	private int maxCapacityValue;
+	private String priceForANight;
+	private Double pricePerNight;
+	private Date creationDate;
+	private String parameter;
+	private String announcementId;
 	private String serviceId;
 	private String service;
 
@@ -60,23 +60,23 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		this.request = request;
 		this.response = response;
 
-		initialiser();
-		// Afficher, ajouter, modifier ou supprimer une annonce
-		switch (this.parametre) {
+		initialize();
+		// Show, add, modify or delete a annoncement
+		switch (this.parameter) {
 		case PARAMETER_ACTION_ADD:
-			ajouterAnnonceActionPerformed();
+			addAnnouncementActionPerformed();
 			break;
 		case PARAMETER_ACTION_ADD_SERVICE:
 			addServiceActionPerformed();
 			break;
 		case PARAMETER_ACTION_EDIT_ANNONCE:
-			ajouterAnnonceModifierActionPerformed();
+			addAnnoncementAndModifyActionPerformed();
 			break;
 		case PARAMETER_ACTION_EDIT:
-			modifierAnnonceActionPerformed();
+			modifyAnnoncementActionPerformed();
 			break;
 		case PARAMETER_ACTION_DELETE:
-			deleteAnnonceActionPerformed();
+			deleteAnnoncementActionPerformed();
 			break;
 		case PARAMETER_ACTION_DELETE_SERVICE:
 			deleteServiceActionPerformed();
@@ -100,9 +100,9 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		String quantity = request.getParameter("serviceQuantity");
 		String idAnnonce = request.getParameter("idAnnonce");
 		String identifiant = (String) this.session.getAttribute("login");
-		int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+		int id_utilisateur = annonceSessionBean.getUserId(identifiant);
 		int idAnnonceInt = Integer.valueOf(idAnnonce);
-		boolean matchingIdUser = annonceSessionBean.isMatchingIdUserAndIdUserAnnonce(id_utilisateur, idAnnonceInt);
+		boolean matchingIdUser = annonceSessionBean.isMatchingUserIdAndAnnouncementId(id_utilisateur, idAnnonceInt);
 
 		if ((name != null || !"".equals(name)) || (quantity != null || !"".equals(quantity))) {
 			if (matchingIdUser) {
@@ -112,7 +112,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 					serviceChambre.setNom(name);
 					serviceChambre.setQuantite(quantityInt);
 					serviceChambre.setId_annonce(idAnnonceInt);
-					serviceChambreSessionBean.creerServiceChambre(serviceChambre);
+					serviceChambreSessionBean.createServiceChambre(serviceChambre);
 					
 					// Reload and redirection
 					setVariableToView("alert-success", "Nouveau service pris en compte");
@@ -144,7 +144,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		// Looking if the ad id matches the id of the ad id from the service
 		try {
 			int idService = Integer.valueOf(serviceId);
-			int idAnnonce = Integer.valueOf(annonceId);
+			int idAnnonce = Integer.valueOf(announcementId);
 			boolean matchingIdUser = serviceChambreSessionBean.isMatchingIdAdAndIdAdService(idAnnonce, idService);
 
 			if (matchingIdUser) {
@@ -152,7 +152,7 @@ public class HotelierAnnonceServlet extends HttpServlet {
 
 				// Reload and redirection
 				setVariableToView("alert-success", "Suppression du service prise en compte");
-				modifierAnnonceActionPerformed();
+				modifyAnnoncementActionPerformed();
 			}
 		} catch (NumberFormatException exception) {
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
@@ -163,33 +163,34 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	}
 
 	/**
+	 * Modify a announcement
 	 * @throws IOException
 	 * @throws ServletException
 	 * 
 	 */
-	private void ajouterAnnonceModifierActionPerformed() throws ServletException, IOException {
+	private void addAnnoncementAndModifyActionPerformed() throws ServletException, IOException {
 		// looking if the anouncement id (id_user) matches the id of the announcement
 
 		String identifiant = (String) this.session.getAttribute("login");
-		int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+		int id_utilisateur = annonceSessionBean.getUserId(identifiant);
 		boolean isFormOk = verificationFormulaire();
 
 		if (isFormOk) {
 			try {
 				int idAnnonce = (int) session.getAttribute("sessionAnnonceId");
 				this.session.removeAttribute("sessionAnnonceId");
-				boolean matchingIdUser = annonceSessionBean.isMatchingIdUserAndIdUserAnnonce(id_utilisateur, idAnnonce);
+				boolean matchingIdUser = annonceSessionBean.isMatchingUserIdAndAnnouncementId(id_utilisateur, idAnnonce);
 
 				if (matchingIdUser) {
 					// get the id of the announcement and update the set in the announcement
 					Annonce annonce = new Annonce();
 					annonce.setId_annonce(idAnnonce);
 					annonce.setId_utilisateur(id_utilisateur);
-					annonce.setTitre(titre);
+					annonce.setTitre(title);
 					annonce.setDescription(description);
-					annonce.setCapacite_max(this.capaciteMaxValue);
-					annonce.setPrix_nuit(prixParNuit);
-					annonceSessionBean.updateAnnonce(annonce);
+					annonce.setCapacite_max(this.maxCapacityValue);
+					annonce.setPrix_nuit(pricePerNight);
+					annonceSessionBean.updateAnnouncement(annonce);
 
 					this.request.removeAttribute("annonceEdited");
 					setVariableToView("alert-success", "Modifications prisent en compte");
@@ -201,24 +202,29 @@ public class HotelierAnnonceServlet extends HttpServlet {
 		}
 		redirectionToServlet(ANNONCE_LISTE_SERVLET);
 	}
-
-	private void ajouterAnnonceActionPerformed() throws ServletException, IOException {
+	
+	/**
+	 * add a announcement
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void addAnnouncementActionPerformed() throws ServletException, IOException {
 		final boolean isOkForm = verificationFormulaire();
 
 		if (isOkForm) {
-			dateCreation = new Date(Calendar.getInstance().getTime().getTime());
+			creationDate = new Date(Calendar.getInstance().getTime().getTime());
 			Annonce annonce = new Annonce();
-			annonce.setTitre(titre.trim());
+			annonce.setTitre(title.trim());
 			annonce.setDescription(description.trim());
-			annonce.setCapacite_max(capaciteMaxValue);
-			annonce.setPrix_nuit(prixParNuit);
+			annonce.setCapacite_max(maxCapacityValue);
+			annonce.setPrix_nuit(pricePerNight);
 			annonce.setActif(true);
 
 			String identifiant = (String) this.session.getAttribute("login");
-			int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+			int id_utilisateur = annonceSessionBean.getUserId(identifiant);
 			annonce.setId_utilisateur(id_utilisateur);
-			annonce.setDate_creation(new Timestamp(dateCreation.getTime()));
-			annonceSessionBean.creerAnnonce(annonce);
+			annonce.setDate_creation(new Timestamp(creationDate.getTime()));
+			annonceSessionBean.createAnnouncement(annonce);
 			setVariableToView("alert-success", "Annonce ajoutée");
 			redirectionToServlet(ANNONCE_LISTE_SERVLET);
 		} else {
@@ -233,15 +239,15 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void modifierAnnonceActionPerformed() throws ServletException, IOException {
+	private void modifyAnnoncementActionPerformed() throws ServletException, IOException {
 		try {
-			int idAnnonce = Integer.valueOf(annonceId);
+			int idAnnonce = Integer.valueOf(announcementId);
 			String identifiant = (String) this.session.getAttribute("login");
-			int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+			int id_utilisateur = annonceSessionBean.getUserId(identifiant);
 
-			boolean isMathingId = annonceSessionBean.isMatchingIdUserAndIdUserAnnonce(id_utilisateur, idAnnonce);
+			boolean isMathingId = annonceSessionBean.isMatchingUserIdAndAnnouncementId(id_utilisateur, idAnnonce);
 			if (isMathingId) {
-				Annonce annonce = annonceSessionBean.getAnnonce(idAnnonce);
+				Annonce annonce = annonceSessionBean.getAnnouncement(idAnnonce);
 				request.setAttribute("annonceEdited", annonce);
 
 				List<ServiceChambre> roomServices = serviceChambreSessionBean.getRoomServices(idAnnonce);
@@ -259,19 +265,19 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	}
 
 	/**
-	 * Delete a annonce action
+	 * Delete a announcement action
 	 * 
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void deleteAnnonceActionPerformed() throws ServletException, IOException {
+	private void deleteAnnoncementActionPerformed() throws ServletException, IOException {
 		String identifiant = (String) this.session.getAttribute("login");
-		int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+		int id_utilisateur = annonceSessionBean.getUserId(identifiant);
 		try {
-			int idAnnonce = Integer.valueOf(annonceId);
-			boolean matchingIdUser = annonceSessionBean.isMatchingIdUserAndIdUserAnnonce(id_utilisateur, idAnnonce);
+			int idAnnonce = Integer.valueOf(announcementId);
+			boolean matchingIdUser = annonceSessionBean.isMatchingUserIdAndAnnouncementId(id_utilisateur, idAnnonce);
 			if (matchingIdUser) {
-				annonceSessionBean.deleteAnnonce(idAnnonce);
+				annonceSessionBean.deleteAnnouncement(idAnnonce);
 			}
 
 			setVariableToView("alert-success", "Suppression de l'annonce prise en compte");
@@ -283,14 +289,14 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	}
 
 	/**
-	 * Veirfication des champs saisies
+	 * Verification of the form values
 	 * 
-	 * @return boolean isOkForm
+	 * @return true / false : if the form is OK
 	 */
 	private boolean verificationFormulaire() {
 		boolean isOkForm = true;
 
-		if (titre == null || "".equals(titre)) {
+		if (title == null || "".equals(title)) {
 			isOkForm = false;
 		}
 
@@ -298,21 +304,21 @@ public class HotelierAnnonceServlet extends HttpServlet {
 			isOkForm = false;
 		}
 
-		if (capaciteMax == null || "".equals(capaciteMax)) {
+		if (maxCapacity == null || "".equals(maxCapacity)) {
 			isOkForm = false;
 		} else {
 			try {
-				this.capaciteMaxValue = Integer.parseInt(capaciteMax);
+				this.maxCapacityValue = Integer.parseInt(maxCapacity);
 			} catch (NumberFormatException exception) {
 				isOkForm = false;
 			}
 		}
 
-		if (prixNuit == null || "".equals(prixNuit)) {
+		if (priceForANight == null || "".equals(priceForANight)) {
 			isOkForm = false;
 		} else {
 			try {
-				this.prixParNuit = Double.parseDouble(prixNuit.trim());
+				this.pricePerNight = Double.parseDouble(priceForANight.trim());
 			} catch (NumberFormatException e) {
 				isOkForm = false;
 			}
@@ -323,28 +329,28 @@ public class HotelierAnnonceServlet extends HttpServlet {
 	}
 
 	/**
-	 * Itinaliser les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
 
-		this.titre = "";
+		this.title = "";
 		this.description = "";
-		this.capaciteMax = "";
-		this.prixNuit = "";
-		this.annonceId = "";
-		this.parametre = "";
+		this.maxCapacity = "";
+		this.priceForANight = "";
+		this.announcementId = "";
+		this.parameter = "";
 
-		this.parametre = request.getParameter("action");
+		this.parameter = request.getParameter("action");
 
-		this.titre = request.getParameter("titre");
+		this.title = request.getParameter("titre");
 		this.description = request.getParameter("description");
-		this.capaciteMax = request.getParameter("capaciteMax");
-		this.prixNuit = request.getParameter("prixNuit");
-		this.annonceId = request.getParameter("annonceId");
+		this.maxCapacity = request.getParameter("capaciteMax");
+		this.priceForANight = request.getParameter("prixNuit");
+		this.announcementId = request.getParameter("annonceId");
 		this.serviceId = request.getParameter("serviceId");
 		this.service = request.getParameter("service");
 	}

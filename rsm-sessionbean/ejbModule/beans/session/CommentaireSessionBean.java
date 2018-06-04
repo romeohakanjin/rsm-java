@@ -34,14 +34,14 @@ public class CommentaireSessionBean {
 	UserTransaction userTransaction;
 
 	/**
-	 * Créer un commentaire
-	 * @param commentaire
-	 * @return
+	 * Create a comment
+	 * @param comment
+	 * @return true/false : if the request has been executed
 	 */
-	public Boolean creerCommentaire(Commentaire commentaire) {
+	public Boolean createComment(Commentaire comment) {
 		try {
 			userTransaction.begin();
-			entityManager.persist(commentaire);
+			entityManager.persist(comment);
 			userTransaction.commit();
 			return true;
 		} catch (RollbackException | HeuristicMixedException
@@ -52,19 +52,19 @@ public class CommentaireSessionBean {
 	}
 	
 	/**
-	 * Récupère tous les commentaires
-	 * @return
+	 * get all comments
+	 * @return List<Commentaire>
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Commentaire> getAllCommentaire(){
+	public List<Commentaire> getAllComments(){
 		String queryString = "FROM Commentaire";
 		Query query = entityManager.createQuery(queryString);
 		return (List<Commentaire>) query.getResultList();
 	}
 	
 	/**
-	 * Récupèrer tous les commentaires signalés
-	 * @return
+	 * get reported comments
+	 * @return List<Object[]>
 	 */
 	public List<Object[]> getSignaledComment(){
 		String queryString = "SELECT c.id_commentaire, c.id_reservation, u.nom, u.prenom, c.date_creation, c.commentaire "
@@ -76,8 +76,9 @@ public class CommentaireSessionBean {
 	}
 	
 	/**
-	 * Passe un commentaire signalé à l'état réfusé
+	 * change the status from a reported comment to refused 
 	 * @param commentId
+	 * @return true/false : if the request has been executed
 	 */
 	public boolean refuseComment(Integer commentId) {
 		try {
@@ -96,7 +97,7 @@ public class CommentaireSessionBean {
 	}
 	
 	/**
-	 * Passe un commentaire signalé à l'état validé
+	 * change the status from a reported comment to validated
 	 * @param commentId
 	 */
 	public boolean validateComment(Integer commentId) {
@@ -116,7 +117,7 @@ public class CommentaireSessionBean {
 	}
 	
 	/**
-	 * Récupère un commentaire par son id_commentaire
+	 * get a comment by is id
 	 * @param commentId
 	 * @return
 	 */

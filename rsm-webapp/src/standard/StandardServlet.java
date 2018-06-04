@@ -15,7 +15,7 @@ import beans.session.UtilisateurSessionBean;
 
 /**
  * 
- * @author Massneymar
+ * @author MDI
  *
  */
 @WebServlet("/StandardServlet")
@@ -27,29 +27,29 @@ public class StandardServlet extends HttpServlet {
 	private HttpSession session;
 
 	@EJB
-	UtilisateurSessionBean utilisateurSessionBean;
+	UtilisateurSessionBean userSessionBean;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		this.request = request;
 		this.response = response;
 
-		initialiser();
+		initialize();
 		showUserInformations();
 	}
 
 	/**
-	 * Itinaliser les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
 	}
 
 	/**
-	 * Affiche les informations de l'utilisateur
+	 * Display the user informations
 	 * 
 	 * @throws ServletException
 	 * @throws IOException
@@ -57,9 +57,9 @@ public class StandardServlet extends HttpServlet {
 	private void showUserInformations() throws ServletException, IOException {
 		String identifiant = (String) this.session.getAttribute("login");
 
-		int idUtilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);
+		int idUtilisateur = userSessionBean.getIdUtilisateur(identifiant);
 		Utilisateur utilisateur = new Utilisateur();
-		utilisateur = (Utilisateur) utilisateurSessionBean.getUserInformation(idUtilisateur);
+		utilisateur = (Utilisateur) userSessionBean.getUser(idUtilisateur);
 
 		this.request.setAttribute("userInformations", utilisateur);
 		redirectionToView(INFOS_PERSONNELLES);

@@ -25,6 +25,7 @@ import beans.session.AnnonceSessionBean;
 import beans.session.PropositionModificationSessionBean;
 import beans.session.ReservationSessionBean;
 import beans.session.ServiceChambreSessionBean;
+import beans.session.UtilisateurSessionBean;
 
 /**
  * Servlet implementation class AnnoncesDetailsServlet
@@ -42,12 +43,11 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
-	private String annonceId;
-	private int annonceIdInt;
-	private int reservationId;
+	private String annoncementId;
+	private int annoncementeIdValue;
 	private String action;
-	private String dateDebut;
-	private String dateFin;
+	private String beginingDate;
+	private String endDate;
 	private double price;
 	private double pricePerNight;
 	private long numberOfDays;
@@ -55,9 +55,12 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 	private Timestamp timestampEnd;
 	private String nameService;
 	private String quantityService;
-
+	
 	@EJB
-	AnnonceSessionBean annonceSessionBean;
+	UtilisateurSessionBean utilisateurSessionBean;
+	
+	@EJB
+	AnnonceSessionBean announcementSessionBean;
 
 	@EJB
 	ReservationSessionBean reservationSessionBean;
@@ -73,11 +76,11 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 		this.request = request;
 		this.response = response;
 
-		initialiser();
+		initialize();
 
 		try {
-			if (annonceId != null) {
-				annonceIdInt = Integer.valueOf(annonceId);
+			if (annoncementId != null) {
+				annoncementeIdValue = Integer.valueOf(annoncementId);
 			}
 
 			switch (action) {
@@ -88,10 +91,10 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 				propositionModificationActionPerformed();
 				break;
 			default:
-				Annonce annonce = annonceSessionBean.getAnnonce(annonceIdInt);
+				Annonce annonce = announcementSessionBean.getAnnouncement(annoncementeIdValue);
 				request.setAttribute("annonceDetails", annonce);
 
-				List<ServiceChambre> roomServices = serviceChambreSessionBean.getRoomServices(annonceIdInt);
+				List<ServiceChambre> roomServices = serviceChambreSessionBean.getRoomServices(annoncementeIdValue);
 				request.setAttribute("roomServices", roomServices);
 
 				redirectionToView(ANNONCE_DETAILS_VIEW);
@@ -110,19 +113,16 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void propositionModificationActionPerformed() throws ServletException, IOException {
-		System.out.println(annonceId);
-		System.out.println(nameService);
-		System.out.println(quantityService);
 		try {
-			annonceIdInt = Integer.valueOf(annonceId);
+			annoncementeIdValue = Integer.valueOf(annoncementId);
 			int quantity = Integer.valueOf(quantityService);
 			String identifiant = (String) this.session.getAttribute("login");
-			int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
-			boolean isMatchingId = reservationSessionBean.isMatchingIdUserReservationAndIdAnnouncement(id_utilisateur, annonceIdInt);
+			int id_utilisateur = announcementSessionBean.getUserId(identifiant);
+			boolean isMatchingId = reservationSessionBean.isMatchingIdUserReservationAndIdAnnouncement(id_utilisateur, annoncementeIdValue);
 			
 			if (isMatchingId) {
 				PropositionModificationAnnonce proposition = new PropositionModificationAnnonce();
-				proposition.setId_annonce(annonceIdInt);
+				proposition.setId_annonce(annoncementeIdValue);
 				proposition.setId_utilisateur(id_utilisateur);
 				proposition.setNom(nameService);
 				proposition.setQuantite(quantity);
@@ -154,23 +154,27 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 			final boolean isOkForm = verificationFormulaire();
 
 			if (isOkForm) {
-				// V�rifier si l'id de l'utilisateur est bien celui d'un utilisateurs standard
+				// Check if the id of the user match a standard user type
 				String identifiant = (String) this.session.getAttribute("login");
-				int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+				int id_utilisateur = announcementSessionBean.getUserId(identifiant);
 
-				boolean isActiveAd = annonceSessionBean.isActiveAd(annonceIdInt);
+				boolean isActiveAd = announcementSessionBean.isAnnouncementActivated(annoncementeIdValue);
 
 				if (isActiveAd) {
-					boolean isAlreadyReservedAdForThisDate = reservationSessionBean.isOkDateForReservation(annonceIdInt,
+					boolean isAlreadyReservedAdForThisDate = reservationSessionBean.isOkDateForReservation(annoncementeIdValue,
 							timestampBegining, timestampEnd);
 					if (!isAlreadyReservedAdForThisDate) {
-						// alors send sur la page de r�sumer de r�servation
-						session.setAttribute("reservationToValidate", annonceIdInt);
+						// then redirect of reservation resume page
+						int userPoints = utilisateurSessionBean.getUserPoints(id_utilisateur);
+						request.setAttribute("userPoints", userPoints);
+						
+						session.setAttribute("reservationToValidate", annoncementeIdValue);
 						session.setAttribute("reservationIdUser", id_utilisateur);
 						session.setAttribute("reservationDateDebut", timestampBegining);
 						session.setAttribute("reservationDateFin", timestampEnd);
 						session.setAttribute("reservationNumberOfDays", numberOfDays);
 						session.setAttribute("reservationPrice", price);
+						
 						redirectionToServlet(RESERVATION_VALIDATE_SERVLET);
 					}
 
@@ -189,21 +193,21 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 	}
 
 	/**
-	 * Veirfication des champs saisies
+	 * Verification of the form values
 	 * 
-	 * @return boolean isOkForm
+	 * @return boolean true / false : if the form values is ok
 	 * @throws ServletException
 	 * @throws ParseException
 	 */
 	private boolean verificationFormulaire() throws ServletException {
 		boolean isOkForm = true;
 
-		if (dateDebut == null || "".equals(dateDebut) && dateFin == null || "".equals(dateFin)) {
+		if (beginingDate == null || "".equals(beginingDate) && endDate == null || "".equals(endDate)) {
 			isOkForm = false;
 		} else {
 			boolean reservationForActualDate = false;
-			Date dateBegining = new Date(dateDebut);
-			Date dateEnd = new Date(dateFin);
+			Date dateBegining = new Date(beginingDate);
+			Date dateEnd = new Date(endDate);
 
 			if (dateEnd.getTime() < dateBegining.getTime()) {
 				isOkForm = false;
@@ -223,7 +227,7 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 				if (dateBegining.getTime() == dateEnd.getTime()) {
 					reservationForActualDate = true;
 					this.numberOfDays = 1;
-					pricePerNight = annonceSessionBean.getPricePerNightAd(annonceIdInt);
+					pricePerNight = announcementSessionBean.getAnnouncementPricePerNight(annoncementeIdValue);
 					this.price = pricePerNight;
 				}
 			}
@@ -237,14 +241,14 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 				// V�rifier que les jours c'est pas sup�rieur � 31 et inf�rieur � 1
 				// V�rifier que en fevrier on d�passe aps 28 jours
 				try {
-					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-					Date firstDate = sdf.parse(dateDebut);
-					Date secondDate = sdf.parse(dateFin);
+					SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+					Date firstDate = sdf.parse(beginingDate);
+					Date secondDate = sdf.parse(endDate);
 
 					long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
 					this.numberOfDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
-					pricePerNight = annonceSessionBean.getPricePerNightAd(annonceIdInt);
+					pricePerNight = announcementSessionBean.getAnnouncementPricePerNight(annoncementeIdValue);
 					this.price = pricePerNight * numberOfDays;
 				} catch (ParseException e) {
 					e.printStackTrace();
@@ -252,11 +256,11 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 			}
 		}
 
-		if (annonceId == null || "".equals(annonceId)) {
+		if (annoncementId == null || "".equals(annoncementId)) {
 			isOkForm = false;
 		} else {
 			try {
-				this.annonceIdInt = Integer.parseInt(annonceId);
+				this.annoncementeIdValue = Integer.parseInt(annoncementId);
 			} catch (NumberFormatException exception) {
 				isOkForm = false;
 			}
@@ -270,12 +274,12 @@ public class AnnoncesDetailsServlet extends HttpServlet {
 	 * 
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
-		this.dateDebut = request.getParameter("dateDebut");
-		this.dateFin = request.getParameter("dateFin");
-		this.annonceId = request.getParameter("annonceId");
+		this.beginingDate = request.getParameter("dateDebut");
+		this.endDate = request.getParameter("dateFin");
+		this.annoncementId = request.getParameter("annonceId");
 		this.nameService = request.getParameter("nom");
 		this.quantityService = request.getParameter("quantite");
 		this.action = request.getParameter("action");

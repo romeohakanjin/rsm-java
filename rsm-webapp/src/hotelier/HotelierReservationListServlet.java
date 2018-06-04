@@ -38,10 +38,10 @@ public class HotelierReservationListServlet extends HttpServlet {
 		this.request = request;
 		this.response = response;
 
-		initialiser();
+		initialize();
 
 		String identifiant = (String) this.session.getAttribute("login");
-		int idUtilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+		int idUtilisateur = annonceSessionBean.getUserId(identifiant);
 
 		List<Object[]> reservations = reservationSessionBean.getReservationsHotelByUserId(idUtilisateur);
 
@@ -50,11 +50,11 @@ public class HotelierReservationListServlet extends HttpServlet {
 	}
 
 	/**
-	 * Itinaliser les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
 

@@ -34,11 +34,11 @@ public class HotelSessionBean {
 	UserTransaction userTransaction;
 	
 	/**
-	 * Créer un hotel
-	 * @param libelle
-	 * @return
+	 * Crate a hotel
+	 * @param hotel : intance of Hotel
+	 * @return true/false : if the request has been executed
 	 */
-	public Boolean creerHotel(Hotel hotel) {
+	public Boolean createHotel(Hotel hotel) {
 		try {
 			userTransaction.begin();
 			entityManager.persist(hotel);
@@ -52,8 +52,8 @@ public class HotelSessionBean {
 	}
 	
 	/**
-	 * Récupère les hotels
-	 * @return
+	 * get all the hotels
+	 * @return List<Hotel>
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Hotel> getAllHotels(){
@@ -63,9 +63,9 @@ public class HotelSessionBean {
 	}
 	
 	/**
-	 * Récupère un hotel
+	 * get a hotel
 	 * @param idHotel
-	 * @return
+	 * @return Hotel
 	 */
 	public Hotel getHotelById(Integer idHotel) {
 		String queryString = "FROM Hotel h WHERE h.id_hotel = "+idHotel;

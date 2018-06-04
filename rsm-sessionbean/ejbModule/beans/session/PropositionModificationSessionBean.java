@@ -38,8 +38,8 @@ public class PropositionModificationSessionBean {
 	/**
 	 * Create a modification proposition for an ad
 	 * 
-	 * @param proposition
-	 * @return
+	 * @param proposition : instance of PropositionModificationAnnonce
+	 * @return true/false : if the request has been executed
 	 */
 	public Boolean createModificationProposition(PropositionModificationAnnonce proposition) {
 		try {
@@ -59,7 +59,7 @@ public class PropositionModificationSessionBean {
 	 * 
 	 * @return List<PropositionModificationAnnonce>
 	 */
-	public List<PropositionModificationAnnonce> getModificationsPorpositions() {
+	public List<PropositionModificationAnnonce> getModificationsPropositions() {
 		String queryString = "FROM PropositionModificationAnnonce";
 		Query query = entityManager.createQuery(queryString);
 		return (List<PropositionModificationAnnonce>) query.getResultList();
@@ -69,11 +69,9 @@ public class PropositionModificationSessionBean {
 	 * get a modification proposition by is id
 	 * 
 	 * @param propositionId
-	 * @return
+	 * @return PropositionModificationAnnonce
 	 */
 	public PropositionModificationAnnonce getModificationsPropositionById(int propositionId) {
-		PropositionModificationAnnonce annonce = new PropositionModificationAnnonce();
-
 		String queryString = "FROM PropositionModificationAnnonce " + "WHERE id_proposition_modif_annonce = '"
 				+ propositionId + "'";
 		Query query = entityManager.createQuery(queryString);

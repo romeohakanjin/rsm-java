@@ -65,10 +65,10 @@ public class UserManagementServlet extends HttpServlet {
 				if (userToDelete != null) {
 					Boolean isDeleted = deleteUserById(idUser, userToDelete.getId_type_utilisateur());
 					if (isDeleted) {
-						setVariableToView("alert-success", "La suppression vient d'être effectué");
+						setVariableToView("alert-success", "La suppression vient d'ï¿½tre effectuï¿½");
 						redirectionToView(USER_MANAGEMENT);
 					} else {
-						setVariableToView("alert-danger", "La suppression n'a pas pu être effectué");
+						setVariableToView("alert-danger", "La suppression n'a pas pu ï¿½tre effectuï¿½");
 					}
 				}
 			}
@@ -85,7 +85,7 @@ public class UserManagementServlet extends HttpServlet {
 	}
 
 	/**
-	 * Initialise les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
@@ -135,22 +135,22 @@ public class UserManagementServlet extends HttpServlet {
 	}
 
 	/**
-	 * Récupère tous les utilisateurs
+	 * get all the users
 	 * 
 	 * @throws IOException
 	 * @throws ServletException
 	 */
 	private void getAllUser() throws ServletException, IOException {
-		List<Utilisateur> userList = utilisateurSessionBean.getAllUtilisateur();
+		List<Utilisateur> userList = utilisateurSessionBean.getUsers();
 		this.request.setAttribute("userList", userList);
 	}
 
 	/**
-	 * Supprime un utilisateur à l'aide de son id
+	 * delete a user by is id
 	 * 
 	 * @param userId
 	 * @param userTypeId
-	 * @return
+	 * @return true / false : if the has been delete
 	 */
 	private boolean deleteUserById(Integer userId, Integer userTypeId) {
 		Boolean isDeleted = false;
@@ -163,7 +163,7 @@ public class UserManagementServlet extends HttpServlet {
 			isDeleted = utilisateurSessionBean.deleteUser(user);
 			break;
 		case 2:
-			annonceList = annonceSessionBean.getAllAnnonceUtilisateur(userId);
+			annonceList = annonceSessionBean.getAllUserAnnouncement(userId);
 			if (annonceList.size() != 0) {
 				for (Annonce annonce : annonceList) {
 					reservationList = reservationSessionBean.getReservationByAnnonceId(annonce.getId_annonce());
@@ -176,7 +176,7 @@ public class UserManagementServlet extends HttpServlet {
 			}
 			break;
 		case 3:
-			reservationList = reservationSessionBean.getReservationByUserId(userId);
+			reservationList = reservationSessionBean.getReservationNotFinishedByUserId(userId);
 			if (reservationList.size() != 0) {
 				isDeleted = false;
 			} else {

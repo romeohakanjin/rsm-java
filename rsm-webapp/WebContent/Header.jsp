@@ -80,7 +80,15 @@
 										<li><a href="DeactivateUserAccount?action=deactivateUser">Désactiver le compte</a></li>
 									</ul>
 								</li>							
-							<% }
+							<% } else{
+								%>
+									<li id="standard"><a href="AnnoncesServlet">Annonces</a>
+										<ul>
+											<li id="standard"><a href="AnnoncesServlet">Liste Annonces</a></li>
+										</ul>
+									</li>
+								<%
+							}
 						%>
 						<%
 							if (session.getAttribute("login") != null) {
@@ -105,7 +113,7 @@
 				if (request.getAttribute("alert-success") != null) {
 			%>
 				<div class="alert alert-success" role="alert">
-				  <strong>Well done!</strong><p><%= request.getAttribute("alert-success") %></p>
+				  <p><%= request.getAttribute("alert-success") %></p>
 				</div>
 			<%
 				request.removeAttribute("alert-success");
@@ -113,7 +121,7 @@
 				} else if (request.getAttribute("alert-info") != null) {
 			%>
 				<div class="alert alert-info" role="alert">
-				  <strong>Heads up!</strong><p><%= request.getAttribute("alert-info") %></p>
+				  <p><%= request.getAttribute("alert-info") %></p>
 				</div>
 			<%
 				request.removeAttribute("alert-info");
@@ -121,7 +129,7 @@
 				} else if (request.getAttribute("alert-warning") != null){
 			%>
 				<div class="alert alert-warning" role="alert">
-				  <strong>Warning!</strong><p><%= request.getAttribute("alert-warning") %></p>
+				  <p><%= request.getAttribute("alert-warning") %></p>
 				</div>							
 			<% 
 				request.removeAttribute("alert-warning");
@@ -129,7 +137,7 @@
 			} else if (request.getAttribute("alert-danger") != null){ 
 			%>
 				<div class="alert alert-danger" role="alert">
-				  <strong>Oh snap!</strong><p><%= request.getAttribute("alert-danger") %></p>
+				  <p><%= request.getAttribute("alert-danger") %></p>
 				</div>							
 			<% 
 				request.removeAttribute("alert-danger");

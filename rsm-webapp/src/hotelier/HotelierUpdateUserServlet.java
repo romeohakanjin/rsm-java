@@ -28,14 +28,14 @@ public class HotelierUpdateUserServlet extends HttpServlet {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private HttpSession session;
-	private String nom;
-	private String prenom;
+	private String lastName;
+	private String firstName;
 	private String mail;
 	private String mobile;
-	private String adresse;
-	private String ville;
-	private String codePostal;
-	private String parametre;
+	private String address;
+	private String town;
+	private String postalCode;
+	private String parameter;
 
 	@EJB
 	UtilisateurSessionBean utilisateurSessionBean;
@@ -45,13 +45,13 @@ public class HotelierUpdateUserServlet extends HttpServlet {
 		this.request = request;
 		this.response = response;
 
-		initialiser();
-		switch (this.parametre) {
+		initialize();
+		switch (this.parameter) {
 		case PARAMETER_ACTION_EDIT_USER:
 			displayEditPage();
 			break;
 		case PARAMETER_ACTION_EDIT:
-			userEditInformations();
+			editUserInformations();
 			break;
 		default:
 			redirectionToServlet(USER_EDITED_SERVLET);
@@ -60,19 +60,18 @@ public class HotelierUpdateUserServlet extends HttpServlet {
 	}
 	
 	/**
-	 * Affiche la page de modification du profil
+	 * Display the profile modification page
 	 * @throws ServletException
 	 * @throws IOException
 	 */
 	private void displayEditPage() throws ServletException, IOException {
-		
 		String identifiant = (String) this.session.getAttribute("login");
 		int id_utilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);		
 		try {
-			// Vérifier si l'id utilisateur match
+			// Check if the id user match
 			boolean isMathingId = utilisateurSessionBean.isMatchingIdUser(id_utilisateur);
 			if (isMathingId) {
-				Utilisateur utilisateur = utilisateurSessionBean.getUtilisateur(id_utilisateur);
+				Utilisateur utilisateur = utilisateurSessionBean.getActiveUsers(id_utilisateur);
 				request.setAttribute("userInformations", utilisateur);
 				redirectionToView(EDIT_USER_INFORMATION_VIEW);
 			} else {
@@ -84,60 +83,60 @@ public class HotelierUpdateUserServlet extends HttpServlet {
 	}
 
 	/**
-	 * Modifie les informations du profil
+	 * Update the profile informations
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void userEditInformations() throws ServletException, IOException {	
+	private void editUserInformations() throws ServletException, IOException {	
 		String identifiant = (String) this.session.getAttribute("login");
 		int id_utilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant);
 		boolean isMathingId = utilisateurSessionBean.isMatchingIdUser(id_utilisateur);
 		if (isMathingId) {
 			Utilisateur utilisateur = new Utilisateur();
 			utilisateur.setId_utilisateur(id_utilisateur);
-			utilisateur.setNom(nom);
-			utilisateur.setPrenom(prenom);
+			utilisateur.setNom(lastName);
+			utilisateur.setPrenom(firstName);
 			utilisateur.setMail(mail);
 			utilisateur.setMobile(mobile);
-			utilisateur.setAdresse(adresse);
-			utilisateur.setVille(ville);
-			utilisateur.setCode_postal(codePostal);
-			utilisateurSessionBean.updateUtilisateur(utilisateur);
+			utilisateur.setAdresse(address);
+			utilisateur.setVille(town);
+			utilisateur.setCode_postal(postalCode);
+			utilisateurSessionBean.updateUser(utilisateur);
 		}
 		redirectionToServlet(USER_EDITED_SERVLET);
 	}
 	
 	/**
-	 * 
+	 * Initialize the values
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
 
-		this.nom = "";
-		this.prenom = "";
-		this.adresse = "";
-		this.ville = "";
-		this.codePostal = "";
+		this.lastName = "";
+		this.firstName = "";
+		this.address = "";
+		this.town = "";
+		this.postalCode = "";
 		this.mail = "";
 		this.mobile = "";
-		this.parametre = "";
-		this.parametre = request.getParameter("action");
-		if (this.parametre == null) {
-			this.parametre = request.getParameter("submitButtonUtilisateurForm");
+		this.parameter = "";
+		this.parameter = request.getParameter("action");
+		if (this.parameter == null) {
+			this.parameter = request.getParameter("submitButtonUtilisateurForm");
 		}
-		this.parametre = request.getParameter("submitButtonUtilisateurForm");
-		if (this.parametre == null) {
-			this.parametre = request.getParameter("action");
+		this.parameter = request.getParameter("submitButtonUtilisateurForm");
+		if (this.parameter == null) {
+			this.parameter = request.getParameter("action");
 		}
-		this.nom = request.getParameter("nom");
-		this.prenom = request.getParameter("prenom");
+		this.lastName = request.getParameter("nom");
+		this.firstName = request.getParameter("prenom");
 		this.mobile = request.getParameter("mobile");
 		this.mail = request.getParameter("mail");
-		this.adresse = request.getParameter("adresse");
-		this.ville = request.getParameter("ville");
-		this.codePostal = request.getParameter("codePostal");
+		this.address = request.getParameter("adresse");
+		this.town = request.getParameter("ville");
+		this.postalCode = request.getParameter("codePostal");
 	}
 	
 	/**

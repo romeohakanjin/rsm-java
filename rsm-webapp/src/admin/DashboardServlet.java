@@ -42,16 +42,16 @@ public class DashboardServlet extends HttpServlet {
 	}
 
 	/**
-	 * Récupère le nombre d'annonce, le nombre d'utilisateur regroupé par type
-	 * d'utilisateur, le nombre de réservation regroupé par état de réservation
+	 * get the number of announcement, the number of user group by they user type,
+	 * the number of reservation group by the state of the reservation
 	 * 
 	 * @throws IOException
 	 * @throws ServletException
 	 */
 	private void getDataForDashboard() throws ServletException, IOException {
-		List<Object> nbAnnonceList = annonceSessionBean.getNbAnnounce();
-		List<Object[]> nbUserList = utilisateurSessionBean.getNbUserGroupByUserType();
-		List<Object[]> nbReservationList = reservationSessionBean.getNbReservationGroupByReservationState();
+		List<Object> nbAnnonceList = annonceSessionBean.getNumberOfAnnouncement();
+		List<Object[]> nbUserList = utilisateurSessionBean.getUserNumberGroupByUserType();
+		List<Object[]> nbReservationList = reservationSessionBean.getNumberOfReservationGroupByReservationState();
 		Integer nbAnnonce = Integer.valueOf(nbAnnonceList.get(0).toString());
 		this.request.setAttribute("nbAnnonce", nbAnnonce);
 		this.request.setAttribute("nbUserList", nbUserList);

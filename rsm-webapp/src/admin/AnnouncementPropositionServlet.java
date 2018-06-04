@@ -39,7 +39,7 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 	private HttpSession session;
 	private String action;
 	private String modificationPropositionId;
-	private String annonceId;
+	private String announcementId;
 
 	@EJB
 	PropositionModificationSessionBean propositionModificationSessionBean;
@@ -89,13 +89,13 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 	 */
 	private void acceptModificationProposition() throws ServletException, IOException {
 		String identifiant = (String) this.session.getAttribute("login");
-		int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+		int id_utilisateur = annonceSessionBean.getUserId(identifiant);
 
 		try {
-			int annonceIdInt = Integer.valueOf(annonceId);
+			int annonceIdInt = Integer.valueOf(announcementId);
 			int idModificationProposition = Integer.valueOf(modificationPropositionId);
 			boolean isMatchinIdUserAndIdAnnouncement = annonceSessionBean
-					.isMatchingIdUserAndIdUserAnnonce(id_utilisateur, annonceIdInt);
+					.isMatchingUserIdAndAnnouncementId(id_utilisateur, annonceIdInt);
 
 			if (isMatchinIdUserAndIdAnnouncement) {
 				boolean isMatchinId = propositionModificationSessionBean
@@ -116,7 +116,7 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 						serviceChambre.setNom(propositionModificationAnnonce.getNom());
 						serviceChambre.setQuantite(propositionModificationAnnonce.getQuantite());
 
-						serviceChambreSessionBean.creerServiceChambre(serviceChambre);
+						serviceChambreSessionBean.createServiceChambre(serviceChambre);
 					}
 					// add point for the user
 					utilisateurSessionBean.addPointForAUser(propositionModificationAnnonce.getId_utilisateur());
@@ -125,7 +125,7 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 					// Modification Proposition table
 					propositionModificationSessionBean.deleteModificationProposition(modificationPropositionId);
 
-					setVariableToView("alert-success", "Cette proposition vient d'être ignorée");
+					setVariableToView("alert-success", "Cette proposition vient d'être prise en compte");
 					redirectionToServlet(ANNONCES_LISTE_SERVLET);
 				} else {
 					setVariableToView("alert-warning", "Numéro de proposition incorrect");
@@ -149,7 +149,7 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 	 */
 	private void propositionModificationListHotelier() throws ServletException, IOException {
 		String identifiant = (String) this.session.getAttribute("login");
-		int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+		int id_utilisateur = annonceSessionBean.getUserId(identifiant);
 
 		List<Object[]> propositionsModifications = propositionModificationSessionBean
 				.getModificationsPropositionByUserId(id_utilisateur);
@@ -180,7 +180,7 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 	 */
 	private void propositionModificationList() throws ServletException, IOException {
 		List<PropositionModificationAnnonce> propositionsModifications = propositionModificationSessionBean
-				.getModificationsPorpositions();
+				.getModificationsPropositions();
 		this.request.setAttribute("propositionsModifications", propositionsModifications);
 
 		redirectionToView(LIST_RESERVATION);
@@ -221,7 +221,7 @@ public class AnnouncementPropositionServlet extends HttpServlet {
 		this.response.setContentType("text/html");
 		this.action = request.getParameter("action");
 		this.modificationPropositionId = request.getParameter("modificationPropositionId");
-		this.annonceId = request.getParameter("annonceId");
+		this.announcementId = request.getParameter("annonceId");
 		if (this.action == null) {
 			this.action = "";
 		}

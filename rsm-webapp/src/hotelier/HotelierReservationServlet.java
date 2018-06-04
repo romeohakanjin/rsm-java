@@ -58,7 +58,7 @@ public class HotelierReservationServlet extends HttpServlet {
 			throws ServletException, IOException {
 		this.request = request;
 		this.response = response;
-		initialiser();
+		initialize();
 
 		switch (action) {
 		case ACCEPT_RESERVATION:
@@ -84,7 +84,7 @@ public class HotelierReservationServlet extends HttpServlet {
 		try {
 			int idReservation = Integer.valueOf(reservationId);
 			String identifiant = (String) this.session.getAttribute("login");
-			int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+			int id_utilisateur = annonceSessionBean.getUserId(identifiant);
 
 			boolean isMathingId = reservationSessionBean.isMatchingIdUserReservationAndIdUserAnnonce(id_utilisateur,
 					idReservation);
@@ -119,7 +119,7 @@ public class HotelierReservationServlet extends HttpServlet {
 		try {
 			int idReservation = Integer.valueOf(reservationId);
 			String identifiant = (String) this.session.getAttribute("login");
-			int id_utilisateur = annonceSessionBean.getIdUtilisateur(identifiant);
+			int id_utilisateur = annonceSessionBean.getUserId(identifiant);
 
 			boolean isMathingId = reservationSessionBean.isMatchingIdUserReservationAndIdUserAnnonce(id_utilisateur,
 					idReservation);
@@ -128,7 +128,7 @@ public class HotelierReservationServlet extends HttpServlet {
 
 				if (reservationStateId == RESERVATION_STATE_HOTELIER) {
 					setVariableToView("alert-success", "Cette annonce vient d'être validée");
-					reservationSessionBean.resufingReservationHotelier(idReservation,
+					reservationSessionBean.refusingReservationHotelier(idReservation,
 							RESERVATION_STATE_REFUSING_HOTELIER, FINISHED_RESERVATION_STATUS_ID);
 				} else {
 					setVariableToView("alert-warning", "Cette annonce n'est pas en attente d'une confirmation");
@@ -145,11 +145,11 @@ public class HotelierReservationServlet extends HttpServlet {
 	}
 
 	/**
-	 * Itinaliser les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
 		this.action = this.request.getParameter("action");

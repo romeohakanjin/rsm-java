@@ -14,9 +14,15 @@
 				if (request.getAttribute("annonceDetails") != null) {
 					Annonce annonce = (Annonce) request.getAttribute("annonceDetails");
 			%>
-			<a href="ModificationProposition.jsp?action=propModif&annonceId=<%= annonce.getId_annonce()%>">
-				Proposition de modification
-			</a>
+			<%
+				if (session.getAttribute("session-standard") != null) {
+			%>
+				<a href="ModificationProposition.jsp?action=propModif&annonceId=<%= annonce.getId_annonce()%>">
+					Proposition de modification
+				</a>
+			<%
+				}
+			%>
 			
 			<form method="get" action="AnnoncesDetailsServlet">
 			<input type="hidden" name="annonceId" value="<%= annonce.getId_annonce() %>" readonly>
@@ -32,13 +38,13 @@
 			<p><%=annonce.getPrix_nuit()%></p>
 			
 			<div>
-				<label>Date de réservation</label>
+				<p>Dates de réservation (mm/jj/aaaa)</p>
 				<p>
-					Date début: <input type="text" name="dateDebut" id="datepickerDebut"
+					Date début: <input type="text" name="dateDebut" id="datepickerDebut" placeholder="(mm/jj/aaaa)"
 						required />
 				</p>
 				<p>
-					Date fin: <input type="text" name="dateFin" id="datepickerFin"
+					Date fin: <input type="text" name="dateFin" id="datepickerFin" placeholder="(mm/jj/aaaa)"
 						required />
 				</p>
 			</div>

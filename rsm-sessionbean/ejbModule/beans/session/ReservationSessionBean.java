@@ -35,12 +35,12 @@ public class ReservationSessionBean {
 	UserTransaction userTransaction;
 
 	/**
-	 * Cr�er une r�servation
+	 * Create a reservation
 	 * 
-	 * @param reservation
-	 * @return
+	 * @param reservation : instance of Reservation
+	 * @return true/false : if the request has been executed
 	 */
-	public Boolean creerReservation(Reservation reservation) {
+	public Boolean createReservation(Reservation reservation) {
 		try {
 			userTransaction.begin();
 			entityManager.persist(reservation);
@@ -72,9 +72,9 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * R�cup�re toutes les r�servations
+	 * get all reservations
 	 * 
-	 * @return
+	 * @return List<Reservation> 
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Reservation> getAllReservation() {
@@ -84,12 +84,12 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * R�cup�re le nombre de r�servation regroup� par �tat de r�servation
+	 * get the number of reservation group by the state of the reservation
 	 * 
-	 * @return
+	 * @return List<Object[]>
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Object[]> getNbReservationGroupByReservationState() {
+	public List<Object[]> getNumberOfReservationGroupByReservationState() {
 		String queryString = "SELECT COUNT(*), er.libelle " + "FROM Reservation AS r "
 				+ "JOIN EtatReservation AS er ON er.id_etat_reservation = r.id_etat_reservation"
 				+ " WHERE etat_reservation = true "
@@ -99,10 +99,9 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * R�cup�re les r�servations ayant pour statut A venir ou En cours li�es � une
-	 * annonce
+	 * get all the reservation with the state incoming or pending of a announcement
 	 * 
-	 * @return
+	 * @return List<Reservation>
 	 */
 	public List<Reservation> getReservationByAnnonceId(Integer annonceId) {
 		String queryString = "FROM Reservation " + "WHERE id_annonce = '" + annonceId + "' "
@@ -112,14 +111,12 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * R�cup�re les r�servations faites par un utilisateur ayant pour statut En
-	 * attente, A venir ou En cours
+	 * get the reservations with waiting, incoming, pending
 	 * 
 	 * @param userId
-	 * @return
+	 * @return  List<Reservation>
 	 */
-	// TODO renommer : getReservationByUserIdNotFinish
-	public List<Reservation> getReservationByUserId(Integer userId) {
+	public List<Reservation> getReservationNotFinishedByUserId(Integer userId) {
 		String queryString = "FROM Reservation " + "WHERE id_utilisateur = '" + userId + "' "
 				+ "AND etat_reservation = true "
 				+ "AND id_etat_reservation <> 3";
@@ -128,7 +125,7 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * R�cup�re les r�servations faites par un utilisateur ayant pour �tat Termin�e
+	 * get reservation with finished state
 	 * 
 	 * @param userId
 	 * @return
@@ -158,12 +155,9 @@ public class ReservationSessionBean {
 	/**
 	 * get all the reservations of a user
 	 * 
-	 * @param idUtilisateur
-	 *            : id of a user
-	 * @return List<Reservation> : list of reservations
+	 * @param userId
+	 * @return List<Object[]> : list of reservations
 	 */
-	// TODO JOIN inutile si c'est juste pour trouver la liste des reservation
-	// d'hotel
 	public List<Object[]> getReservationsHotelByUserId(int userId) {
 		String queryString = "FROM Reservation as r " + "JOIN Annonce AS a ON a.id_annonce = r.id_annonce "
 				+ "JOIN EtatReservation AS er ON er.id_etat_reservation = r.id_etat_reservation "
@@ -177,18 +171,18 @@ public class ReservationSessionBean {
 	/**
 	 * check if the the id user correspond to the id user of the annouce
 	 * 
-	 * @param id_utilisateur
+	 * @param userId
 	 *            : id of the current user
-	 * @param idReservation
+	 * @param reservationId
 	 *            : id of the reservation
 	 * @return boolean : true if the id correspond or false
 	 */
-	public boolean isMatchingIdUserReservationAndIdUserAnnonce(int idUser, int idReservation) {
+	public boolean isMatchingIdUserReservationAndIdUserAnnonce(int userId, int reservationId) {
 		boolean isMatchingId = false;
 
 		String query = "FROM Reservation as r, Annonce as a " + "WHERE a.id_annonce = r.id_annonce "
 				+ "AND etat_reservation = true "
-				+ "AND a.id_utilisateur = '" + idUser + "' " + "AND r.id_reservation = '" + idReservation + "' ";
+				+ "AND a.id_utilisateur = '" + userId + "' " + "AND r.id_reservation = '" + reservationId + "' ";
 		Query query2 = entityManager.createQuery(query);
 
 		List annonces = query2.getResultList();
@@ -205,9 +199,6 @@ public class ReservationSessionBean {
 	 * 
 	 * @return int : state (id) of the reservation
 	 */
-	// TODO : D�placer cette m�thode dans EtatReservationSessionBean
-	// TODO : Enlever le traitement et le faire dans la servlet appelant cette
-	// m�thode
 	public int getReservationStateId(int reservationId) {
 		int idStateReservation = 0;
 
@@ -226,26 +217,24 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * Valdiate a reservation in a hotel
+	 * Validate a reservation in a hotel
 	 * 
-	 * @param idReservation
+	 * @param reservationId
 	 *            : id of the reservation
 	 * @param reservationStateValidationHotelier
 	 *            : id of the validation state
 	 */
-	// TODO : Param�tre incomingReservationStatusId pas utilis� dans la m�thode donc
-	// pourquoi le mettre en param
-	public void validationReservationHotelier(int idReservation, int reservationStateValidationHotelier,
+	public void validationReservationHotelier(int reservationId, int reservationStateValidationHotelier,
 			int incomingReservationStatusId) {
 		try {
 			userTransaction.begin();
 			String queryString = "UPDATE Reservation AS r " + "SET r.id_etat_reservation = '"
-					+ reservationStateValidationHotelier + "'" + "WHERE r.id_reservation = '" + idReservation + "' ";
+					+ reservationStateValidationHotelier + "'" + "WHERE r.id_reservation = '" + reservationId + "' ";
 			Query query = entityManager.createQuery(queryString);
 			query.executeUpdate();
 
 			String queryStringUpdate = "UPDATE Reservation AS r " + "SET r.id_statut_reservation = '"
-					+ reservationStateValidationHotelier + "'" + "WHERE r.id_reservation = '" + idReservation + "' ";
+					+ reservationStateValidationHotelier + "'" + "WHERE r.id_reservation = '" + reservationId + "' ";
 			Query queryUpdate = entityManager.createQuery(queryStringUpdate);
 			queryUpdate.executeUpdate();
 
@@ -257,25 +246,24 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * refusing a reservation in a hotel
+	 * refuse a reservation in a hotel
 	 * 
-	 * @param idReservation
+	 * @param reservationId
 	 *            : id of the reservation
 	 * @param reservationStateRefusingHotelier
 	 *            : : id of the refusing state
 	 */
-	// TODO : renommer resufing en refusing
-	public void resufingReservationHotelier(int idReservation, int reservationStateRefusingHotelier,
+	public void refusingReservationHotelier(int reservationId, int reservationStateRefusingHotelier,
 			int finishedReservationStatusId) {
 		try {
 			userTransaction.begin();
 			String queryString = "UPDATE Reservation AS r " + "SET r.id_etat_reservation = '"
-					+ reservationStateRefusingHotelier + "' WHERE r.id_reservation = '" + idReservation + "' ";
+					+ reservationStateRefusingHotelier + "' WHERE r.id_reservation = '" + reservationId + "' ";
 			Query query = entityManager.createQuery(queryString);
 			query.executeUpdate();
 
 			String queryStringUpdate = "UPDATE Reservation AS r " + "SET r.id_statut_reservation = '"
-					+ finishedReservationStatusId + "'" + "WHERE r.id_reservation = '" + idReservation + "' ";
+					+ finishedReservationStatusId + "'" + "WHERE r.id_reservation = '" + reservationId + "' ";
 			Query queryUpdate = entityManager.createQuery(queryStringUpdate);
 			queryUpdate.executeUpdate();
 
@@ -289,17 +277,17 @@ public class ReservationSessionBean {
 	/**
 	 * If there is any reservation already coming for this ad
 	 * 
-	 * @param annonceIdInt
+	 * @param announcementId
 	 * @param timestampBegining
 	 * @param timestampEnd
+	 * @param true / false : if the date is ok
 	 */
-	// TODO : pas de traitement en session bean
-	public boolean isOkDateForReservation(int annonceIdInt, Timestamp timestampBegining, Timestamp timestampEnd) {
+	public boolean isOkDateForReservation(int announcementId, Timestamp timestampBegining, Timestamp timestampEnd) {
 		boolean isOkDate = false;
 
 		String query = "SELECT date_debut_sejour, date_fin_sejour" + " FROM Reservation "
 				+ " WHERE date_debut_sejour >= '" + timestampBegining + "' " + " AND date_fin_sejour <= '"
-				+ timestampEnd + "' " + " AND id_annonce = '" + annonceIdInt + "' "
+				+ timestampEnd + "' " + " AND id_annonce = '" + announcementId + "' "
 				+ "AND etat_reservation = true";
 		Query query2 = entityManager.createQuery(query);
 		List reservation = query2.getResultList();
@@ -312,10 +300,10 @@ public class ReservationSessionBean {
 	}
 
 	/**
-	 * R�cup�re les r�servations qui ne sont pas encore pass�s d'un utilisateur
+	 * get all the reservations that are not passed yet
 	 * 
 	 * @param userId
-	 * @return
+	 * @return List<Reservation>
 	 */
 	public List<Reservation> getReservationNonPasseeByUserId(Integer userId) {
 		String queryString = "FROM Reservation r " + "WHERE r.id_etat_reservation = 3 "
@@ -327,14 +315,14 @@ public class ReservationSessionBean {
 	
 	/**
 	 * check if the reservation is waiting for approval for this user
-	 * @param idUtilisateur 
+	 * @param userId 
 	 * @param reservationId
 	 * @return true / false if the reservation is OK
 	 */
-	public boolean isReservationPending(int idUtilisateur, String reservationId) {
+	public boolean isReservationPending(int userId, String reservationId) {
 		boolean isOkReservation = false;
 		
-		String queryString = "FROM Reservation " + "WHERE id_utilisateur = '" + idUtilisateur + "' "
+		String queryString = "FROM Reservation " + "WHERE id_utilisateur = '" + userId + "' "
 				+ "AND etat_reservation = true "
 				+ "AND id_reservation = '"+reservationId+"' "
 				+ "AND id_etat_reservation = 1 OR id_etat_reservation = 2";
@@ -371,18 +359,18 @@ public class ReservationSessionBean {
 	/**
 	 * check if the id user correspond to the id user on the reservation and the state s finished
 	 * 
-	 * @param id_utilisateur
+	 * @param userId
 	 *            : id of the current user
-	 * @param idAnnouncement
+	 * @param announcementId
 	 *            : id of the announcement
 	 * @return boolean : true if the id correspond or false
 	 */
-	public boolean isMatchingIdUserReservationAndIdAnnouncement(int idUser, int idAnnouncement) {
+	public boolean isMatchingIdUserReservationAndIdAnnouncement(int userId, int announcementId) {
 		boolean isMatchingId = false;
 
 		String query = "FROM Reservation"
-				+ " WHERE id_utilisateur = '"+idUser+"'"
-				+ " AND id_annonce = '"+idAnnouncement+"'"
+				+ " WHERE id_utilisateur = '"+userId+"'"
+				+ " AND id_annonce = '"+announcementId+"'"
 				+ " AND id_statut_reservation = 4";
 		Query query2 = entityManager.createQuery(query);
 

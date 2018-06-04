@@ -45,15 +45,15 @@ public class AnnonceSessionBean {
 	UserTransaction userTransaction;
 
 	/**
-	 * Cr�er une annonce
+	 * Create a announcement
 	 * 
-	 * @param Annonce
-	 * @return
+	 * @param announcement : instance of Annonce
+	 * @return true/false : if the request has been executed
 	 */
-	public Boolean creerAnnonce(Annonce annonce) {
+	public Boolean createAnnouncement(Annonce announcement) {
 		try {
 			userTransaction.begin();
-			entityManager.persist(annonce);
+			entityManager.persist(announcement);
 			userTransaction.commit();
 			return true;
 		} catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
@@ -64,31 +64,31 @@ public class AnnonceSessionBean {
 	}
 
 	/**
-	 * get the number of announce for a hotelier
-	 * 
-	 * @return
+	 * get the number of announcement for a hotelier
+	 * @param idUser
+	 * @return long : numberOfAnnounce
 	 */
-	public long getNumberOfAnnounceForHotelier(int idUser) {
-		long numberOfAnnounce = 0;
+	public long getNumberOfAnnouncementForHotelier(int idUser) {
+		long numberOfAnnouncement = 0;
 
 		String query = "SELECT COUNT(id_annonce) FROM Annonce WHERE id_utilisateur = '" + idUser + "' AND actif = true";
 		Query query2 = entityManager.createQuery(query);
 
-		List listAnnonce = query2.getResultList();
+		List announcementList = query2.getResultList();
 
-		for (int i = 0; i < listAnnonce.size(); i++) {
-			numberOfAnnounce = (long) listAnnonce.get(i);
+		for (int i = 0; i < announcementList.size(); i++) {
+			numberOfAnnouncement = (long) announcementList.get(i);
 		}
-		return numberOfAnnounce;
+		return numberOfAnnouncement;
 	}
 
 	/**
 	 * get the number of announce for each etat_reservation
 	 * 
-	 * @param idUser
-	 *            : id of the user
+	 * @param idUser : id of the user
+	 * @return List<Object[]>
 	 */
-	public List<Object[]> getNumberOfAnnouncePerReservationStatus(int idUser) {
+public List<Object[]> getNumberOfAnnouncementPerReservationStatus(int idUser) {
 		String query = "SELECT COUNT(er.id_etat_reservation), er.libelle "
 				+ "FROM Annonce AS a, Reservation AS r, EtatReservation AS er " + "WHERE a.id_annonce = r.id_annonce "
 				+ "AND r.id_etat_reservation = er.id_etat_reservation " + "AND a.id_utilisateur = '" + idUser + "'"
@@ -96,39 +96,44 @@ public class AnnonceSessionBean {
 				+ "GROUP BY er.libelle";
 		Query query2 = entityManager.createQuery(query);
 
-		List<Object[]> numberOfAnnounce = query2.getResultList();
+		List<Object[]> numberOfAnnouncement = query2.getResultList();
 
-		return numberOfAnnounce;
+		return numberOfAnnouncement;
 	}
 
 	/**
-	 * R�cup�re toutes les annonces
+	 * get all the announcement
 	 * 
-	 * @return
+	 * @return List<Annonce>: list of Announcement
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Annonce> getAllAnnonce() {
+	public List<Annonce> getAllAnnouncement() {
 		String queryString = "FROM Annonce WHERE actif = TRUE";
 		Query query = entityManager.createQuery(queryString);
-		return (List<Annonce>) query.getResultList();
+		List<Annonce> announcementList = (List<Annonce>) query.getResultList();
+		
+		return announcementList;
 	}
 	
 	/**
-	 * R�cup�re l'annonce associ� � l'id
-	 * @param idAnnonce
-	 * @return
+	 * get a announcement by is id
+	 * @param announcementId
+	 * @return Annonce : the announcement
 	 */
-	public Annonce getAnnonceById(Integer idAnnonce) {
-		String queryString = "FROM Annonce WHERE actif = true AND id_annonce = "+idAnnonce;
+	public Annonce getAnnouncementById(Integer announcementId) {
+		String queryString = "FROM Annonce WHERE actif = true AND id_annonce = "+announcementId;
 		Query query = entityManager.createQuery(queryString);
-		return (Annonce) query.getResultList().get(0);
+		Annonce announcement = (Annonce) query.getResultList().get(0);
+		
+		return announcement;
 	}
 	
 	/**
-	 * R�cup�re les annonces en fonction des champs saisis
-	 * par l'utilisateur
+	 * Get all the announcement that have the keywords
 	 * @param destination
-	 * @return
+	 * @keywords
+	 * @keywordsList
+	 * @return List<Integer>
 	 */
 	public List<Integer> getAnnouncementSearched(String destination, String keywords, String[] keywordsList){
 		String queryString = "SELECT a.id_annonce "
@@ -148,67 +153,71 @@ public class AnnonceSessionBean {
 	}
 
 	/**
-	 * R�cup�re l'id de la d'un utilisateur
+	 * get the id of a user
 	 * 
-	 * @param identifiant
-	 *            : email
+	 * @param identifiant : email
 	 * @return int : id of the user
 	 */
-	public int getIdUtilisateur(String identifiant) {
-		int idUtilisateur = 0;
+	public int getUserId(String identifiant) {
+		int idUser = 0;
 
 		String query = "SELECT u.id_utilisateur FROM Utilisateur AS u " + "WHERE u.mail = '" + identifiant + "'";
 		Query query2 = entityManager.createQuery(query);
 
-		List listAnnonce = query2.getResultList();
+		List announcementList = query2.getResultList();
 
-		for (int i = 0; i < listAnnonce.size(); i++) {
-			idUtilisateur = (int) listAnnonce.get(i);
+		for (int i = 0; i < announcementList.size(); i++) {
+			idUser = (int) announcementList.get(i);
 		}
-		return idUtilisateur;
-	}
-	
-	public Annonce getAnnonce(int idAnnonce) {
-		Annonce annonce = new Annonce();
-		String query = "FROM Annonce AS a " + "WHERE a.id_annonce = '" + idAnnonce + "'";
-		Query query2 = entityManager.createQuery(query);
-		List listAnnonce = query2.getResultList();
-
-		for (int i = 0; i < listAnnonce.size(); i++) {
-			annonce = (Annonce) listAnnonce.get(0);
-		}
-		return annonce;
+		return idUser;
 	}
 	
 	/**
-	 * R�cup�re les annonces actives post�es pas un utilisateur
-	 * @param idUser
-	 * @return
+	 * get a announcement
+	 * @param announcemenId
+	 * @return Annonce : the announcement
 	 */
-	public List<Annonce> getAllAnnonceUtilisateur(int idUser) {	
+	public Annonce getAnnouncement(int announcemenId) {
+		Annonce announcement = new Annonce();
+		String query = "FROM Annonce AS a " + "WHERE a.id_annonce = '" + announcemenId + "'";
+		Query query2 = entityManager.createQuery(query);
+		List announcementList = query2.getResultList();
+
+		for (int i = 0; i < announcementList.size(); i++) {
+			announcement = (Annonce) announcementList.get(0);
+		}
+		return announcement;
+	}
+	
+	/**
+	 * Get active reservation from a user
+	 * @param idUser
+	 * @return List<Annonce>
+	 */
+	public List<Annonce> getAllUserAnnouncement(int idUser) {	
 		String query = "FROM Annonce " + "WHERE id_utilisateur = '"+ idUser + "' AND actif = true";
 		Query query2 = entityManager.createQuery(query);
-		List<Annonce> listAnnonce = query2.getResultList();
-		return listAnnonce;
+		List<Annonce> announcementList = query2.getResultList();
+		return announcementList;
 	}
 
 	/**
-	 * Check if the id_utilisateur of the annonce correspond to the actual userId
+	 * Check if the id_utilisateur of the announcement correspond to the actual userId
 	 * 
 	 * @param idUser
 	 * @param idAnnonce
 	 * @return true if the id_utilisateur match
 	 */
-	public boolean isMatchingIdUserAndIdUserAnnonce(int idUser, int idAnnonce) {
+	public boolean isMatchingUserIdAndAnnouncementId(int idUser, int idAnnonce) {
 		boolean isMatchingId = false;
 
 		String query = "SELECT id_annonce FROM Annonce WHERE id_utilisateur = '" + idUser
 				+ "' AND id_annonce = '" + idAnnonce + "' AND actif = true ";
 		Query query2 = entityManager.createQuery(query);
 
-		List annonces = query2.getResultList();
+		List announcementList = query2.getResultList();
 
-		if (annonces.size() != 0) {
+		if (announcementList.size() != 0) {
 			isMatchingId = true;
 		}
 
@@ -216,50 +225,51 @@ public class AnnonceSessionBean {
 	}
 
 	/**
-	 * Update a annonce
+	 * Update a announcement
 	 * 
-	 * @param annonce
-	 *            : The object Annonce representing a annonce to edit
-	 * @throws SQLException 
+	 * @param announcement
+	 *            : The object Annonce representing a announcement to edit
 	 */
-	public void updateAnnonce(Annonce annonce){
-		int id_annonce = annonce.getId_annonce();
-		String titre = annonce.getTitre();
-		String description = annonce.getDescription();
-		int capacite_max = annonce.getCapacite_max();
+	public void updateAnnouncement(Annonce announcement){
+		int announcementId = announcement.getId_annonce();
+		String title = announcement.getTitre();
+		String description = announcement.getDescription();
+		int maxCapacity = announcement.getCapacite_max();
 		try {
-			Connection connection = dataSource.getConnection();
-			String sql = "UPDATE Annonce AS a SET titre = ?, description = ?, capacite_max = ?, WHERE a.id_annonce = ?"; 
-			PreparedStatement statement = connection.prepareStatement(sql); 
-			//en spécifiant bien les types SQL cibles 
-			statement.setString(1, titre); 
-			statement.setString(2, description); 
-			statement.setInt(3, capacite_max); 
-			statement.setInt(3, id_annonce);
-			statement.executeUpdate(); 
-//			
-//			String query = "UPDATE Annonce AS a " + "SET titre = '" + titre + "', " + "description = '" + description
-//					+ "', " + "capacite_max = '" + capacite_max + "' " + "WHERE a.id_annonce = '" + id_annonce + "' ";
-//
-//			Query query1 = entityManager.createQuery(query);
-//			query1.executeUpdate();
-			connection.commit();
-		} catch (SecurityException | IllegalStateException | SQLException exception) {
+			userTransaction.begin();
+//			Connection connection = dataSource.getConnection();
+//			String sql = "UPDATE Annonce AS a SET titre = ?, description = ?, capacite_max = ?, WHERE a.id_annonce = ?"; 
+//			PreparedStatement statement = connection.prepareStatement(sql); 
+//			//en spécifiant bien les types SQL cibles 
+//			statement.setString(1, title); 
+//			statement.setString(2, description); 
+//			statement.setInt(3, maxCapacity); 
+//			statement.setInt(3, announcementId);
+//			statement.executeUpdate(); 
+			
+			String query = "UPDATE Annonce AS a " + "SET titre = '" + title + "', " + "description = '" + description
+					+ "', " + "capacite_max = '" + maxCapacity + "' " + "WHERE a.id_annonce = '" + announcementId + "' ";
+
+			Query query1 = entityManager.createQuery(query);
+			query1.executeUpdate();
+			userTransaction.commit();
+		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException exception) {
 
 			exception.printStackTrace();
 		}
 	}
 
 	/**
-	 * Delete a annonce
+	 * Delete a announcement
 	 * 
-	 * @param idAnnonce
+	 * @param announcementId
 	 */
-	public void deleteAnnonce(int idAnnonce) {
+	public void deleteAnnouncement(int announcementId) {
 		try {
 			userTransaction.begin();
 
-			String query = "UPDATE Annonce AS a SET actif = false WHERE id_annonce = '" + idAnnonce + "' ";
+			String query = "UPDATE Annonce AS a SET actif = false WHERE id_annonce = '" + announcementId + "' ";
 
 			Query query1 = entityManager.createQuery(query);
 			query1.executeUpdate();
@@ -273,27 +283,27 @@ public class AnnonceSessionBean {
 	}
 	
 	/**
-	 * R�cup�re le nombre d'annonce
-	 * @return
+	 * get the number of announcement
+	 * @return List<Object>
 	 */
-	public List<Object> getNbAnnounce() {
+	public List<Object> getNumberOfAnnouncement() {
 		String queryString = "SELECT COUNT(*) FROM Annonce";
 		Query query = entityManager.createQuery(queryString);
-
-		return query.getResultList();
+		List<Object> announcementList = query.getResultList();
+		
+		return announcementList;
 	}
 
 	/**
-	 * get all the comments from a annonce
+	 * get all the comments from a announcement
 	 * 
-	 * @param idAnnonce
-	 * @return
-	 * @return
+	 * @param announcementId
+	 * @return List<Commentaire> : comments of a announcement
 	 */
-	public List<Commentaire> getCommentsFromAnnonce(int idAnnonce) {
+	public List<Commentaire> getAnnouncementComments(int announcementId) {
 		String queryString = "SELECT c.id_commentaire, c.commentaire, c.id_reservation, c.id_etat_commentaire "
 				+ "FROM Commentaire AS c " + "JOIN Reservation AS r ON c.id_reservation = r.id_reservation "
-				+ "JOIN Annonce as a ON r.id_annonce = a.id_annonce " + "WHERE a.id_annonce = '" + idAnnonce + "' ";
+				+ "JOIN Annonce as a ON r.id_annonce = a.id_annonce " + "WHERE a.id_annonce = '" + announcementId + "' ";
 		Query query = entityManager.createQuery(queryString);
 		List<Object[]> res = query.getResultList();
 		List<Commentaire> comments = new ArrayList<Commentaire>();
@@ -315,20 +325,20 @@ public class AnnonceSessionBean {
 	/**
 	 * Check if the id_utilisateur of the comment correspond to the actual commentId
 	 * 
-	 * @param id_utilisateur
+	 * @param userId
 	 * @param commentId
-	 * @return true if the id of the comment match the list of annonce
+	 * @return true/false : if the id of the comment match the list of announcement
 	 */
-	public boolean isMatchingIdUserAndIdComment(int id_utilisateur, int commentId) {
+	public boolean isMatchingUserIdAndCommentId(int userId, int commentId) {
 		boolean isMatchingId = false;
 		String queryString = "SELECT c.id_commentaire " + "FROM Commentaire AS c "
 				+ "JOIN Reservation AS r ON c.id_reservation = r.id_reservation "
-				+ "JOIN Annonce as a ON r.id_annonce = a.id_annonce " + "WHERE a.id_utilisateur = '" + id_utilisateur
+				+ "JOIN Annonce as a ON r.id_annonce = a.id_annonce " + "WHERE a.id_utilisateur = '" + userId
 				+ "' " + "AND c.id_commentaire = '" + commentId + "' ";
 		Query query = entityManager.createQuery(queryString);
-		List<Commentaire> commentaire = query.getResultList();
+		List<Commentaire> commentList = query.getResultList();
 
-		if (commentaire.size() != 0) {
+		if (commentList.size() != 0) {
 			isMatchingId = true;
 		}
 
@@ -384,19 +394,17 @@ public class AnnonceSessionBean {
 	/**
 	 * if the ad is active or not
 	 * 
-	 * @param annonceIdInt
-	 *            : ad id
-	 * @return true/false : if the ad is active
+	 * @param announcementId
+	 * @return true/false : if the announcement is active
 	 */
-	//TODO: pas de traitement dans le session bean
-	public boolean isActiveAd(int annonceIdInt) {
+	public boolean isAnnouncementActivated(int announcementId) {
 		boolean isActive = false;
 
 		String queryString = "SELECT a.actif " + "FROM Annonce AS a " + "WHERE a.actif = true";
 		Query query = entityManager.createQuery(queryString);
-		List<Annonce> annonce = query.getResultList();
+		List<Annonce> announcement = query.getResultList();
 
-		if (annonce.size() != 0) {
+		if (announcement.size() != 0) {
 			isActive = true;
 		}
 
@@ -404,13 +412,12 @@ public class AnnonceSessionBean {
 	}
 	
 	/**
-	 * R�cup�re les annonces actives d'un utilisateur
-	 * pour lesquels il existe des r�servations
-	 * � l'�tat Valid� et au statut autre que Termin�
+	 * get the active announcement of a user where the reservation have the validate state 
+	 * 		and other than terminated status
 	 * @param idUser
-	 * @return
+	 * @return List<Annonce>
 	 */
-	public List<Annonce> getAnnonceByUserWithReservationValide(Integer idUser){
+	public List<Annonce> getAnnouncementByUserIdAndValidatedReservation(Integer idUser){
 		String queryString = "SELECT a.actif, a.capacite_max, a.date_creation, a.date_modification, "
 				+ "a.description, a.id_annonce, a.id_utilisateur, a.prix_nuit, a.titre "
 				+ "FROM Annonce a "
@@ -420,18 +427,19 @@ public class AnnonceSessionBean {
 				+ "AND r.id_statut_reservation <> 4 "
 				+ "AND a.id_utilisateur = "+idUser;
 		Query query = entityManager.createQuery(queryString);
-		return query.getResultList();
+		List<Annonce> announcementList = query.getResultList();
+		return announcementList;
 	}
 
 	/**
-	 * Get the price for one night of a ad by his id
-	 * @param annonceIdInt2
+	 * Get the price for one night of a announcement by his id
+	 * @param annoncementId
 	 * @return double: pricePerNight
 	 */
-	public double getPricePerNightAd(int annonceIdInt) {
-		String queryString = "SELECT prix_nuit FROM Annonce WHERE id_annonce = '"+annonceIdInt+"' ";
+	public double getAnnouncementPricePerNight(int annoncementId) {
+		String queryString = "SELECT prix_nuit FROM Annonce WHERE id_annonce = '"+annoncementId+"' ";
 		Query query = entityManager.createQuery(queryString);
-		Double prix =  (Double) query.getSingleResult();
-		return prix;
+		Double price =  (Double) query.getSingleResult();
+		return price;
 	}
 }

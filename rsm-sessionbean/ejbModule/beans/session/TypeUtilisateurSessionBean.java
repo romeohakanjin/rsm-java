@@ -34,15 +34,15 @@ public class TypeUtilisateurSessionBean {
 	UserTransaction userTransaction;
 
 	/**
-	 * Créer un type d'utilisateur
-	 * @param libelle
-	 * @return
+	 * create a user type
+	 * @param name
+	 * @return true/false : if the request has been executed
 	 */
-	public Boolean creerTypeUtilisateur(String libelle) {
+	public Boolean createUserType(String name) {
 		try {
 			userTransaction.begin();
 			TypeUtilisateur typeUtilisateur = new TypeUtilisateur();
-			typeUtilisateur.setLibelle(libelle);
+			typeUtilisateur.setLibelle(name);
 			entityManager.persist(typeUtilisateur);
 			userTransaction.commit();
 			return true;
@@ -54,24 +54,23 @@ public class TypeUtilisateurSessionBean {
 	}
 
 	/**
-	 * Récupère tous les types d'utilisateurs
-	 * @return
+	 * get all user states
+	 * @return List<TypeUtilisateur>
 	 */
 	@SuppressWarnings("unchecked")
-	public List<TypeUtilisateur> getAllTypeUtilisateur(){
+	public List<TypeUtilisateur> getUserStates(){
 		String queryString = "FROM TypeUtilisateur";
 		Query query = entityManager.createQuery(queryString);
 		return (List<TypeUtilisateur>) query.getResultList();
 	}
 	
 	/**
-	 * Récupère le type d'utilisateur
-	 * associé à l'id passé en paramètre
-	 * @param idType
-	 * @return
+	 * get the user state
+	 * @param stateId
+	 * @return ist<TypeUtilisateur>
 	 */
-	public List<TypeUtilisateur> getUserTypeById(Integer idType) {
-		String queryString = "FROM TypeUtilisateur WHERE id_type_utilisateur = "+idType;
+	public List<TypeUtilisateur> getUserStateById(Integer stateId) {
+		String queryString = "FROM TypeUtilisateur WHERE id_type_utilisateur = "+stateId;
 		Query query = entityManager.createQuery(queryString);
 		return (List<TypeUtilisateur>) query.getResultList();
 	}

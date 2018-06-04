@@ -36,29 +36,29 @@ public class HotelierProfilServlet extends HttpServlet {
 		this.request = request;
 		this.response = response;
 
-		initialiser();
+		initialize();
 		showUserInformations();
 	}
 
 	/**
-	 * Itinaliser les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
-	private void initialiser() throws IOException {
+	private void initialize() throws IOException {
 		this.session = request.getSession();
 		this.response.setContentType("text/html");
 	}
 	
 	/**
-	 * Affiche les informations de l'utilisateur
+	 * display user informations
 	 * @throws ServletException
 	 * @throws IOException
 	 */
 	private void showUserInformations() throws ServletException, IOException {
 		String identifiant = (String) this.session.getAttribute("login");
 		int idUtilisateur = utilisateurSessionBean.getIdUtilisateur(identifiant); 
-		Utilisateur utilisateur = utilisateurSessionBean.getUserInformationById(idUtilisateur);
+		Utilisateur utilisateur = utilisateurSessionBean.getUser(idUtilisateur);
 		Hotel hotel = hotelSessionBean.getHotelById(utilisateur.getId_hotel());
 		this.request.setAttribute("userInformations", utilisateur);
 		this.request.setAttribute("hotelInformations", hotel);

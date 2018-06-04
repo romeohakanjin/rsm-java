@@ -49,10 +49,10 @@ public class CommentManagementServlet extends HttpServlet {
 					Boolean isRefuse = refuseCommentById(idComment);
 					if (isRefuse) {
 						getAllComment();
-						setVariableToView("alert-success", "Commentaire supprimé");
+						setVariableToView("alert-success", "Commentaire supprimï¿½");
 						redirectionToView(COMMENT_MANAGEMENT);
 					} else {
-						setVariableToView("alert-danger", "La suppression de ce commentaire n'a pas pu être effectuée");
+						setVariableToView("alert-danger", "La suppression de ce commentaire n'a pas pu ï¿½tre effectuï¿½e");
 					}
 				}
 			}
@@ -65,10 +65,10 @@ public class CommentManagementServlet extends HttpServlet {
 					Boolean isValidate = validateCommentById(idComment);
 					if (isValidate) {
 						getAllComment();
-						setVariableToView("alert-success", "Commentaire validé");
+						setVariableToView("alert-success", "Commentaire validï¿½");
 						redirectionToView(COMMENT_MANAGEMENT);
 					} else {
-						setVariableToView("alert-warning", "La validation de ce commentaire n'a pas pu être effectuée");
+						setVariableToView("alert-warning", "La validation de ce commentaire n'a pas pu ï¿½tre effectuï¿½e");
 					}
 				}
 			}
@@ -81,7 +81,7 @@ public class CommentManagementServlet extends HttpServlet {
 	}
 
 	/**
-	 * Initialise les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
@@ -131,7 +131,7 @@ public class CommentManagementServlet extends HttpServlet {
 	}
 
 	/**
-	 * Récupère tous les utilisateurs
+	 * get all the comments
 	 * 
 	 * @throws IOException
 	 * @throws ServletException
@@ -142,7 +142,7 @@ public class CommentManagementServlet extends HttpServlet {
 	}
 
 	/**
-	 * Passe un commentaire signalé à l'état réfusé
+	 * switch a comment from reported state to refuse
 	 * 
 	 * @param commentId
 	 */
@@ -151,7 +151,7 @@ public class CommentManagementServlet extends HttpServlet {
 	}
 
 	/**
-	 * Passe un commentaire signalé à l'état validé
+	 * switch a comment from reported state to validate
 	 * 
 	 * @param commentId
 	 */

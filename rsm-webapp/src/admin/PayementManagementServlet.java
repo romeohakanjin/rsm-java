@@ -35,12 +35,12 @@ public class PayementManagementServlet extends HttpServlet {
 		this.response = response;
 
 		initialize();
-		getAllPaiement();
+		getAllPayments();
 		redirectionToView(PAYEMENT_MANAGEMENT);
 	}
 
 	/**
-	 * Initialise les variables
+	 * Initialize the values
 	 * 
 	 * @throws IOException
 	 */
@@ -78,13 +78,13 @@ public class PayementManagementServlet extends HttpServlet {
 	}
 
 	/**
-	 * Récupère tous les paiements
+	 * get all the payments
 	 * 
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void getAllPaiement() throws ServletException, IOException {
-		List<Object[]> paiementList = paiementSessionBean.getHistoriquePaiement();
+	private void getAllPayments() throws ServletException, IOException {
+		List<Object[]> paiementList = paiementSessionBean.getPaiementHistorical();
 		this.request.setAttribute("paiementList", paiementList);
 	}
 }
