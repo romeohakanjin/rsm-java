@@ -143,8 +143,7 @@ public class ReservationSessionBean {
 	public List<Object[]> getReservationsHotelByUserId(int userId) {
 		String queryString = "FROM Reservation as r " + "JOIN Annonce AS a ON a.id_annonce = r.id_annonce "
 				+ "JOIN EtatReservation AS er ON er.id_etat_reservation = r.id_etat_reservation "
-				+ "WHERE a.id_utilisateur = '" + userId + "' "
-				+ "AND etat_reservation = true";
+				+ "WHERE a.id_utilisateur = '" + userId + "' ";
 		Query query = entityManager.createQuery(queryString);
 
 		return query.getResultList();
@@ -185,8 +184,7 @@ public class ReservationSessionBean {
 		int idStateReservation = 0;
 
 		String queryString = "SELECT r.id_etat_reservation " 
-				+ "FROM Reservation as r " + "WHERE r.id_reservation = '"+ reservationId + "' "
-				+ "AND etat_reservation = true";
+				+ "FROM Reservation as r " + "WHERE r.id_reservation = '"+ reservationId + "' ";
 		Query query2 = entityManager.createQuery(queryString);
 
 		List listStateReservation = query2.getResultList();

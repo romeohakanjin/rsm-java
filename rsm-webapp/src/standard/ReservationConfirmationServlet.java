@@ -63,18 +63,19 @@ public class ReservationConfirmationServlet extends HttpServlet {
 
 	/**
 	 * pay a reservation with point
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * 
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	private void paymentReservationWithPoints() throws ServletException, IOException {
 		try {
 			String identifiant = (String) this.session.getAttribute("login");
 			int id_utilisateur = announcementSessionBean.getUserId(identifiant);
 			int userPoints = utilisateurSessionBean.getUserPoints(id_utilisateur);
-			
+
 			if (userPoints >= 100) {
 				utilisateurSessionBean.payReservationWithPoints(id_utilisateur);
-				
+
 				int annonceId = (int) session.getAttribute("reservationToValidate");
 				int userId = (int) session.getAttribute("reservationIdUser");
 				Timestamp timestampBegining = (Timestamp) session.getAttribute("reservationDateDebut");
@@ -115,8 +116,6 @@ public class ReservationConfirmationServlet extends HttpServlet {
 	 */
 	private void reservationValidate() throws ServletException, IOException {
 		try {
-			// TODO :faire appel � la m�thode pour paiement
-			// paiement()
 
 			int annonceId = (int) session.getAttribute("reservationToValidate");
 			int userId = (int) session.getAttribute("reservationIdUser");
@@ -125,24 +124,46 @@ public class ReservationConfirmationServlet extends HttpServlet {
 			long numberOfDays = (long) session.getAttribute("reservationNumberOfDays");
 			Double price = (Double) session.getAttribute("reservationPrice");
 
-			Reservation reservation = new Reservation();
-			reservation.setId_annonce(annonceId);
-			reservation.setId_utilisateur(userId);
-			reservation.setDate_debut_sejour(timestampBegining);
-			reservation.setDate_fin_sejour(timestampEnd);
-			reservation.setDuree_sejour((int) numberOfDays);
-			reservation.setPrix(price);
-			reservation.setId_etat_reservation(1);
-			reservation.setId_statut_reservation(1);
+			boolean isOkPayment = apiPaypalPayment(annonceId, userId, price);
 
-			reservationSessionBean.createReservation(reservation);
+			if (isOkPayment) {
+				Reservation reservation = new Reservation();
+				reservation.setId_annonce(annonceId);
+				reservation.setId_utilisateur(userId);
+				reservation.setDate_debut_sejour(timestampBegining);
+				reservation.setDate_fin_sejour(timestampEnd);
+				reservation.setDuree_sejour((int) numberOfDays);
+				reservation.setPrix(price);
+				reservation.setId_etat_reservation(1);
+				reservation.setId_statut_reservation(1);
 
-			setVariableToView("alert-success", "Réservation prise en compte");
-			redirectionToServlet(ANNONCES_LISTE_SERVLET);
+				reservationSessionBean.createReservation(reservation);
+
+				setVariableToView("alert-success", "Réservation prise en compte");
+				redirectionToServlet(ANNONCES_LISTE_SERVLET);
+			} else {
+				setVariableToView("alert-danger", "Paiement non pris en compte");
+				redirectionToServlet(ANNONCES_LISTE_SERVLET);
+			}
 		} catch (Exception exception) {
 			setVariableToView("alert-danger", "Réservation non prise en compte");
 			redirectionToServlet(ANNONCES_LISTE_SERVLET);
 		}
+	}
+	
+	/**
+	 * Call paypal api to do the paymment
+	 * @param annonceId : announcement id
+	 * @param userId : user id
+	 * @param price : price of the reservation
+	 * @return true / false : if the payment is done
+	 */
+	private boolean apiPaypalPayment(int annonceId, int userId, Double price) {
+		boolean isOkPayment = true;
+		
+		
+		
+		return isOkPayment;
 	}
 
 	/**
